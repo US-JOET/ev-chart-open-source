@@ -1,0 +1,228 @@
+{
+    "module": 9,
+    "fields": [
+        {
+            "field_name": "project_id",
+            "required": false,
+            "datatype": "string",
+            "length": null,
+            "is_nullable": false
+        },
+        {
+            "field_name": "station_upgrade",
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+        },
+        {
+            "field_name": "real_property_acq_date",
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+        },
+        {
+            "field_name": "real_property_acq_owned",
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+        },
+        {
+            "field_name": "real_property_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "real_property_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_acq_date",
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_acq_owned",
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "equipment_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_install_date",
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_install_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "equipment_install_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "equipment_install_cost_elec",
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "equipment_install_cost_const",
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "equipment_install_cost_labor",
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "equipment_install_cost_other",
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "der_acq_owned",
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "der_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "der_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "der_install_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "der_install_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "dist_sys_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "dist_sys_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        },
+        {
+            "field_name": "service_cost_total",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+        },
+        {
+            "field_name": "service_cost_federal",
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+        }
+    ]
+}

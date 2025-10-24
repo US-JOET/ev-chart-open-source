@@ -1,0 +1,6 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+SM81,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,TRUE
+SM82,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,TRUE
+SM83,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,TRUE
+SM84,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,TRUE
+SM85,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,TRUE

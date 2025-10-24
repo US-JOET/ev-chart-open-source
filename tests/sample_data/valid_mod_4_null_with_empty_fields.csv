@@ -1,0 +1,4 @@
+﻿station_id,port_id,network_provider,outage_id,outage_duration
+APIM4,354321,shell_recharge,,
+APIM5,354322,shell_recharge,,
+cherry,123,blink,,

@@ -1,0 +1,25 @@
+h2#submitModalHeading {
+  font-family: Montserrat-Bold;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+
+.submission-modal-field {
+  display: flex;
+}
+
+.submission-modal-label {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+  padding-bottom: 8px;
+  padding-right: 4px;
+}
+
+.submission-alert {
+  margin-bottom: 24px;
+}
+
+.null-field-text {
+  margin-bottom: 24px;
+}

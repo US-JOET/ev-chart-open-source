@@ -1,0 +1,34 @@
+.dr-welcome-container {
+  margin-top: 2rem;
+}
+
+.dr-welcome-header {
+  margin: 0;
+}
+
+.dr-dashboard-tabs {
+  margin-top: 1.5rem;
+  margin-bottom: 80px;
+}
+
+#drSSDashboard,
+#drPPDashboard,
+#drSubmissionTracker {
+  margin-top: 16px;
+}
+
+.dr-due-date-banner {
+  margin-top: 2rem;
+  margin-bottom: 24px;
+}
+
+.submission-tracker-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.submission-tracker-container .usa-icon {
+  cursor: pointer;
+  fill: #a9aeb1;
+  margin-left: 4px;
+}

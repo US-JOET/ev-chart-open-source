@@ -1,0 +1,20 @@
+.error-guidance-container {
+  margin-top: 24px;
+  padding: 24px;
+  width: 572px;
+  border-radius: 8px;
+  background-color: #e6eff2;
+}
+
+.error-guidance-graphic {
+  height: 229px;
+  width: 531px;
+}
+
+.error-guidance-container p {
+  margin-bottom: 8px;
+}
+
+.no-pagination {
+  width: 370px;
+}

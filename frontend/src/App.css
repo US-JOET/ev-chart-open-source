@@ -1,0 +1,102 @@
+/* uswds/ evchartstorybook css */
+@import "../node_modules/evchartstorybook/lib/index.css";
+
+/* custom css */
+@import "../src/containers/Management/Stations/StationForm/StationForm.css";
+@import "../src/components/Modals/Modal.css";
+@import "../src/containers/Login/Login.css";
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: Montserrat-Thin;
+  font-weight: bold;
+}
+
+h1 {
+  margin: 21px 0;
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+p {
+  font-family: Montserrat-Regular;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+ol {
+  font-family: "Montserrat-Regular";
+}
+
+li {
+  line-height: 24px;
+}
+
+b {
+  font-family: "Montserrat-Bold";
+}
+
+/* Fix footer at bottom of screen*/
+div#main-content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+div#main-content {
+  flex: 1;
+}
+
+h3.required-field::after {
+  font-family: "Montserrat-Regular";
+  font-weight: lighter;
+}
+
+.base-TabsList-root {
+  border-bottom: 1px solid #005a7c;
+}
+
+.base-Tab-root {
+  border: 1px solid #a9aeb1;
+  background-color: #ffffff;
+  border-radius: 8px 8px 0 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  font-family: Montserrat-Regular;
+  font-size: 16px;
+  line-height: 24px;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.base-Tab-root.base--selected {
+  position: relative;
+  font-family: Montserrat-Thin;
+  color: #005a7c;
+  border-left: 1px solid #005a7c;
+  border-right: 1px solid #005a7c;
+  border-top: 1px solid #005a7c;
+  border-radius: 4px 4px 0px 0px;
+  z-index: 300;
+}
+
+.base-Tab-root.base--selected::after {
+  content: "";
+  background-color: white;
+  height: 10px;
+  margin-bottom: -10px;
+  display: block;
+  width: calc(100% + 32px);
+  margin-left: -16px;
+}
+
+.base-Tab-root:hover {
+  font-family: Montserrat-Thin;
+}

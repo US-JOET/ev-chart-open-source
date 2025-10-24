@@ -1,0 +1,101 @@
+.no-data-add-user {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.sort-icon.usa-icon {
+  margin-left: 8px;
+  margin-top: 10px;
+  fill: #ffffff;
+  width: 20px;
+  height: 20px;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-view-details {
+  color: #005a7c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.user-pagination-info {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#SummaryTableUsers .pagination-info-row-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#SummaryTableUsers .pagination-info-row {
+  display: flex;
+  align-items: center;
+}
+
+#SummaryTableUsers .pagination-info-row .pagination-info-dropdown {
+  align-items: center;
+  display: flex;
+}
+
+#SummaryTableUsers .pagination-info {
+  margin-top: 16px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#SummaryTableUsers .pagination-info-row-count {
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: solid 1.5px #9d9d9d;
+}
+
+#SummaryTableUsers .pagination-info-row-per-page {
+  margin-right: 8px;
+}
+
+#usersSelectItemsPerPage {
+  border-radius: 5%;
+  margin-top: 0 !important;
+}
+
+#SummaryTableUsers .column-definitions-button {
+  font-family: Montserrat-Regular;
+  color: #005a7c;
+  background-color: #fff;
+  float: right;
+}
+
+.overflow-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+td.user_name {
+  max-width: 220px;
+}
+
+td.user_role {
+  max-width: 140px;
+}
+
+td.user_email {
+  max-width: 200px;
+}
+
+.no-actions {
+  padding-left: 8px;
+}

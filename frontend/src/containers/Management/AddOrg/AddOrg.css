@@ -1,0 +1,58 @@
+.add-sr-background-card {
+  padding: 12px 32px 32px 32px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px 0 #dedede;
+  width: 629px;
+}
+
+.new-organization-container {
+  height: 104px;
+  width: 565px;
+  border-radius: 4px;
+  background-color: #e7f6f8;
+}
+
+.organization-registration-status {
+  margin-top: 24px;
+  padding: 16px;
+  height: 104px;
+  width: 565px;
+  border-radius: 4px;
+  background-color: #e7f6f8;
+}
+
+.organization-registration-status h4 {
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.new-org-subheading {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9e8e8;
+}
+
+.ev-ch-art-form-controls-text-i {
+  color: #71767a;
+  font-family: "Montserrat-Regular";
+  font-size: 16px !important;
+  letter-spacing: 0;
+  line-height: 16px;
+}
+
+.add-admin-heading {
+  margin-top: 40px;
+}
+
+.jo-select-org-container {
+  margin-bottom: 12px;
+}
+
+.org-type-selection {
+  margin-bottom: 8px;
+}
+
+.org-type-selection label.usa-radio__label {
+  font-family: "Montserrat-Regular";
+  font-size: 16px;
+  line-height: 24px;
+}

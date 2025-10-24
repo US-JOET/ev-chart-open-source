@@ -1,0 +1,14 @@
+## kms_cmk_not_scheduled_for_deletion
+ 
+let kms_cmk_not_scheduled_for_deletion = Resources.*[ Type == "AWS::KMS::Key" 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "KMS_CMK_NOT_SCHEDULED_FOR_DELETION"
+]
+ 
+rule KMS_CMK_NOT_SCHEDULED_FOR_DELETION when %kms_cmk_not_scheduled_for_deletion !empty {
+    %kms_cmk_not_scheduled_for_deletion.Properties.EnableKeyRotation == true
+    <<
+      Violation: All KMS and CMK key must not be scheduled for deletion.
+      Fix: Set the EnableKeyRotation property Properties.EnableKeyRotation to true.
+    >>
+}

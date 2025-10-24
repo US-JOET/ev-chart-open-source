@@ -1,0 +1,15 @@
+## rds_cluster_deletion_protection_enabled
+
+let aws_rds_clusters_deletion_protection_enabled = Resources.*[ Type == 'AWS::RDS::DBCluster'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "RDS_CLUSTER_DELETION_PROTECTION_ENABLED"
+]
+
+rule RDS_CLUSTER_DELETION_PROTECTION_ENABLED when %aws_rds_clusters_deletion_protection_enabled !empty {
+  %aws_rds_clusters_deletion_protection_enabled.Properties.DeletionProtection EXISTS
+  %aws_rds_clusters_deletion_protection_enabled.Properties.DeletionProtection == true
+  <<
+    Violation: All RDS clusters must deletion protection enabled.
+    Fix: Set the parameter for DeletionProtection to true.
+  >>
+}

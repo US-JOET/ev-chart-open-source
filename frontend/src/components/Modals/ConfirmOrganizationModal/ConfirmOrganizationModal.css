@@ -1,0 +1,32 @@
+.organization-confirm-alert .usa-alert__text {
+  font-size: 16px;
+}
+
+.confirm-organization-modal-field {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.confirm-organization-modal-label {
+  width: 224px;
+}
+
+.checkbox.add-org-checkbox {
+  margin-top: 24px;
+}
+
+.confirm-organization-modal-data {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+}
+
+h2#confirmOrganizationModalHeading {
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.org-info-sub-heading {
+  margin-bottom: 8px;
+}

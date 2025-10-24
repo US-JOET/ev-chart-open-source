@@ -1,0 +1,105 @@
+.evchart-card-container {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px 0 #dedede;
+}
+
+.evchart-card {
+  padding: 2rem 2rem 2.75rem 2rem;
+}
+
+.getting-started-card {
+  margin-top: 2rem;
+}
+
+.getting-started-card__heading {
+  margin: 0;
+  font-size: 18px;
+}
+
+.submitting-data-card__heading {
+  margin-top: 2rem;
+  font-size: 18px;
+}
+
+.submitting-data-card__subheading {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.submitting-data-card__subheading.submitting-data-card__subheading--direct {
+  margin-top: 1.5rem;
+}
+
+.getting-started-card__link-container {
+  margin-top: 1rem;
+}
+
+.getting-started-card__link-helper {
+  font-family: Montserrat-Regular;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.submission-deadlines-table.usa-table {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.submission-deadlines-table.usa-table th,
+.submission-deadlines-table.usa-table td {
+  padding: 1rem 0.5rem;
+  line-height: 16px;
+}
+
+.submission-deadlines-table__tbody {
+  vertical-align: top;
+}
+
+.submission-deadlines-table__column-nowrap {
+  text-wrap: nowrap;
+}
+
+.submitting-data-card__ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.submitting-data-card__li {
+  margin-top: 1rem;
+}
+
+.submitting-data-card__li-helper {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.upload-data-button-container {
+  margin-top: 0.5rem;
+}
+
+.upload-data-button.usa-button {
+  background-color: #005a7c;
+}
+
+.sr-module-one-note-container {
+  border-top: 1px solid #e9e8e8;
+  padding-top: 18px;
+  display: flex;
+}
+
+.sr-module-one-note-container .note {
+  font-family: "Montserrat-Bold";
+  font-size: 12px;
+  margin-right: 20px;
+}
+
+.sr-module-one-note-container .instructions {
+  font-family: "Montserrat-Regular";
+  font-size: 12px;
+}
+
+.full-wdith-getting-started {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

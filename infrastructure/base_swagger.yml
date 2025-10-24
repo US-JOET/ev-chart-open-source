@@ -1,0 +1,11 @@
+swagger: "2.0"
+info:
+  description: EV-ChART REST API
+  version: 2023-09-29T19:09:34Z
+  title: EV-ChART_REST_API
+host: no8zn3ij82.execute-api.us-east-1.amazonaws.com
+basePath: /dev
+schemes:
+  - https
+paths: {}
+definitions: {}

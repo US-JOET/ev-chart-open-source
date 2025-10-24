@@ -1,0 +1,2 @@
+station_id,network_provider,charger_id,connector_id,port_id,session_id,session_start,session_end,session_error,energy_kwh,power_kw,payment_method
+StationMod2,shell_recharge,NULL,NULL,123-456-7,10001,NULL,NULL,NULL,NULL,NULL,VISA

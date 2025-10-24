@@ -1,0 +1,18 @@
+## Cloudwatch_alarm_resource_check
+
+#
+let cloudwatch_alarm_resource_check = Resources.*[ Type == 'AWS::CloudWatch::Alarm'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "CLOUDWATCH_ALARM_RESOURCE_CHECK"
+]
+
+rule CLOUDWATCH_ALARM_RESOURCE_CHECK when %cloudwatch_alarm_resource_check !empty {
+  %cloudwatch_alarm_resource_check.Properties.AlarmResources exists or
+  %cloudwatch_alarm_resource_check.Properties.OKResources exists or
+  %cloudwatch_alarm_resource_check.Properties.InsufficientDataResources exists
+
+  <<
+    Violation: CloudWatch Alarms should have at least one Alarm Resource, one Insufficient Data Resources action, or one OK Resource enabled.
+    Fix: Set one Alarm Resource, one Insufficient Data Resources action, or one OK Resource on the CloudWatch Alarm resource.
+  >>
+}

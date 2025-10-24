@@ -1,0 +1,80 @@
+Description: A stack containing resources for an AWS Serverless Lambda function deployed from an AWS ECR image. The Lambda will be given a role that grants it permission to access resources in a VPC. The IDs of the security group and subnet of the VPC resource must be specified as parameters. An optional parameter allows the application name to be set so resources will be tagged appropriately. In addition, secrets are delivered to the Lambda environment. 
+# Reference: https://gist.github.com/chinchalinchin/60bfb548fc4f24cf905b0931a0ca5905
+Parameters:
+  ApiGatewayVpcEndoint:
+    Type: String
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+  VpcSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    #Description:
+
+  VpcSubnetIdsPrivate:
+    Type: List<AWS::EC2::Subnet::Id>
+    #Description:
+
+  TestTimeout:
+    Type: Number
+    Default: 300
+
+  LambdaResourceCommitId:
+    Type: String
+    #Description:
+
+Mappings:
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+  VpcIdMap:
+    us-east-1:
+      "414275662771": vpc-05a349f3444076a6d
+      "030628784534": vpc-082b5ecc72a39dfc3
+      "888515010394": vpc-0dd0b535d7070df3b
+    us-east-2:
+      "414275662771": vpc-0d9a94cfe49ce36a3
+      "030628784534": vpc-0964ba310648efd83
+      "888515010394": vpc-070d60d18a2a512db
+
+Conditions:
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+  
+Resources:
+  LambdaECRRepositoryDRSmokeTestECR:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionTimeout: 900
+        RepositoryName: lambdas/basic_ui_test
+        # 414275662771.dkr.ecr.us-east-1.amazonaws.com/lambdas/basic_ui_test:latest
+        LambdaFunctionDescription: lambda that runs selenium to check DR smoke tests
+        LambdaFunctionFunctionName: basic_ui_test
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:5
+        # LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment

@@ -1,0 +1,13 @@
+let api_gw_ssl_enabled = Resources.*[ Type == 'AWS::ApiGateway::RestApi'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "API_GW_SSL_ENABLED"
+]
+
+rule API_GW_SSL_ENABLED when %api_gw_ssl_enabled !empty {
+  some %api_gw_ssl_enabled.Properties.EndpointConfiguration.Types[0] == ["EDGE"]
+  <<
+    Violation: API Gateway must have SSL enabled when using EDGE endpoint configuration
+    Fix: Set EndpointConfiguration type to "EDGE"
+  >>
+}
+

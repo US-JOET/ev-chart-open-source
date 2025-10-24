@@ -1,0 +1,3 @@
+station_id,network_provider,operator_name,operator_address,operator_city,operator_state,operator_zip,operator_zip_extended
+,,,,,,,
+TESTM62,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234

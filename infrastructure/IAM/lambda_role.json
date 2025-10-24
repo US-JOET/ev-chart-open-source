@@ -1,0 +1,220 @@
+Trust:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "lambda.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+Permissions:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cognito-idp:AdminCreateUser",
+                "cognito-idp:AdminSetUserPassword",
+                "cognito-idp:DescribeUserPoolClient",
+                "cognito-idp:AdminUserGlobalSignOut"
+            ],
+            "Resource": [
+                "arn:aws:cognito-idp:*:ENV_ACCOUNT_ID:userpool/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "rds:CopyDBClusterSnapshot",
+                "rds:DescribeDBClusterSnapshots",
+                "rds:DeleteDBClusterSnapshot"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster-snapshot:*"
+            ]
+        },
+        {
+            "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:Scan",
+                "dynamodb:Query",
+                "dynamodb:UpdateItem"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*:ENV_ACCOUNT_ID:table/ev-chart*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:logs:*:ENV_ACCOUNT_ID:log-group:/aws/lambda/EV-ChART_*"
+            ]
+        },
+        {
+            "Action": [
+                "ec2:AssignPrivateIpAddresses",
+                "ec2:CreateNetworkInterface",
+                "ec2:DeleteNetworkInterface",
+                "ec2:UnassignPrivateIpAddresses"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:ec2:*:ENV_ACCOUNT_ID:*"
+            ]
+        },
+        {
+            "Action": [
+                "ec2:DescribeNetworkInterfaces"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Action": [
+                "s3:GetBucket*",
+                "s3:GetObject*",
+                "s3:List*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-artifact-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "secretsmanager:GetSecretValue"
+            ],
+            "Resource": [
+                "arn:aws:secretsmanager:*:ENV_ACCOUNT_ID:secret:evchart/*",
+                "arn:aws:secretsmanager:*:ENV_ACCOUNT_ID:secret:rds!*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "secretsmanager:CreateSecret"
+            ],
+            "Resource": [
+                "arn:aws:secretsmanager:*:ENV_ACCOUNT_ID:secret:*"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "secretsmanager:Name": "evchart/*"
+                }
+            },
+            "Effect": "Allow"
+        },
+        {
+            "Sid": "NotResourceLevel",
+            "Action": [
+                "kms:CreateKey"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:Decrypt",
+                "kms:CreateGrant",
+                "kms:DescribeKey",
+                "kms:GetKeyPolicy",
+                "kms:ReplicateKey",
+                "kms:GenerateDataKey"
+            ],
+            "Resource": "arn:aws:kms:*:ENV_ACCOUNT_ID:*",
+            "Effect": "Allow",
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                },
+                "ForAnyValue:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                }
+            }
+        },
+        {
+            "Action": [
+                "kms:CreateAlias",
+                "kms:UpdateAlias"
+            ],
+            "Resource": [
+                "arn:aws:kms:*:ENV_ACCOUNT_ID:alias/ev-chart/*",
+                "arn:aws:kms:*:ENV_ACCOUNT_ID:key/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "ssm:GetParameter*"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:ENV_ACCOUNT_ID:parameter/ev-chart/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "lambda:InvokeFunction"
+            ],
+            "Resource": [
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:function:EV-ChART_*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "sqs:SendMessage",
+                "sqs:DeleteMessage",
+                "sqs:GetQueueAttributes",
+                "sqs:ReceiveMessage"
+            ],
+            "Effect": "Allow",
+            "Resource": "arn:aws:sqs:*:ENV_ACCOUNT_ID:ev-chart*"
+        },
+        {
+            "Action": [
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "sns:Publish"
+            ],
+            "Resource": [
+                "arn:aws:sns:*:ENV_ACCOUNT_ID:ev-chart-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "apigateway:POST"
+            ],
+            "Resource": [
+                "arn:aws:apigateway:*::/restapis*",
+                "arn:aws:apigateway:*::/usageplans*",
+                "arn:aws:apigateway:*::/apikeys*"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}

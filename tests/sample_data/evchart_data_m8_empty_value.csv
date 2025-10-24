@@ -1,0 +1,3 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+,,,,,,,
+ASTM82,shell_recharge,TRUE,FAIL,none,,0,0

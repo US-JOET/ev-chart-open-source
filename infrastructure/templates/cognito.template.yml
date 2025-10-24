@@ -1,0 +1,229 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ""
+
+Metadata: {}
+
+Parameters:
+  CognitoUserPoolIdentityProviderClientSecret:
+    Type: String
+    #Description:
+    NoEcho: true
+
+  CognitoUserPoolLambdaConfigPreTokenGeneration:
+    Type: String
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+Mappings:
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+  HostnameMap:
+    dev:
+      Hostname: evchart-dev
+    test:
+      Hostname: evchart-test
+    prod:
+      Hostname: evchart
+
+Conditions:
+  isDev: !Equals [ !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ], dev ]
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+  isProd: !Equals [ !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ], prod ]
+
+Resources:
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Condition: isNotSubEnvironment
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      #AliasAttributes:
+      #  - email
+      AutoVerifiedAttributes:
+        - email
+      LambdaConfig:
+        PreTokenGeneration: !Ref CognitoUserPoolLambdaConfigPreTokenGeneration
+        PreTokenGenerationConfig:
+          LambdaArn: !Ref CognitoUserPoolLambdaConfigPreTokenGeneration
+          LambdaVersion: V2_0
+      UsernameAttributes:
+        - email
+      UserPoolAddOns:
+        AdvancedSecurityMode: AUDIT
+      #UserPoolTags:
+
+  CognitoUserPoolUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    DependsOn: CognitoUserPoolUserPoolResourceServer
+    Properties:
+      AccessTokenValidity: !If
+        - isDev
+        - 60
+        - !Ref AWS::NoValue
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+        - !Sub
+          - gov.driveelectric.evchart${SubEnvironmentName}/admin
+          -
+            SubEnvironmentName: !If
+              - isNotSubEnvironment
+              - ""
+              - !Sub -${SubEnvironment}
+      #AuthSessionValidity:
+      CallbackURLs:
+        - !Sub
+          - https://${Hostname}.driveelectric.gov/login
+          -
+            Hostname: !If
+              - isNotSubEnvironment
+              - !FindInMap
+                - HostnameMap
+                - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+                - Hostname
+              - !Sub evchart-${SubEnvironment}
+      #DefaultRedirectURI:
+      #EnablePropagateAdditionalUserContextData:
+      #EnableTokenRevocation:
+      ExplicitAuthFlows:
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - !If
+          - isProd
+          - !Ref AWS::NoValue
+          - ALLOW_USER_PASSWORD_AUTH
+      GenerateSecret: true
+      IdTokenValidity: !If
+        - isDev
+        - 60
+        - !Ref AWS::NoValue
+      LogoutURLs:
+        - !Sub
+          - https://${Hostname}.driveelectric.gov
+          -
+            Hostname: !If
+              - isNotSubEnvironment
+              - !FindInMap
+                - HostnameMap
+                - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+                - Hostname
+              - !Sub evchart-${SubEnvironment}
+      #PreventUserExistenceErrors:
+      #ReadAttributes:
+      #RefreshTokenValidity:
+      SupportedIdentityProviders:
+        - !If
+          - isNotSubEnvironment
+          - !Ref CognitoUserPoolUserPoolIdentityProvider
+          - OneID
+      TokenValidityUnits: !If
+        - isDev
+        -
+          AccessToken: minutes
+          IdToken: minutes
+        - !Ref AWS::NoValue
+      UserPoolId: !If
+        - isNotSubEnvironment
+        - !Ref CognitoUserPool
+        - "{{resolve:ssm:/ev-chart/cognito/user_pool_id}}"
+      #WriteAttributes:
+
+  CognitoUserPoolUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Condition: isNotSubEnvironment
+    Properties:
+      Domain: !Sub
+        - evchart-${Environment}
+        -
+          Environment: !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+      UserPoolId: !Ref CognitoUserPool
+
+  CognitoUserPoolUserPoolIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Condition: isNotSubEnvironment
+    Properties:
+      AttributeMapping:
+        email: email
+        family_name: family_name
+        given_name: given_name
+        name: name
+      ProviderDetails:
+        attributes_request_method: GET
+        authorize_scopes: email openid profile
+        client_id: EVChART
+        client_secret: !Ref CognitoUserPoolIdentityProviderClientSecret
+        oidc_issuer: https://eams-auth.oneid.energy.gov
+      ProviderName: OneID
+      ProviderType: OIDC
+      UserPoolId: !Ref CognitoUserPool
+
+  CognitoUserPoolUserPoolResourceServer:
+    Type: AWS::Cognito::UserPoolResourceServer
+    Properties:
+      Identifier: !Sub
+        - gov.driveelectric.evchart${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub -${SubEnvironment}
+      Name: EV-ChART custom scope resource server.
+      Scopes:
+        -
+          ScopeDescription: Administrator scope.
+          ScopeName: admin
+      UserPoolId: !If
+        - isNotSubEnvironment
+        - !Ref CognitoUserPool
+        - "{{resolve:ssm:/ev-chart/cognito/user_pool_id}}"
+
+  SSMParameterCognitoUserPoolClientId:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: EV-ChART Cognito user pool client ID.
+      Name: !Sub
+        - /ev-chart/cognito${SubEnvironmentPath}/user_pool_client_id
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !Ref CognitoUserPoolUserPoolClient
+
+  SSMParameterCognitoUserPoolDomain:
+    Type: AWS::SSM::Parameter
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: EV-ChART Cognito user pool domain name.
+      Name: /ev-chart/cognito/user_pool_domain
+      Type: String
+      Value: !Ref CognitoUserPoolUserPoolDomain
+
+  SSMParameterCognitoUserPoolId:
+    Type: AWS::SSM::Parameter
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: EV-ChART Cognito user pool ID.
+      Name: /ev-chart/cognito/user_pool_id
+      Type: String
+      Value: !Ref CognitoUserPool
+
+Outputs:
+  CognitoUserPoolArn:
+    Condition: isNotSubEnvironment
+    Description: The ARN for the EV-ChART Cognito user pool.
+    Value: !GetAtt CognitoUserPool.Arn

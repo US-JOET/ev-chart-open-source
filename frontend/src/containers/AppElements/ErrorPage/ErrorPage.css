@@ -1,0 +1,16 @@
+.align-center {
+  text-align: center;
+}
+
+#notFoundText {
+  padding-top: 64px;
+}
+
+#notFoundDots {
+  padding-top: 24px;
+}
+
+#notFoundReturnHome {
+  padding-top: 24px;
+  padding-bottom: 46px;
+}

@@ -1,0 +1,6 @@
+station_id,network_provider,der_upgrade,der_onsite,derr_type,der_type_other,der_kw,der_kwh
+ASTM81,shell_recharge,TRUE,FAIL,none,,90,45
+ASTM82,shell_recharge,TRUE,FAIL,none,,0,0
+ASTM83,shell_recharge,TRUE,FAIL,none,combined_heat_and_power_units-utilize waste heat to provide cooling,80,30
+ASTM84,shell_recharge,TRUE,FAIL,none,,0,0
+ASTM85,shell_recharge,TRUE,FAIL,none,,0,0

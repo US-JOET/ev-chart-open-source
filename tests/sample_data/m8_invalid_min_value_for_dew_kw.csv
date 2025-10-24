@@ -1,0 +1,2 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+StationMod8,shell_recharge,FALSE,TRUE,solar; station_battery8,ombined_heat_and_power_units-utilize,-1,45

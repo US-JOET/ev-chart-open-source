@@ -1,0 +1,26 @@
+{
+  "module": 4,
+  "fields": [
+    {
+      "field_name": "port_id",
+      "required": true,
+      "datatype": "string",
+      "max_length": 36
+    },
+    {
+      "field_name": "outage_id",
+      "required": true,
+      "datatype": "datetime",
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "outage_duration",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 8,
+      "max_scale": 2,
+      "min_value": 0.01,
+      "required_empty_allowed": true
+    }
+  ]
+}

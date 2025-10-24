@@ -1,0 +1,52 @@
+{
+  "module": 3,
+  "fields": [
+    {
+      "field_name": "port_id",
+      "required": true,
+      "datatype": "string",
+      "max_length": 36,
+      "is_nullable": false
+    },
+    {
+      "field_name": "uptime_reporting_start",
+      "required": true,
+      "datatype": "datetime",
+      "is_nullable": false
+    },
+    {
+      "field_name": "uptime_reporting_end",
+      "required": true,
+      "datatype": "datetime",
+      "is_nullable": false
+    },
+    {
+      "field_name": "uptime",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 5,
+      "max_scale": 2,
+      "min_value": 0,
+      "is_nullable": true,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "total_outage",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 8,
+      "max_scale": 2,
+      "min_value": 0,
+      "is_nullable": false
+    },
+    {
+      "field_name": "total_outage_excl",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 8,
+      "max_scale": 2,
+      "min_value": 0,
+      "is_nullable": false
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+﻿station_id,port_id,network_provider,outage_id,outage_duration,excluded_outage,excluded_outage_reason,excluded_outage_notes
+SM1,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,1,notes for the outage
+SM2,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,2,12345
+SM3,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,3,-1
+SM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,4,
+SM5,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,5,notes for the outage
+SM6,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,6,notes for the outage
+SM7,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,False,,notes for the outage
+SM8,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,1,1.25
+SM9,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,True,2,
+SM10,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92,,,

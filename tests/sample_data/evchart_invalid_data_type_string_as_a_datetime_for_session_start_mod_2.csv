@@ -1,0 +1,2 @@
+﻿station_id,port_id,network_provider,session_id,session_start,session_end,session_error,energy_kwh,power_kw,payment_method
+StationMod2,123-456-7,shell_recharge,10001,FALSE,2024-01-20T00:00:00Z,ERROR1,20241.01,20241.02,VISA

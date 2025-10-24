@@ -1,0 +1,11 @@
+station_id,network_provider,operator_name,operator_address,operator_city,operator_state,operator_zip,operator_zip_extended
+TESTM1,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM2,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM3,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM4,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM5,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM6,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM7,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM8,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM9,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM10,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514

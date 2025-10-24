@@ -1,0 +1,68 @@
+#moduleDetailsTable .pagination-info {
+  margin-top: 16px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#moduleDetailsTable .module-details-table-info {
+  justify-content: space-between;
+}
+
+#moduleDetailsTable .pagination-info-row {
+  align-items: center;
+  display: flex;
+}
+
+#moduleDetailsTable .pagination-info-row-count {
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: solid 1.5px #9d9d9d;
+}
+
+#moduleDetailsTable .pagination-info-row-per-page {
+  margin-right: 8px;
+}
+
+#moduleDetailsSelectItemsPerPage {
+  border-radius: 5%;
+  margin-top: 0 !important;
+}
+
+#moduleDetailsTable .module-details-button-group {
+  display: flex;
+  align-items: center;
+}
+
+#moduleDetailsTable .module-details-unstyled-button {
+  height: 24px;
+}
+
+#downloadAsCSVButton {
+  border-right: solid 1.5px #9d9d9d;
+  padding-right: 16px;
+}
+
+#moduleDetailsTable .module-details-button-divider {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+
+#openPDFButton {
+  padding-left: 16px;
+}
+
+.pdf-launch-icon {
+  margin-right: 8px;
+}
+
+.usa-table--fixed-first tbody td:nth-of-type(2) {
+  max-width: 400px;
+}
+
+.overflow-ellipsis-details-data {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

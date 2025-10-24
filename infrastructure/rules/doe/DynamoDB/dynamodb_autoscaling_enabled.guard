@@ -1,0 +1,14 @@
+## Dynamodb_Autoscaling_Enabled
+ 
+let dynamodb_autoscaling_enabled = Resources.*[ Type == "AWS::DynamoDB::Table" 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "DYNAMODB_AUTOSCALING_ENABLED"
+]
+ 
+rule DYNAMODB_AUTOSCALING_ENABLED when %dynamodb_autoscaling_enabled !empty {
+    %dynamodb_autoscaling_enabled.Properties.ProvisionedThroughput.AutoScalingSetting.notEmpty == true
+    <<
+      Violation: All DynamoDB Tables must have Autoscaling enabled.
+      Fix: Set the dynamodb table property ProvisionedThroughput.AutoScalingSetting.notEmpty to true.
+    >>
+}

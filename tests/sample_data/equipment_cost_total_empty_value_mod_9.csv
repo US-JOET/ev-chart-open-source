@@ -1,0 +1,2 @@
+station_id,network_provider,real_property_cost_total,real_property_cost_federal,equipment_cost_total,equipment_cost_federal,equipment_install_cost_total,equipment_install_cost_federal,der_cost_total,der_cost_federal,der_install_cost_total,der_install_cost_federal,dist_sys_cost_total,dist_sys_cost_federal,service_cost_total,service_cost_federal
+APIM91,shell_recharge,1800.89,2800.89,,4800.89,5800.89,6800.89,7800.89,8800.89,9800.89,10800.89,13800.89,14800.89,15800.89,16800.89

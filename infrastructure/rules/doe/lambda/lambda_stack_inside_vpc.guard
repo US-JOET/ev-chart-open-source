@@ -1,0 +1,48 @@
+#
+#####################################
+##      Gherkin        ##
+#####################################
+# Rule Identifier:
+#  LAMBDA_STACK_INSIDE_VPC
+#
+# Description:
+#  Checks whether an AWS Lambda function is allowed access to an Amazon Virtual Private Cloud.
+#
+# Reports on:
+#  AWS::CloudFormation::Stack
+#
+# Evaluates:
+#  AWS CloudFormation
+#
+# Rule Parameters:
+#  NA
+#
+# Scenarios:
+# a) SKIP: when no AWS Lambda functions are present
+# b) PASS: when all AWS Lambda functions are VPC enabled
+# c) FAIL: when any AWS Lambda functions are not VPC enabled
+# d) SKIP: when metadata includes the suppression for rule LAMBDA_STACK_INSIDE_VPC
+
+#
+# Select all AWS Lambda Function resources from incoming template (payload)
+#
+
+rule  LAMBDA_STACK_INSIDE_VPC 
+{
+  let aws_lambda_stack_functions_inside_vpc = Resources.*[ Type == 'AWS::CloudFormation::Stack' 
+    Metadata.guard.SuppressedRules not exists or
+    Metadata.guard.SuppressedRules.* != "LAMBDA_STACK_INSIDE_VPC"
+    Properties.Parameters.LambdaFunctionFunctionName exists
+  ].Properties
+
+  when %aws_lambda_stack_functions_inside_vpc !empty 
+  {
+    %aws_lambda_stack_functions_inside_vpc.Parameters.LambdaFunctionVpcConfigSecurityGroupId !empty
+    %aws_lambda_stack_functions_inside_vpc.Parameters.LambdaFunctionVpcConfigSubnetIds !empty
+    <<
+      Violation:  All AWS Lambda Functions must be configured with access to a VPC
+      Fix: set the Parameters.LambdaFunctionVpcConfigSecurityGroupId and Parameters.LambdaFunctionVpcConfigSubnetIds parameters with a list of security groups and subnets.
+      Lambda creates an elastic network interface for each combination of security group and subnet in the function's VPC configuration.
+    >>
+  }
+}

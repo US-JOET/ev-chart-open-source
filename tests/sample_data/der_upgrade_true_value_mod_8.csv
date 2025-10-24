@@ -1,0 +1,2 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+SM81,shell_recharge,TRUE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12

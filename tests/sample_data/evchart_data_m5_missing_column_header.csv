@@ -1,0 +1,3 @@
+station_id,project_id,network_provider,maintenance_report_start,caas,maintenance_cost_total,maintenance_cost_federal
+ATM51,AB-1234-567-89,shell_recharge,2023-01-01T00:00:00Z,TRUE,1394.23,697.12
+ATM52,12Q3456789,shell_recharge,2023-01-01T00:00:00Z,FALSE,4239.23,2119.62

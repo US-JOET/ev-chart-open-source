@@ -1,0 +1,89 @@
+.selected-chip {
+  margin-top: 8px;
+  margin-right: 8px;
+}
+
+.module-radio-button-selection {
+  margin-left: 30px;
+}
+
+.section-subheader {
+  margin-bottom: 32px;
+}
+
+.data-parameters-instructions {
+  margin-bottom: 30px;
+}
+
+.query-download-instructions {
+  margin-bottom: 32px;
+}
+
+.reporting-cadence-instructions {
+  margin-bottom: 32px;
+}
+
+.form-query-button-group {
+  margin-top: 32px;
+}
+
+.usa-checkbox__label {
+  margin-top: 18px !important;
+  margin-bottom: 4px;
+}
+
+.query-card-container h3 {
+  font-size: 18px;
+}
+
+.no-data-alert-banner {
+  margin-top: 32px;
+}
+
+.no-data-alert-banner-description {
+  margin-top: 18px;
+}
+
+.query-step-header {
+  margin-top: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9e8e8;
+}
+
+.dropdown-selections h4,
+h4.reporting-cadence-title {
+  font-family: "Montserrat-Regular";
+  font-weight: normal !important;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.query-card-container {
+  padding-bottom: 32px;
+}
+
+.query-card {
+  padding: 12px 32px 32px 32px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px 0 #dedede;
+}
+
+.query-card-content {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.reporting-year-disabled-text {
+  height: 16px;
+  width: 418px;
+  color: #171717;
+  font-family: "Montserrat-Regular";
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 16px;
+}
+
+.clear-filters-button {
+  margin-left: 12px !important;
+}

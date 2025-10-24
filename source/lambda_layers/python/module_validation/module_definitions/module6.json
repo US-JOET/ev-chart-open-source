@@ -1,0 +1,53 @@
+{
+  "module": 6,
+  "fields": [
+    {
+      "field_name": "operator_name",
+      "required": true,
+      "datatype": "string",
+      "min_length": 1
+    },
+    {
+      "field_name": "operator_address",
+      "required": true,
+      "datatype": "string",
+      "min_length": 1
+    },
+    {
+      "field_name": "operator_city",
+      "required": true,
+      "datatype": "string",
+      "min_length": 1
+    },
+    {
+      "field_name": "operator_state",
+      "required": true,
+      "datatype": "string",
+      "length": 2
+    },
+    {
+      "field_name": "operator_zip",
+      "required": true,
+      "datatype": "string",
+      "length": 5
+    },
+    {
+      "field_name": "operator_zip_extended",
+      "required": false,
+      "datatype": "string",
+      "length": 4
+    },
+    {
+      "field_name": "operator_type",
+      "required": false,
+      "datatype": "string",
+      "max_length": 255
+    },
+    {
+      "field_name": "operator_notes",
+      "required": false,
+      "datatype": "string",
+      "max_length": 255
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+.org-summary-background {
+  margin-bottom: 32px;
+  box-shadow: 8px;
+  box-shadow: 0 0 8px #dedede;
+}
+
+.org-summary-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 32px;
+}
+
+.org-summary-container .column {
+  flex: 1;
+}
+
+.org-summary-container .heading {
+  font-family: Montserrat-Regular;
+  font-size: 12px;
+  line-height: 24px;
+}
+
+.org-summary-container .data {
+  font-family: Montserrat-Thin;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.user-overview-spinner-mini {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}

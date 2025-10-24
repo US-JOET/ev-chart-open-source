@@ -1,0 +1,51 @@
+.jo-header-banner {
+  height: 48px;
+  background-color: #005a7c;
+}
+
+.logo-title-container {
+  float: left;
+  margin-top: 22px;
+  margin-bottom: 12px;
+  margin-left: -2rem;
+}
+
+.user-profile-container {
+  vertical-align: middle;
+  float: right;
+  margin-top: 22px;
+  margin-right: -2rem;
+}
+
+.ev-chart-nav-container {
+  margin: auto;
+}
+
+#evchartHeaderLogo {
+  height: 32px;
+  width: 107px;
+  margin-top: 8px;
+}
+
+#basic-logo {
+  white-space: pre-line;
+  line-height: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#evchartTextLogo {
+  height: 32px;
+}
+
+.user_information {
+  margin-top: 0px;
+}
+
+.notifications-logo {
+  margin-top: 0px;
+}
+
+ul#extended-nav-section-three {
+  width: 16rem;
+}

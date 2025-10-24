@@ -1,0 +1,35 @@
+h2#removeModalHeading {
+  font-family: Montserrat-Bold;
+  border-bottom: 1px solid #9d9d9d;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+}
+
+.remove-station-field {
+  padding: 8px 0;
+}
+
+.remove-station-field.border-bottom {
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.remove-station-field .field {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+}
+
+.remove-alert {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.remove-alert .usa-alert__heading,
+.remove-alert .usa-alert__text {
+  font-size: 16px !important;
+}
+
+.remove-alert .usa-alert--warning .usa-alert__body::before {
+  mask-size: 22px 22px !important;
+  top: 10px;
+}

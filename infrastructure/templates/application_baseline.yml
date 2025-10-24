@@ -1,0 +1,161 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Deploy baseline resources needed for the EV-ChART application and devops pipeline.
+
+Metadata: {}
+
+Parameters:
+  MasterKMSKeyArn:
+    Type: String
+    Default: ""
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+Rules:
+  isValidAccountId:
+    Assertions:
+      -
+        Assert: !Contains
+          -
+            - "414275662771" # EV-ChART development account.
+            - "030628784534" # EV-ChART test account.
+            - "888515010394" # EV-ChART production account.
+          - !Ref AWS::AccountId
+        AssertDescription: >
+          Deployment should only be to the EV-ChART AWS accounts listed in the "isValidAccountId" rule assertion that is
+          defined in this template.
+
+Mappings:
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+Conditions:
+  createKMSCMK: !And
+    - !Equals [ !Ref MasterKMSKeyArn, "" ]
+    - !Condition isPrimaryEnvironment
+  isPrimaryEnvironment: !And
+    - !Equals [ !Ref AWS::Region, "us-east-1" ]
+    - !Condition isNotSubEnvironment
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+
+Resources:
+  KMSKey:
+    Type: AWS::KMS::Key
+    Condition: createKMSCMK
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      Description: General EV-ChART CMK
+      Enabled: true
+      EnableKeyRotation: true
+      KeyPolicy:
+        Statement:
+          -
+            Action:
+              - kms:*
+            Effect: Allow
+            Principal:
+              AWS: !Ref AWS::AccountId
+            Resource: "*"
+          -
+            Action:
+              - kms:Decrypt*
+              - kms:Describe*
+              - kms:Encrypt*
+              - kms:GenerateDataKey*
+              - kms:ReEncrypt*
+            Condition:
+              ArnEquals:
+                kms:EncryptionContext:aws:logs:arn:
+                  - !Sub arn:${AWS::Partition}:logs:*:${AWS::AccountId}:*
+            Effect: Allow
+            Principal:
+              Service: logs.amazonaws.com
+            Resource: "*"
+        Version: 2012-10-17
+      MultiRegion: true
+      PendingWindowInDays: 7
+      #Tags:
+
+  KMSKeyAlias:
+    Type: AWS::KMS::Alias
+    Condition: createKMSCMK
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AliasName: alias/ev-chart/general
+      TargetKeyId: !GetAtt KMSKey.Arn
+
+  # This is the artifact bucket for the environment within which the GitHub runner will deploy the static assets and
+  # templates for the application.
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED
+          - S3_BUCKET_DEFAULT_LOCK_ENABLED
+          - S3_BUCKET_LOGGING_ENABLED
+          - S3_BUCKET_PUBLIC_READ_PROHIBITED
+          - S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+          - S3_BUCKET_REPLICATION_ENABLED
+        SuppressedRulesDescription:
+          S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_DEFAULT_LOCK_ENABLED: >
+            Not needed as data retention is satisfied by loading the data in the database.
+            Incorrect/error data does not need to be retained.
+          S3_BUCKET_LOGGING_ENABLED: >
+            Not needed as the S3 buckets are not public and are only accessible by the AWS account
+            and any fedarated identities.
+          S3_BUCKET_PUBLIC_READ_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_PUBLIC_WRITE_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_REPLICATION_ENABLED: >
+            Not needed as replication is not needed.
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          -
+            BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              KMSMasterKeyID: !If
+                - createKMSCMK
+                - !GetAtt KMSKey.Arn
+                - alias/ev-chart/general
+              SSEAlgorithm: aws:kms
+      BucketName: !Sub
+        - ev-chart-artifact-${Environment}-${AWS::Region}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+      #Tags:
+
+  SSMParameterKMSKeyArn:
+    Type: AWS::SSM::Parameter
+    Condition: isPrimaryEnvironment
+    Properties:
+      Description: The ARN of the general EV-ChART KMS CMK.
+      Name: /ev-chart/kms/general-arn
+      Type: String
+      Value: !If
+        - createKMSCMK
+        - !GetAtt KMSKey.Arn
+        - !Ref MasterKMSKeyArn
+
+Outputs: {}

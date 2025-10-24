@@ -1,0 +1,3131 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ""
+
+Metadata: {}
+
+Parameters:
+  ApiGatewayRestApiAuthorizerProviderARN:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIDefault:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDownloadModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetColumnDefinitions:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetNetworkProviders:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetUploadOptions:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetSubrecipients:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDirectRecipients:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetStationsById:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetStationsByOrgId:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPostImportModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPostS2SImportModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPostStation:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveStationId:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIToken:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDraftOrSubmittedData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiPolicySourceVpce:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPutSubmitModuleData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPutSubmissionApproval:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetModuleDetails:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDecisionDetails:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetUsersByOrgId:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiStageLogsLogGroupKmsKeyAlias:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetOrgUserData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPostUser:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPostOrg:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPatchStation:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIPatchUser:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetStatus:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetS2SModuleDetails:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetImportErrorData:
+    Type: String
+    #Description:
+
+  ApiGatewayRestApiMethodIntegrationUriAPIFeatureFlags:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetModuleHistoryLog:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetAuthorizations:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetSubmissionTracker:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetReportingYears:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardProgramPerformance:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPFederallyFundedNetworkSize:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPReliability:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPCapitalCosts:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPMaintenanceCosts:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPEnergyUsage:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardSubmissionDetails:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPILogout:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetPresignedUrl:
+    Type: String
+    #Description
+
+  ApiGatewayRestApiMethodIntegrationUriAPIGetSubmittingNullData:
+    Type: String
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+Mappings:
+  ApiGatewayExecutionRoleName:
+    dev:
+      Name: role/APIGatewayExecution-NeviDev
+    test:
+      Name: role/APIGatewayExecution-NeviTest
+    prod:
+      Name: role/APIGatewayExecution-NeviProd
+
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+Conditions:
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+
+Resources:
+  ApiGatewayRestApi:
+    Type: AWS::ApiGateway::RestApi
+    Metadata:
+      guard:
+        SuppressedRules:
+          - API_GW_SSL_ENABLED
+        SuppressedRulesDescription:
+          API_GW_SSL_ENABLED: >
+            Not relevant due to the API Gateway being private and a reverse proxy target of the DOE
+            TIC which contains the certificate.
+
+    Properties:
+      Description: !Sub
+        - EV-ChART REST API (${Environment})
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+      EndpointConfiguration:
+        Types:
+          - PRIVATE
+      Name: !Sub
+        - EV-ChART_REST_API${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      Policy:
+        Statement:
+          -
+            Action: execute-api:Invoke
+            Condition:
+              StringNotEquals:
+                aws:SourceVpce: !Ref ApiGatewayRestApiPolicySourceVpce
+            Effect: Deny
+            Principal: "*"
+            Resource: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:*
+          -
+            Action: execute-api:Invoke
+            Effect: Allow
+            Principal: "*"
+            Resource: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:*
+        Version: 2012-10-17
+      #Tags:
+
+  ApiGatewayRestApiAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      IdentitySource: method.request.header.Authorization
+      Name: !Sub
+        - EV-ChART_REST_API${SubEnvironmentName}_Authorizer
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ProviderARNs:
+        - !Ref ApiGatewayRestApiAuthorizerProviderARN
+      RestApiId: !Ref ApiGatewayRestApi
+      Type: COGNITO_USER_POOLS
+
+  # DO NOT FORGET TO ADD NEW METHOD RESOURCES TO THE "DependsOn" PROPERTY!
+  # Also, be sure the method you are adding to an API resource does not already exist.
+  ApiGatewayRestApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - ApiGatewayRestApiDefaultMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultStaticMediaJPGProxyMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultStaticMediaPNGProxyMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultStaticMediaSVGProxyMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultStaticMediaTTFProxyMethodGet
+      - ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2ProxyMethodGet
+      - ApiGatewayRestApiResourceAPIDecisionMethodGet
+      - ApiGatewayRestApiResourceAPIDecisionMethodOptions
+      - ApiGatewayRestApiResourceAPIDownloadModuleDataMethodOptions
+      - ApiGatewayRestApiResourceAPIDownloadModuleDataMethodGet
+      - ApiGatewayRestApiResourceAPIColumnDefinitionsMethodGet
+      - ApiGatewayRestApiResourceAPIColumnDefinitionsMethodOptions
+      - ApiGatewayRestApiResourceAPINetworkProvidersMethodGet
+      - ApiGatewayRestApiResourceAPINetworkProvidersMethodOptions
+      - ApiGatewayRestApiResourceAPIUploadOptionsMethodGet
+      - ApiGatewayRestApiResourceAPIUploadOptionsMethodOptions
+      - ApiGatewayRestApiResourceAPIModuleDataImportMethodOptions
+      - ApiGatewayRestApiResourceAPIModuleDataImportMethodPost
+      - ApiGatewayRestApiResourceAPIS2SModuleDataImportMethodOptions
+      - ApiGatewayRestApiResourceAPIS2SModuleDataImportMethodPost
+      - ApiGatewayRestApiResourceAPIModuleDataMethodGet
+      - ApiGatewayRestApiResourceAPIModuleDataMethodOptions
+      - ApiGatewayRestApiResourceAPISubrecipientsMethodGet
+      - ApiGatewayRestApiResourceAPISubrecipientsMethodOptions
+      - ApiGatewayRestApiResourceAPIDirectRecipientsMethodGet
+      - ApiGatewayRestApiResourceAPIDirectRecipientsMethodOptions
+      - ApiGatewayRestApiResourceAPIStationsMethodOptions
+      - ApiGatewayRestApiResourceAPIStationsMethodPatch
+      - ApiGatewayRestApiResourceAPIStationsMethodPost
+      - ApiGatewayRestApiResourceAPIStationsOrgIdMethodGet
+      - ApiGatewayRestApiResourceAPIStationsOrgIdMethodOptions
+      - ApiGatewayRestApiResourceAPIStationsStationIdMethodGet
+      - ApiGatewayRestApiResourceAPIStationsStationIdMethodOptions
+      - ApiGatewayRestApiResourceAPITokenMethodGet
+      - ApiGatewayRestApiResourceAPITokenMethodOptions
+      - ApiGatewayRestApiResourceAPIDraftSubmittedMethodOptions
+      - ApiGatewayRestApiResourceAPIDraftSubmittedMethodGet
+      - ApiGatewayRestApiResourceAPISubmitModuleDataMethodPut
+      - ApiGatewayRestApiResourceAPISubmitModuleDataMethodOptions
+      - ApiGatewayRestApiResourceAPISubmissionApprovalMethodPut
+      - ApiGatewayRestApiResourceAPISubmissionApprovalMethodOptions
+      - ApiGatewayRestApiResourceAPIModuleDetailsMethodGet
+      - ApiGatewayRestApiResourceAPIModuleDetailsMethodOptions
+      - ApiGatewayRestApiResourceAPIOrgUserDataMethodGet
+      - ApiGatewayRestApiResourceAPIOrgUserDataMethodOptions
+      - ApiGatewayRestApiResourceAPIOrgUserDataMethodPost
+      - ApiGatewayRestApiResourceAPIUsersMethodGet
+      - ApiGatewayRestApiResourceAPIUsersMethodOptions
+      - ApiGatewayRestApiResourceAPIUsersMethodPatch
+      - ApiGatewayRestApiResourceAPIUsersMethodPost
+      - ApiGatewayRestApiResourceAPIStatusMethodGet
+      - ApiGatewayRestApiResourceAPIStatusMethodOptions
+      - ApiGatewayRestApiResourceAPIS2SModuleDetailsMethodGet
+      - ApiGatewayRestApiResourceAPIS2SModuleDetailsMethodOptions
+      - ApiGatewayRestApiResourceAPIImportErrorDataMethodOptions
+      - ApiGatewayRestApiResourceAPIImportErrorDataMethodGet
+      - ApiGatewayRestApiResourceAPIFeatureFlagsMethodGet
+      - ApiGatewayRestApiResourceAPIFeatureFlagsMethodOptions
+      - ApiGatewayRestApiResourceAPIModuleHistoryLogMethodGet
+      - ApiGatewayRestApiResourceAPIModuleHistoryLogMethodOptions
+      - ApiGatewayRestApiResourceAPIAuthorizationsMethodGet
+      - ApiGatewayRestApiResourceAPIAuthorizationsMethodOptions
+      - ApiGatewayRestApiResourceAPISubmissionTrackerMethodGet
+      - ApiGatewayRestApiResourceAPISubmissionTrackerMethodOptions
+      - ApiGatewayRestApiResourceAPIRemoveModuleDataMethodPut
+      - ApiGatewayRestApiResourceAPIRemoveModuleDataMethodOptions
+      - ApiGatewayRestApiResourceAPIRemoveStationIdMethodPut
+      - ApiGatewayRestApiResourceAPIRemoveStationIdMethodOptions
+      - ApiGatewayRestApiResourceAPIReportingYearsMethodGet
+      - ApiGatewayRestApiResourceAPIReportingYearsMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardProgramPerformanceMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardProgramPerformanceMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardPPFederallyFundedNetworkSizeMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardPPFederallyFundedNetworkSizeMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardPPReliabilityMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardPPReliabilityMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardPPCapitalCostsMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardPPCapitalCostsMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardPPMaintenanceCostsMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardPPMaintenanceCostsMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardPPEnergyUsageMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardPPEnergyUsageMethodOptions
+      - ApiGatewayRestApiResourceAPIDashboardSubmissionDetailsMethodGet
+      - ApiGatewayRestApiResourceAPIDashboardSubmissionDetailsMethodOptions
+      - ApiGatewayRestApiResourceAPILogoutMethodGet
+      - ApiGatewayRestApiResourceAPIPresignedUrlMethodGet
+      - ApiGatewayRestApiResourceAPIPresignedUrlMethodOptions
+      - ApiGatewayRestApiResourceAPISubmittingNullDataMethodOptions
+      - ApiGatewayRestApiResourceAPISubmittingNullDataMethodGet
+
+    Properties:
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiDefaultMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      ResourceId: !GetAtt ApiGatewayRestApi.RootResourceId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiDefaultMethodHead:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: HEAD
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      ResourceId: !GetAtt ApiGatewayRestApi.RootResourceId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefault:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: "{proxy+}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefault
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStatic:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: static
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMedia:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStatic
+      PathPart: media
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaJPG:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMedia
+      PathPart: jpg
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaJPGProxy:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaJPG
+      PathPart: "{proxy}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaJPGProxyMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          -
+            ContentHandling: CONVERT_TO_BINARY
+            ResponseParameters:
+              method.response.header.Content-Type: "'image/jpeg'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "path": "/static/media/jpg/$input.params().path.get('proxy')"
+            }
+        Type: AWS
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Content-Type: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaJPGProxy
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaPNG:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMedia
+      PathPart: png
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaPNGProxy:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaPNG
+      PathPart: "{proxy}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaPNGProxyMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          -
+            ContentHandling: CONVERT_TO_BINARY
+            ResponseParameters:
+              method.response.header.Content-Type: "'image/x-png'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "path": "/static/media/png/$input.params().path.get('proxy')"
+            }
+        Type: AWS
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Content-Type: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaPNGProxy
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaSVG:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMedia
+      PathPart: svg
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaSVGProxy:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaSVG
+      PathPart: "{proxy}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaSVGProxyMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          -
+            ContentHandling: CONVERT_TO_BINARY
+            ResponseParameters:
+              method.response.header.Content-Type: "'image/svg+xml'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "path": "/static/media/svg/$input.params().path.get('proxy')"
+            }
+        Type: AWS
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Content-Type: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaSVGProxy
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaTTF:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMedia
+      PathPart: ttf
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaTTFProxy:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaTTF
+      PathPart: "{proxy}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaTTFProxyMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          -
+            ContentHandling: CONVERT_TO_BINARY
+            ResponseParameters:
+              method.response.header.Content-Type: "'font/ttf'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "path": "/static/media/ttf/$input.params().path.get('proxy')"
+            }
+        Type: AWS
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Content-Type: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaTTFProxy
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMedia
+      PathPart: woff2
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2Proxy:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2
+      PathPart: "{proxy}"
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2ProxyMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        IntegrationResponses:
+          -
+            ContentHandling: CONVERT_TO_BINARY
+            ResponseParameters:
+              method.response.header.Content-Type: "'font/woff2'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "path": "/static/media/woff2/$input.params().path.get('proxy')"
+            }
+        Type: AWS
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIDefault}/invocations
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Content-Type: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDefaultStaticMediaWOFF2Proxy
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUI:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: ui
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIColumnDefinitions:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIUI
+      PathPart: column-definitions
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIColumnDefinitionsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetColumnDefinitions}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIColumnDefinitions
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIColumnDefinitionsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,table_name'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIColumnDefinitions
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPINetworkProviders:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIUI
+      PathPart: network-providers
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPINetworkProvidersMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetNetworkProviders}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPINetworkProviders
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPINetworkProvidersMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPINetworkProviders
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUploadOptions:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIUI
+      PathPart: upload-options
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUploadOptionsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetUploadOptions}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUploadOptions
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUploadOptionsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUploadOptions
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIReportingYears:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIUI
+      PathPart: reporting-years
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIReportingYearsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetReportingYears}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIReportingYears
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIReportingYearsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIReportingYears
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModule:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: module
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: data
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDataMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+           -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,upload_id'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmittingNullData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: submitting-null
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmittingNullDataMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetSubmittingNullData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmittingNullData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmittingNullDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+           -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,module_id,upload_id'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmittingNullData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveModuleData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: remove
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveModuleDataMethodPut:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PUT
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIRemoveModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveModuleDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+           -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIRemoveModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmitModuleData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: submit
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmitModuleDataMethodPut:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PUT
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPutSubmitModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmitModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmitModuleDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+           -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmitModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDraftSubmitted:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: draft-submitted
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDraftSubmittedMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDraftOrSubmittedData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDraftSubmitted
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDraftSubmittedMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,status'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDraftSubmitted
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDataImport:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: import
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDataImportMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,quarter,year,parent_org,module_id,org_id,uploaded_by,checksum'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleDataImport
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDataImportMethodPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: POST
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPostImportModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleDataImport
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2S:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: s2s
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SImport:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIS2S
+      PathPart: import
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModule:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIS2S
+      PathPart: module
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModuleDetails:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIS2SModule
+      PathPart: details
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModuleDataImportMethodPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: True
+      AuthorizationType: "NONE"
+      HttpMethod: POST
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPostS2SImportModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIS2SImport
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModuleDataImportMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Api-Key,x-api-key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIS2SImport
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModuleDetailsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      ApiKeyRequired: True
+      AuthorizationType: "NONE"
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetS2SModuleDetails}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIS2SModuleDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIS2SModuleDetailsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,X-Api-Key,x-api-key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,GET'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIS2SModuleDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionApproval:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: submission-approval
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionApprovalMethodPut:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PUT
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPutSubmissionApproval}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmissionApproval
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionApprovalMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,upload_id,submission_status'"
+              method.response.header.Access-Control-Allow-Methods: "'PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmissionApproval
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDecision:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: decision
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDecisionMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDecisionDetails}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDecision
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDecisionMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDecision
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDownloadModuleData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: download
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDownloadModuleDataMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDownloadModuleData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDownloadModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDownloadModuleDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDownloadModuleData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDetails:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: details
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDetailsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetModuleDetails}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleDetailsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,upload_id,download'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIImportErrorData:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: import-error-data
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIImportErrorDataMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetImportErrorData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIImportErrorData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIImportErrorDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIImportErrorData
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleHistoryLog:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: history-log
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleHistoryLogMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetModuleHistoryLog}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleHistoryLog
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIModuleHistoryLogMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIModuleHistoryLog
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionTracker:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIModule
+      PathPart: submission-tracker
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionTrackerMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetSubmissionTracker}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmissionTracker
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubmissionTrackerMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubmissionTracker
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStations:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: stations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'PATCH,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsMethodPatch:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PATCH
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPatchStation}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsMethodPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: POST
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPostStation}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsOrgId:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIStations
+      PathPart: org-id
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsOrgIdMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetStationsByOrgId}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStationsOrgId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsOrgIdMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStationsOrgId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsStationId:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIStations
+      PathPart: station-id
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsStationIdMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetStationsById}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStationsStationId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStationsStationIdMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,DELETE,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStationsStationId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveStationId:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIStationsStationId
+      PathPart: remove
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveStationIdMethodPut:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PUT
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveStationId}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIRemoveStationId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIRemoveStationIdMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'PUT,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIRemoveStationId
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUsers:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: users
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUsersMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetUsersByOrgId}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUsers
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUsersMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,email'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,PATCH,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUsers
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUsersMethodPatch:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: PATCH
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPatchUser}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUsers
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIUsersMethodPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: POST
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPostUser}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIUsers
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIOrg:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: org
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIOrgUserDataMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetOrgUserData}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIOrg
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIOrgUserDataMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS,POST'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIOrg
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIOrgUserDataMethodPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationScopes:
+        - gov.driveelectric.evchart/admin
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: POST
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIPostOrg}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIOrg
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDirectRecipients:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIOrg
+      PathPart: direct-recipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDirectRecipientsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDirectRecipients}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDirectRecipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDirectRecipientsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,route'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDirectRecipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubrecipients:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIOrg
+      PathPart: subrecipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubrecipientsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetSubrecipients}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubrecipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPISubrecipientsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,only_authorized'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPISubrecipients
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIToken:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: token
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPITokenMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIToken}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIToken
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPITokenMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIToken
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStatus:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: status
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStatusMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetStatus}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStatus
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIStatusMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIStatus
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIFeatureFlags:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: features
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIFeatureFlagsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIFeatureFlags}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIFeatureFlags
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIFeatureFlagsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIFeatureFlags
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIAuthorizations:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: authorizations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIAuthorizationsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetAuthorizations}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIAuthorizations
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIAuthorizationsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIAuthorizations
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboard:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: dashboard
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardProgramPerformance:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboard
+      PathPart: program-performance
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardProgramPerformanceMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardProgramPerformance}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestAPIGetDashboardPPFederallyFundedNetworkSize:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      PathPart: federally-funded-network-size
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardPPFederallyFundedNetworkSizeMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPFederallyFundedNetworkSize}/invocations
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPFederallyFundedNetworkSize
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboardPPFederallyFundedNetworkSizeMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPFederallyFundedNetworkSize
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestAPIGetDashboardPPReliability:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      PathPart: reliability
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardPPReliabilityMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPReliability}/invocations
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPReliability
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboardPPReliabilityMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPReliability
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestAPIGetDashboardPPCapitalCosts:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      PathPart: capital-costs
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardPPCapitalCostsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPCapitalCosts}/invocations
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPCapitalCosts
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboardPPCapitalCostsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPCapitalCosts
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestAPIGetDashboardPPMaintenanceCosts:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      PathPart: maintenance-costs
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardPPMaintenanceCostsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPMaintenanceCosts}/invocations
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPMaintenanceCosts
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboardPPMaintenanceCostsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPMaintenanceCosts
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestAPIGetDashboardPPEnergyUsage:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      PathPart: energy-usage
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardPPEnergyUsageMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPEnergyUsage}/invocations
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPEnergyUsage
+      RestApiId: !Ref ApiGatewayRestApi
+
+
+  ApiGatewayRestApiResourceAPIDashboardPPEnergyUsageMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestAPIGetDashboardPPEnergyUsage
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardProgramPerformanceMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDashboardProgramPerformance
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardSubmissionDetails:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !Ref ApiGatewayRestApiResourceAPIDashboard
+      PathPart: submission-details
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardSubmissionDetailsMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardSubmissionDetails}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDashboardSubmissionDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIDashboardSubmissionDetailsMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIDashboardSubmissionDetails
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPILogout:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: logout
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPILogoutMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPILogout}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPILogout
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIPresignedUrl:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ApiGatewayRestApi.RootResourceId
+      PathPart: url
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIPresignedUrlMethodGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref ApiGatewayRestApiAuthorizer
+      HttpMethod: GET
+      Integration:
+        Credentials: !Sub
+          - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+          -
+            RoleName: !FindInMap
+              - ApiGatewayExecutionRoleName
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - Name
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiGatewayRestApiMethodIntegrationUriAPIGetPresignedUrl}/invocations
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIPresignedUrl
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiResourceAPIPresignedUrlMethodOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+          -
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            StatusCode: 200
+        RequestTemplates:
+          application/json: |
+            {
+              "statusCode": 200
+            }
+        Type: MOCK
+      MethodResponses:
+        -
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: True
+            method.response.header.Access-Control-Allow-Methods: True
+            method.response.header.Access-Control-Allow-Origin: True
+          StatusCode: 200
+      ResourceId: !Ref ApiGatewayRestApiResourceAPIPresignedUrl
+      RestApiId: !Ref ApiGatewayRestApi
+
+  ApiGatewayRestApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      AccessLogSetting:
+        DestinationArn: !GetAtt ApiGatewayRestApiStageLogsLogGroup.Arn
+        Format: '{"requestId": "$context.requestId", "ip": "$context.identity.sourceIp", "userEmailFromToken": "$context.authorizer.claims.email", "userNameFromToken": "$context.authorizer.claims.username", "userSubjectFromToken": "$context.authorizer.claims.sub", "requestTime": "$context.requestTime", "httpMethod": "$context.httpMethod", "resourcePath": "$context.resourcePath", "status": "$context.status", "protocol": "$context.protocol", "responseLength": "$context.responseLength"}'
+      DeploymentId: !Ref ApiGatewayRestApiDeployment
+      RestApiId: !Ref ApiGatewayRestApi
+      StageName: !If
+        - isNotSubEnvironment
+        - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+        - !Ref SubEnvironment
+      #Tags:
+
+  ApiGatewayRestApiStageLogsLogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      KmsKeyId: !Sub arn:${AWS::Partition}:kms:${AWS::Region}:${AWS::AccountId}:alias/${ApiGatewayRestApiStageLogsLogGroupKmsKeyAlias}
+      LogGroupName: !Sub
+        - /aws/apigateway/EV-ChART_REST_API${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      RetentionInDays: 30
+      #Tags:
+
+  ApiUsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      Description: Usage plan for s2s API keys to users
+      ApiStages:
+        - ApiId: !Ref ApiGatewayRestApi
+          Stage: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  SSMParameterApiGatewayRestApiId:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART environment API Gateway ID.
+      Name: !Sub
+        - /ev-chart/api-gateway${SubEnvironmentPath}/gateway-id
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !Ref ApiGatewayRestApi
+
+  SSMParameterUsagePlanId:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Usage plan id for api
+      Name: !Sub
+        - /ev-chart/${SubEnvironmentPath}usage-plan-id
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub ${SubEnvironment}/
+      Type: String
+      Value: !Ref ApiUsagePlan
+
+Outputs: {}

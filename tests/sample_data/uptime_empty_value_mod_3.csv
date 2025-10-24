@@ -1,0 +1,2 @@
+﻿station_id,port_id,network_provider,uptime_reporting_start,uptime_reporting_end,uptime,total_outage,total_outage_excl
+APIM3,654321,shell_recharge,2023-07-03T12:51:48Z,2023-07-03T12:51:48Z,,1232.33,1223.23

@@ -1,0 +1,2 @@
+﻿network_provider,port_id,uptime_reporting_start,uptime_reporting_end,uptime,total_outage,total_outage_excl
+shell_recharge,AB-1234-567-89,2024-01-03T10:51:48Z,2024-01-03T11:51:48Z,101.02,1230.03,2.11

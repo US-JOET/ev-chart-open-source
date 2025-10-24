@@ -1,0 +1,16 @@
+{
+  "ruleSetName": "EV-ChART-NIST800-171-53",
+  "version": "1.0.0",
+  "description": "AWS Guard rule set based on the applicable NIST 800-171 and 800-53 rev5 security controls for EV-ChART AWS services",
+  "mapping": [
+    {"guardFilePath": "rules/doe/API_GW/api_gw_ssl_enabled.guard"},
+    {"guardFilePath": "rules/doe/DynamoDB/dynamodb_autoscaling_enabled.guard"},
+    {"guardFilePath": "rules/doe/KMS/kms_cmk_not_scheduled_for_deletion.guard"},
+    {"guardFilePath": "rules/doe/cloudformation/CLOUDFORMATION_STACK_DRIFT_DETECTION_CHECK.guard"},
+    {"guardFilePath": "rules/doe/cloudwatch/cloudwatch_alarm_resource_check.guard"},
+    {"guardFilePath": "rules/doe/cloudwatch/cloudwatch_alarm_settings_check.guard"},
+    {"guardFilePath": "rules/doe/rds/rds_cluster_deletion_protection_enabled.guard"},
+    {"guardFilePath": "rules/doe/rds/rds_snapshots_public_prohibited.guard"},
+    {"guardFilePath": "rules/doe/tags/required_tags.guard"}
+    ]
+}

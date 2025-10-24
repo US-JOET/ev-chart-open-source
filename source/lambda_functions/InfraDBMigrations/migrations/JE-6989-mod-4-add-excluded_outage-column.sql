@@ -1,0 +1,1 @@
+ALTER TABLE module4_data_v3 ADD COLUMN excluded_outage TINYINT(1) DEFAULT NULL;

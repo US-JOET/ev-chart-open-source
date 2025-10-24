@@ -1,0 +1,3106 @@
+{
+  "ev_error_data": {
+    "schema": {
+      "dr_org_friendly_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "the direct recipient that uploaded the record",
+        "display_name": "DR Org Friendly ID"
+      },
+      "error_description": {
+        "rds_column_default": null,
+        "rds_rds_is_nullable": "NO",
+        "rds_column_type": "varchar(2048)",
+        "rds_column_key": "",
+        "field_description": "This describes the error for each error record",
+        "display_name": "Error Description"
+      },
+      "error_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: Unique characters to indentify the error record. Act as primary key in this table",
+        "display_name": "Error ID"
+      },
+      "error_row": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "int",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "header_name": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "the column in the record json that caused the record to be bad data ",
+        "display_name": "Header Name"
+      },
+      "module_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "",
+        "field_description": "the module table number where the error occured",
+        "display_name": "Module ID"
+      },
+      "record": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "JSON object of the data that was ingested into the module table that was revoked",
+        "display_name": "Record"
+      },
+      "sr_org_friendly_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "the sub-recipeint that uploaded the record",
+        "display_name": "SR Org Friendly ID"
+      },
+      "station_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "the station_id the error record  is associated with",
+        "display_name": "Station ID"
+      },
+      "timestamp": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "time when error was detected in upload",
+        "display_name": "Timestamp"
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "field_description": "the upload_id for the error that is linked to the import_metadata table.  MUL value indicates this field is indexed.",
+        "display_name": "Upload ID"
+      }
+    },
+    "table_description": "Errors detected during validation of module uploads"
+  },
+  "import_metadata": {
+    "schema": {
+      "comments": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "provided by the DR reviewer of the submission when approving or rejecting",
+        "display_name": "Comments"
+      },
+      "module_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(2)",
+        "rds_column_key": "",
+        "field_description": "module ID of the uploaded data",
+        "display_name": "Module ID"
+      },
+      "org_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "UUID of the organization (DR or SR) that uploaded the module data",
+        "display_name": "Org ID"
+      },
+      "parent_org": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "UUID of the DR for which module data was uploaded.  If uploaded by DR user, org_id and parent_id will be the same",
+        "display_name": "Parent Org ID"
+      },
+      "quarter": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(2)",
+        "rds_column_key": "",
+        "field_description": "quarter reporting period for submission data.  Null for one-time and annual modules.",
+        "display_name": "Quarter"
+      },
+      "submission_status": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "enum('Processing','Draft','Submitted','Pending','Approved','Rejected','Error','Duplicate','Archived')",
+        "rds_column_key": "",
+        "field_description": "status of submission, one of list of enumerated values",
+        "display_name": "Submission Status"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "email identifier of who submitted the submission data",
+        "display_name": "Updated By"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "time of initial upload or submission status change",
+        "display_name": "Updated On"
+      },
+      "upload_friendly_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "MUL",
+        "field_description": "future use--a simple unique character for identifing the metadata record",
+        "display_name": "Upload Friendly ID"
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: unique identifier for each data import",
+        "display_name": "Upload ID"
+      },
+      "year": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(4)",
+        "rds_column_key": "",
+        "field_description": "reporting year for the submission data",
+        "display_name": "Year"
+      }
+    },
+    "table_description": "track status for all valid uploads"
+  },
+  "import_metadata_history": {
+    "schema": {
+      "action_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "enum('DELETE','UPDATE','INSERT')",
+        "rds_column_key": "",
+        "field_description": "DELETE, UPDATE, INSERT",
+        "display_name": "Action Type"
+      },
+      "changed_data": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "JSON object of data modified in record",
+        "display_name": "Changed Data"
+      },
+      "id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "auto-generated unique ID for history table",
+        "display_name": "ID"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "email identifier of who performed action on metadata record",
+        "display_name": "Updated By"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "timestamp when metadata record updated",
+        "display_name": "Updated On"
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "matches upload_id from import_metadata",
+        "display_name": "Upload ID"
+      }
+    },
+    "table_description": "track changes to records in import_metadata via trigger"
+  },
+  "migration": {
+    "schema": {
+      "executed_on": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "when script was executed in this environment",
+        "display_name": "Executed On"
+      },
+      "script_name": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(100)",
+        "rds_column_key": "PRI",
+        "field_description": "script name",
+        "display_name": "Script Name"
+      }
+    },
+    "table_description": "track incremental changes made to schemas"
+  },
+  "module2_data_v3": {
+    "schema": {
+      "charger_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "This attribute identifies a single charger. A charger (or post) is a device with one or more charging ports and connectors for charging EVs.",
+        "display_name": "Charger ID",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 36,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "connector_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "This attribute identifies a single connector. A connector is a device that attaches the charging port to an EV's charging inlet to transfer electricity.",
+        "display_name": "Connector ID",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 36,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "energy_kwh": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(7,2)",
+        "rds_column_key": "",
+        "field_description": "Amount of energy (in kilowatt-hours) dispensed by the port (port ID) during the charging session (session ID).",
+        "display_name": "Energy Charged",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 7,
+            "max_scale": 2,
+            "min_value": 0,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "error_other": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The description for any other error codes associated with an unsuccessful charging session that are not categorized in the recommended error codes in session_error",
+        "display_name": "Session Error Description",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "payment_method": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "Method(s) of payment used to complete the charging session (session ID).",
+        "display_name": "Payment Method",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 255,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "payment_other": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The description for any method(s) of payment used to complete the charging session that are not categorized in the recommended payment methods in payment_method",
+        "display_name": "Payment Method Description",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "port_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Possibly remove module_validation",
+        "display_name": "Port ID",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36
+          }
+        }
+      },
+      "port_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Port ID at the time of upload (may be different than current)",
+        "display_name": "Port ID*",
+        "module_validation": {}
+      },
+      "port_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_ports": "port_uuid"
+        },
+        "field_description": "port unique identifier, matches value in station_ports table",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "power_kw": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(7,2)",
+        "rds_column_key": "",
+        "field_description": "Maximum power (in kilowatts) dispensed by the port (port ID) during charging session (session ID).",
+        "display_name": "Peak Power",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 7,
+            "max_scale": 2,
+            "min_value": 0,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "session_end": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying when the charging session was completed",
+        "display_name": "Session End",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "session_error": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "Any error codes associated with an unsuccessful charging session.",
+        "display_name": "Session Error",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 255,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "session_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "This uniquely identifies each charging session",
+        "display_name": "Session ID",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "session_start": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying when the charging session became active in the platform of the charging network provider",
+        "display_name": "Session Start",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      },
+      "user_reports_no_data": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "set to 1 (true) for records that follow guidance for no data during reporting period",
+        "display_name": "User Reports No Data",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Charging Sessions",
+    "frequency": "quarterly",
+    "module_display_name": "Module 2: Charging Sessions",
+    "unique_key_constraints": [
+      "station_uuid",
+      "port_id",
+      "session_id"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "port_id",
+      "session_id",
+      "network_provider_upload",
+      "charger_id",
+      "connector_id",
+      "session_start",
+      "session_end",
+      "session_error",
+      "error_other",
+      "energy_kwh",
+      "power_kw",
+      "payment_method",
+      "payment_other"
+    ]
+  },
+  "module3_data_v3": {
+    "schema": {
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "port_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Possibly remove module_validation",
+        "display_name": "Port ID",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36,
+            "is_nullable": false
+          }
+        }
+      },
+      "port_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Port ID at the time of upload (may be different than current)",
+        "display_name": "Port ID*",
+        "module_validation": {}
+      },
+      "port_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_ports": "port_uuid"
+        },
+        "field_description": "port unique identifier, matches value in station_ports table",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "total_outage": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(8,2)",
+        "rds_column_key": "",
+        "field_description": "The total time (in minutes) during the previous year where the charging port (port ID) did not successfully dispense electricity as expected.",
+        "display_name": "Total Outage",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 8,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "total_outage_excl": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(8,2)",
+        "rds_column_key": "",
+        "field_description": "The total time (in minutes) during the previous year where the charging port (port ID) did not successfully dispense electricity as expected for reasons outside the charging station operator's control.",
+        "display_name": "Total Excluded Outage",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 8,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      },
+      "uptime": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(5,2)",
+        "rds_column_key": "",
+        "field_description": "the time over the previous 12 months when a charger's hardware and software are both online and available for use or in use, and the charging port successfully dispenses electricity in accordance with requirements for minimum power level.",
+        "display_name": "Uptime",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 5,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "uptime_reporting_end": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying the end date of the reporting period for port uptime, total outage, and total excluded outage.",
+        "display_name": "Uptime Reporting End Date",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "uptime_reporting_start": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying the start date of the reporting period for port uptime, total outage, and total excluded outage.",
+        "display_name": "Uptime Reporting Start Date",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "user_reports_no_data": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "set to 1 (true) for records that follow guidance for no data during reporting period",
+        "display_name": "User Reports No Data",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Uptime",
+    "frequency": "quarterly",
+    "module_display_name": "Module 3: Uptime",
+    "unique_key_constraints": [
+      "station_uuid",
+      "port_id",
+      "uptime_reporting_start",
+      "uptime_reporting_end"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "port_id",
+      "network_provider_upload",
+      "uptime_reporting_start",
+      "uptime_reporting_end",
+      "uptime",
+      "total_outage",
+      "total_outage_excl"
+    ]
+  },
+  "module4_data_v3": {
+    "schema": {
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "outage_duration": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(8,2)",
+        "rds_column_key": "",
+        "field_description": "Length of time (in minutes) during which the charging port (port ID) could not successfully dispense electricity",
+        "display_name": "Outage Duration",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 8,
+            "max_scale": 2,
+            "min_value": 0.01,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "outage_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp uniquely identifying a single instance of an outage for a given charging port",
+        "display_name": "Outage ID",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "port_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Possibly remove module_validation",
+        "display_name": "Port ID",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36
+          }
+        }
+      },
+      "port_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {}
+      },
+      "port_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_ports": "port_uuid"
+        },
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {}
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      },
+      "user_reports_no_data": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "set to 1 (true) for records that follow guidance for no data during reporting period",
+        "display_name": "User Reports No Data",
+        "module_validation": {}
+      },
+      "excluded_outage": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Excluded Outage",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": true
+          }
+        }
+      },
+      "excluded_outage_reason": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint unsigned",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Excluded Outage Reason",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "integer",
+            "min_value": 1,
+            "max_value": 6,
+            "is_nullable": true
+          }
+        }
+      },
+      "excluded_outage_notes": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "VARCHAR(255)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Excluded Outage Notes",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255,
+            "is_nullable": true
+          }
+        }
+      }
+    },
+    "table_description": "Outages",
+    "frequency": "quarterly",
+    "module_display_name": "Module 4: Outages",
+    "unique_key_constraints": [
+      "station_uuid",
+      "outage_id",
+      "port_id"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "port_id",
+      "outage_id",
+      "network_provider_upload",
+      "outage_duration",
+      "excluded_outage",
+      "excluded_outage_reason",
+      "excluded_outage_notes"
+    ]
+  },
+  "module5_data_v3": {
+    "schema": {
+      "caas": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "Indicator for whether the total maintenance and repair cost at the charging station (Station ID) is reported as a total cost from a \"charging-as-a-service\" agreement that does not provide itemized maintenance and repair costs; the total cost may include equipment acquisition, installation, and other services.",
+        "display_name": "Charging as a Service",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+          }
+        }
+      },
+      "maintenance_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(9,2)",
+        "rds_column_key": "",
+        "field_description": "Total amount paid for maintenance and repair at the charging station (Station ID) during the calendar year specified in \"maintenance and repair cost reporting year\" with federal funding.",
+        "display_name": "Federal Maintenance and Repair Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 9,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "maintenance_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(9,2)",
+        "rds_column_key": "",
+        "field_description": "Total amount paid for maintenance and repair at the charging station (Station ID) during the calendar year specified in \"maintenance and repair cost reporting year.\"",
+        "display_name": "Total Maintenance and Repair Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 9,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "maintenance_notes": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "Additional description that explains the maintenance and repair cost data.",
+        "display_name": "Maintenance Notes",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255,
+            "is_nullable": false
+          }
+        }
+      },
+      "maintenance_report_end": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying the end date associated with reported maintenance and repair costs",
+        "display_name": "Maintenance and Repair Cost Reporting End Date",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "maintenance_report_start": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Timestamp identifying the start date associated with reported maintenance and repair costs",
+        "display_name": "Field Maintenance and Repair Cost Reporting Start Date",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "project_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(256)",
+        "rds_column_key": "",
+        "field_description": "Federal Award Identification Number (FAIN) or other identifiers that uniquely identify the NEVI Formula Program project and/or the grant awarded",
+        "display_name": "Project ID",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "length": null,
+            "is_nullable": false
+          }
+        }
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      },
+      "user_reports_no_data": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "set to 1 (true) for records that follow guidance for no data during reporting period",
+        "display_name": "User Reports No Data",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Maintenance Costs",
+    "frequency": "annual",
+    "module_display_name": "Module 5: Maintenance Costs",
+    "unique_key_constraints": [
+      "station_uuid",
+      "maintenance_report_start"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "network_provider_upload",
+      "project_id",
+      "maintenance_report_start",
+      "maintenance_report_end",
+      "caas",
+      "maintenance_cost_total",
+      "maintenance_cost_federal",
+      "maintenance_notes"
+    ]
+  },
+  "module6_data_v3": {
+    "schema": {
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "operator_address": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The street address specifying the headquarters of the charging station operator",
+        "display_name": "Station Operator Address",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "min_length": 1
+          }
+        }
+      },
+      "operator_city": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The name of the incorporated municipality (or other general-purpose local governmental unit) in which the headquarters of the charging station operator is located",
+        "display_name": "Station Operator City",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "min_length": 1
+          }
+        }
+      },
+      "operator_name": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The entity that owns the chargers and supporting equipment and facilities at one or more charging stations",
+        "display_name": "Station Operator Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "min_length": 1
+          }
+        }
+      },
+      "operator_notes": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "Additional description that explains station operator data",
+        "display_name": "Operator Notes",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255
+          }
+        }
+      },
+      "operator_state": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(2)",
+        "rds_column_key": "",
+        "field_description": "Two-character USPS abbreviation indicating the state (or state equivalent) in which the headquarters of the charging station operator is located",
+        "display_name": "Station Operator State",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 2
+          }
+        }
+      },
+      "operator_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "Indicator for what type of involvement the private entity (station operator name) has at the charging station",
+        "display_name": "Operator Type",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 255
+          }
+        }
+      },
+      "operator_zip": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(5)",
+        "rds_column_key": "",
+        "field_description": "The 5-digit code that identifies the individual post office or metropolitan area delivery station associated with the address of the headquarters of the charging station operator",
+        "display_name": "Station Operator ZIP",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 5
+          }
+        }
+      },
+      "operator_zip_extended": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(4)",
+        "rds_column_key": "",
+        "field_description": "A 4-digit extension of the 5-digit station operator ZIP code",
+        "display_name": "Station Operator ZIP Extended",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "length": 4
+          }
+        }
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Station Operator Identity",
+    "frequency": "one_time",
+    "module_display_name": "Module 6: Station Operator Identity",
+    "unique_key_constraints": [
+      "station_uuid",
+      "operator_name"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "network_provider_upload",
+      "operator_name",
+      "operator_address",
+      "operator_city",
+      "operator_state",
+      "operator_zip",
+      "operator_zip_extended",
+      "operator_type",
+      "operator_notes"
+    ]
+  },
+  "module7_data_v3": {
+    "schema": {
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "opportunity_program": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The type of state or local business opportunity certification program(s) for all private entities involved in the operation and maintenance of chargers participated in during the calendar year specified in opportunity program reporting year",
+        "display_name": "Opportunity Program Participation",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": null
+          }
+        }
+      },
+      "program_descript": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "The description of opportunity_program if \"other\" is chosen from the recommended opportunity programs.",
+        "display_name": "Opportunity Program Description",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "length": null
+          }
+        }
+      },
+      "program_report_year": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Opportunity Program Reporting Year",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 4
+          }
+        }
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Station Operator Program",
+    "frequency": "annual",
+    "module_display_name": "Module 7: Station Operator Program",
+    "unique_key_constraints": [
+      "station_uuid",
+      "program_report_year"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "network_provider_upload",
+      "program_report_year",
+      "opportunity_program",
+      "program_descript"
+    ]
+  },
+  "module8_data_v3": {
+    "schema": {
+      "der_kw": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(10,2)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Power Output Capacity",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 10,
+            "max_scale": 2,
+            "min_value": 0
+          }
+        }
+      },
+      "der_kwh": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(10,2)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Energy Storage Capacity",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 10,
+            "max_scale": 2,
+            "min_value": 0
+          }
+        }
+      },
+      "der_onsite": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Distributed Energy Resource On-Site",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "boolean"
+          }
+        }
+      },
+      "der_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "DER Asset Type",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "min_length": 1
+          }
+        }
+      },
+      "der_type_other": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "DER Asset Type Description",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "min_length": 1
+          }
+        }
+      },
+      "der_upgrade": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "DER Upgrade",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean"
+          }
+        }
+      },
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      }
+    },
+    "table_description": "DER Information",
+    "frequency": "one_time",
+    "module_display_name": "Module 8: DER Information",
+    "unique_key_constraints": [
+      "station_uuid",
+      "der_type"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "network_provider_upload",
+      "der_upgrade",
+      "der_onsite",
+      "der_type",
+      "der_type_other",
+      "der_kw",
+      "der_kwh"
+    ]
+  },
+  "module9_data_v3": {
+    "schema": {
+      "der_acq_owned": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "Distributed Energy Acquisition Owned",
+        "display_name": "Distributed Energy Acquisition Owned",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "der_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Distributed Energy Acquisition Cost",
+        "display_name": "Federal Distributed Energy Acquisition Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "der_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Distributed Energy Acquisition Cost",
+        "display_name": "Total Distributed Energy Acquisition Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "der_install_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Distributed Energy Installation Cost",
+        "display_name": "Federal Distributed Energy Installation Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "der_install_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Distributed Energy Installation Cost",
+        "display_name": "Total Distributed Energy Installation Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "dist_sys_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Distribution and System Costs",
+        "display_name": "Federal Distribution and System Costs",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true
+          }
+        }
+      },
+      "dist_sys_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Distribution and System Costs",
+        "display_name": "Total Distribution and System Costs",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_acq_date": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Acquisition Date",
+        "display_name": "Charging Equipment Acquisition Date",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "equipment_acq_owned": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Acquisition Owned",
+        "display_name": "Charging Equipment Acquisition Owned",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+          }
+        }
+      },
+      "equipment_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Charging Equipment Acquisition Cost",
+        "display_name": "Federal Charging Equipment Acquisition Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "equipment_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Charging Equipment Installation Cost",
+        "display_name": "Total Charging Equipment Installation Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_cost_const": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Installation Cost - Construction Material",
+        "display_name": "Charging Equipment Installation Cost - Construction Material",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_cost_elec": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Installation Cost - Electric Material",
+        "display_name": "Charging Equipment Installation Cost - Electric Material",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Charging Equipment Installation Cost",
+        "display_name": "Federal Charging Equipment Installation Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "equipment_install_cost_labor": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Installation Cost - Labor",
+        "display_name": "Charging Equipment Installation Cost - Labor",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_cost_other": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Installation Cost - Other",
+        "display_name": "Charging Equipment Installation Cost - Other",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Charging Equipment Installation Cost",
+        "display_name": "Total Charging Equipment Installation Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "equipment_install_date": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Charging Equipment Installation Date",
+        "display_name": "Charging Equipment Installation Date",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "The name of the entity that operates the digital communication network that remotely manages the chargers.",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "network_provider_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "friendly name of network provider at the time of upload, retained in case value changed after upload",
+        "display_name": "Network Provider",
+        "module_validation": {}
+      },
+      "project_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Project ID",
+        "display_name": "Project ID",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "length": null,
+            "is_nullable": false
+          }
+        }
+      },
+      "real_property_acq_date": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "Real Property Acquisition Date",
+        "display_name": "Real Property Acquisition Date",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "datetime",
+            "is_nullable": false
+          }
+        }
+      },
+      "real_property_acq_owned": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "Real Property Acquisition Owned",
+        "display_name": "Real Property Acquisition Owned",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+          }
+        }
+      },
+      "real_property_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Real Property Acquisition Cost",
+        "display_name": "Federal Real Property Acquisition Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "real_property_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Real Property Acquisition Cost",
+        "display_name": "Total Real Property Acquisition Cost",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "service_cost_federal": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Federal Service Costs",
+        "display_name": "Federal Service Costs",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": false
+          }
+        }
+      },
+      "service_cost_total": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,2)",
+        "rds_column_key": "",
+        "field_description": "Total Service Costs",
+        "display_name": "Total Service Costs",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 2,
+            "min_value": 0,
+            "is_nullable": true,
+            "required_empty_allowed": true
+          }
+        }
+      },
+      "station_id_upload": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "Station ID at the time of upload, retained in case value changed after upload",
+        "display_name": "Station ID",
+        "module_validation": {}
+      },
+      "station_upgrade": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "Station Upgrade",
+        "display_name": "Station Upgrade",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "boolean",
+            "is_nullable": false
+          }
+        }
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "station unique identifier, matches station_registrations table, not visible to user",
+        "display_name": "",
+        "module_validation": {}
+      },
+      "time_at_upload": {
+        "rds_column_default": "CURRENT_TIMESTAMP",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "timestamp",
+        "rds_column_key": "",
+        "field_description": "time when record was uploaded",
+        "display_name": "Time at Upload",
+        "module_validation": {}
+      },
+      "upload_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "import_metadata": "upload_id"
+        },
+        "field_description": "unique identifier for upload, matches value in import_metadata",
+        "display_name": "Upload ID",
+        "module_validation": {}
+      },
+      "user_reports_no_data": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "set to 1 (true) for records that follow guidance for no data during reporting period",
+        "display_name": "User Reports No Data",
+        "module_validation": {}
+      }
+    },
+    "table_description": "Capital and Installation Costs",
+    "frequency": "one_time",
+    "module_display_name": "Module 9: Capital and Installation Costs",
+    "unique_key_constraints": [
+      "station_uuid"
+    ],
+    "left_grid_headers": [
+      "station_id_upload"
+    ],
+    "right_grid_headers": [
+      "network_provider_upload",
+      "project_id",
+      "station_upgrade",
+      "real_property_acq_date",
+      "real_property_acq_owned",
+      "real_property_cost_total",
+      "real_property_cost_federal",
+      "equipment_acq_date",
+      "equipment_acq_owned",
+      "equipment_cost_total",
+      "equipment_cost_federal",
+      "equipment_install_date",
+      "equipment_install_cost_total",
+      "equipment_install_cost_federal",
+      "equipment_install_cost_elec",
+      "equipment_install_cost_const",
+      "equipment_install_cost_labor",
+      "equipment_install_cost_other",
+      "der_acq_owned",
+      "der_cost_federal",
+      "der_cost_total",
+      "der_install_cost_total",
+      "der_install_cost_federal",
+      "dist_sys_cost_total",
+      "dist_sys_cost_federal",
+      "service_cost_total",
+      "service_cost_federal"
+    ]
+  },
+  "station_authorizations": {
+    "schema": {
+      "authorization_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: station authorization unique ID, not shown to user",
+        "display_name": "Field Name"
+      },
+      "dr_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "sr_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "reference": {
+            "station_registrations": "station_uuid"
+        }
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "station_authorizations_history": {
+    "schema": {
+      "action_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "enum('DELETE','UPDATE','INSERT')",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "authorization_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "changed_data": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: auto-increment ID",
+        "display_name": "Field Name"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "station_ports": {
+    "schema": {
+      "federally_funded": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "port_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation":{
+          "default":{
+            "required": true,
+            "datatype": "string",
+            "max_length": 36,
+            "min_length": 1
+          }
+        }
+      },
+      "port_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "required_empty_allowed": true,
+            "datatype": "string",
+            "max_length": 255,
+            "min_length": 0
+          }
+        }
+      },
+      "port_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: unique ID for port, not shown to user",
+        "display_name": "Field Name",
+        "module_validation":{
+          "default":{
+            "datatype": "string",
+            "length": 36          }
+        }
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "station_registrations": "station_uuid"
+        },
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "station_ports_history": {
+    "schema": {
+      "action_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "enum('DELETE','UPDATE','INSERT')",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "changed_data": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: auto-increment ID for history entry",
+        "display_name": "Field Name"
+      },
+      "port_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "station_registrations": {
+    "schema": {
+      "address": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(255)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 255
+          }
+        }
+      },
+      "AFC": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "CFI": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "city": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(100)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 100
+          }
+        }
+      },
+      "CMAQ": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "CRP": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "dr_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 36
+          }
+        }
+      },
+      "EVC_RAA": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "latitude": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(10,8)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 10,
+            "max_scale": 8,
+            "min_value": -90
+          }
+        }
+      },
+      "longitude": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "decimal(11,8)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "decimal",
+            "max_precision": 11,
+            "max_scale": 8,
+            "min_value": -180
+          }
+        }
+      },
+      "network_provider": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36
+          }
+        }
+      },
+      "network_provider_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "network_providers": "network_provider_uuid"
+        },
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "datatype": "string",
+            "max_length": 36
+          }
+        }
+      },
+      "NEVI": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "nickname": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(50)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": false,
+            "datatype": "string",
+            "max_length": 50
+          }
+        }
+      },
+      "num_fed_funded_ports": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "int",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "required_empty_allowed": true,
+            "min_value": 0
+          }
+        }
+      },
+      "num_non_fed_funded_ports": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "int",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "required_empty_allowed": true,
+            "min_value": 0
+          }
+        }
+      },
+      "operational_date": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "date",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "datetime"
+          }
+        }
+      },
+      "OTHER": {
+        "rds_column_default": "0",
+        "rds_is_nullable": "NO",
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "integer",
+            "length": 1,
+            "min_value": 0,
+            "max_value": 1
+          }
+        }
+      },
+      "project_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(30)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 30
+          }
+        }
+      },
+      "state": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(2)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 2
+          }
+        }
+      },
+      "station_id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "max_length": 36
+          }
+        }
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: unique station ID, not shown to user",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "datatype": "string",
+            "length": 36
+          }
+        }
+      },
+      "status": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "enum('Active','Pending Approval')",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string"
+          }
+        }
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "zip": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(5)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 5
+          }
+        }
+      },
+      "zip_extended": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(4)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name",
+        "module_validation": {
+          "default": {
+            "required": true,
+            "datatype": "string",
+            "length": 4
+          }
+        }
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "station_registrations_history": {
+    "schema": {
+      "action_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "enum('DELETE','UPDATE','INSERT')",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "changed_data": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: auto-increment",
+        "display_name": "Field Name"
+      },
+      "station_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "this is the in-line doc for field",
+        "display_name": "Field Name"
+      }
+    },
+    "table_description": "this is the in-line doc for table"
+  },
+  "network_providers": {
+    "schema": {
+      "network_provider_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": false,
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "PRI",
+        "field_description": "Primary Key: unique ID of NP, not shown to user",
+        "display_name": ""
+      },
+      "network_provider_value": {
+        "rds_column_default": null,
+        "rds_is_nullable": false,
+        "rds_column_type": "varchar(45)",
+        "rds_column_key": "",
+        "field_description": "friendly ID of network provider, used in upload",
+        "display_name": "Network Provider"
+      },
+      "description": {
+        "rds_column_default": null,
+        "rds_is_nullable": false,
+        "rds_column_type": "varchar(45)",
+        "rds_column_key": "",
+        "field_description": "description of network provider",
+        "display_name": "Network Provider Label"
+      },
+      "is_active": {
+        "rds_column_default": null,
+        "rds_is_nullable": false,
+        "rds_column_type": "tinyint(1)",
+        "rds_column_key": "",
+        "field_description": "if the network provider is active (1) or not (0)",
+        "display_name": "NP Is Active"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "email identifier for add/change/delete",
+        "display_name": "Updated By"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "time of add/change/delete",
+        "display_name": "Updated On"
+      }
+    },
+    "table_description": "Allowed network provider names, IDs"
+  },
+  "network_providers_history": {
+    "schema": {
+      "action_type": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "enum('DELETE','UPDATE','INSERT')",
+        "rds_column_key": "",
+        "field_description": "DELETE, UPDATE, INSERT",
+        "display_name": "Action Type"
+      },
+      "changed_data": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "json",
+        "rds_column_key": "",
+        "field_description": "JSON object of data modified in record",
+        "display_name": "Changed Data"
+      },
+      "id": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "int",
+        "rds_column_key": "PRI",
+        "field_description": "auto-incremented unique ID for history table",
+        "display_name": "ID"
+      },
+      "updated_by": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "varchar(72)",
+        "rds_column_key": "",
+        "field_description": "email identifier of who performed action on metadata record",
+        "display_name": "Updated By"
+      },
+      "updated_on": {
+        "rds_column_default": null,
+        "rds_is_nullable": "YES",
+        "rds_column_type": "datetime",
+        "rds_column_key": "",
+        "field_description": "timestamp when metadata record updated",
+        "display_name": "Updated On"
+      },
+      "network_provider_uuid": {
+        "rds_column_default": null,
+        "rds_is_nullable": "NO",
+        "rds_column_type": "varchar(36)",
+        "rds_column_key": "MUL",
+        "reference": {
+          "network_providers": "network_provider_uuid"
+        },
+        "field_description": "matches np_uuid from network_providers",
+        "display_name": "Upload ID"
+      }
+    },
+    "table_description": "track changes to records in network_providers via trigger"
+  }
+}

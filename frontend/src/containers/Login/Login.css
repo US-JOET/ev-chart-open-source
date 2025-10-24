@@ -1,0 +1,98 @@
+div#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.login-container {
+  margin-top: 32px;
+}
+
+.sign-in-container {
+  background-color: #005a7c;
+  border-radius: 8px;
+  border: 1px solid #005a7c;
+  padding: 19px 40px;
+}
+
+.summary-information-container {
+  padding: 19px 40px;
+}
+
+.sign-in-header {
+  color: #ffffff;
+}
+
+.oneid-button {
+  width: 100%;
+  font-size: 16px;
+  background-color: #f57e29;
+  padding-left: 15px;
+  margin-top: 3px;
+}
+.oneid-button:hover,
+.oneid-button:focus,
+.oneid-button:active {
+  background-color: #ce6c28;
+}
+
+.sign-in-text {
+  margin-top: 24px;
+  margin-bottom: 40px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+}
+
+.grid-container header.usa-header {
+  border-bottom: solid #e9e8e8 1px;
+}
+
+.information-summary-bullets {
+  line-height: 30px;
+}
+
+.login-list {
+  margin-top: 8px;
+}
+
+.evchart-link-reference {
+  margin-top: 16px;
+}
+
+li.login-list-item {
+  padding-left: 15px;
+}
+
+.login-list li::marker {
+  font-size: 0.5rem;
+}
+
+.login-list li {
+  font-family: "Montserrat-Regular";
+}
+
+.login-footer .usa-footer__logo.grid-row.mobile-lg\:grid-col-6.mobile-lg\:grid-gap-2 {
+  padding-left: 55px;
+}
+
+.evchart-link-reference a {
+  font-family: "Montserrat-Regular";
+}
+
+.no-access-alert {
+  margin-top: 32px;
+}
+
+.svg-dots {
+  margin-top: 3px;
+  margin-bottom: 24px;
+}
+
+/* Add to evchart storybook */
+.usa-header--extended .usa-nav {
+  border-top: none;
+  border-bottom: solid #ce6c28 1px;
+  padding: 0;
+  width: 100%;
+}

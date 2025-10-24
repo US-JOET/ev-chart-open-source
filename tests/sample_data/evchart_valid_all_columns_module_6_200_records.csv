@@ -1,0 +1,201 @@
+station_id,network_provider,operator_name,operator_address,operator_city,operator_state,operator_zip,operator_zip_extended
+APIM61,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM62,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM63,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM64,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM65,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM66,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM67,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM68,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM69,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM70,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM71,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM72,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM73,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM74,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM75,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM76,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM77,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM78,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM79,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM80,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM81,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM82,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM83,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM84,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM85,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM86,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM87,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM88,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM89,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM90,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM91,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM92,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM93,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM94,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM95,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM96,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM97,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM98,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM99,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM100,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM101,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM102,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM103,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM104,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM105,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM106,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM107,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM108,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM109,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM110,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM111,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM112,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM113,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM114,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM115,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM116,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM117,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM118,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM119,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM120,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM121,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM122,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM123,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM124,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM125,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM126,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM127,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM128,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM129,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM130,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM131,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM132,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM133,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM134,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM135,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM136,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM137,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM138,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM139,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM140,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM141,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM142,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM143,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM144,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM145,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM146,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM147,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM148,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM149,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM150,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM151,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM152,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM153,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM154,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM155,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM156,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM157,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM158,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM159,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM160,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM161,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM162,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM163,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM164,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM165,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM166,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM167,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM168,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM169,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM170,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM171,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM172,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM173,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM174,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM175,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM176,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM177,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM178,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM179,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM180,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM181,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM182,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM183,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM184,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM185,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM186,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM187,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM188,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM189,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM190,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM191,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM192,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM193,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM194,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM195,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM196,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM197,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM198,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM199,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM200,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM201,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM202,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM203,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM204,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM205,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM206,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM207,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM208,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM209,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM210,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM211,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM212,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM213,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM214,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM215,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM216,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM217,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM218,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM219,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM220,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM221,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM222,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM223,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM224,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM225,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM226,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM227,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM228,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM229,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM230,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM231,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM232,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM233,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM234,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM235,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM236,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM237,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM238,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM239,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM240,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM241,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM242,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM243,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM244,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM245,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM246,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM247,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM248,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM249,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM250,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM251,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM252,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM253,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM254,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM255,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM256,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM257,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM258,shell_recharge,SparkFlow,305 27th Street,Chicago,IL,60616,1234
+APIM259,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514
+APIM260,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,WI,53711,7514

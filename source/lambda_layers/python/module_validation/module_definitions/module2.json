@@ -1,0 +1,90 @@
+{
+  "module": 2,
+  "fields": [
+    {
+      "field_name": "port_id",
+      "required": true,
+      "datatype": "string",
+      "max_length": 36
+    },
+    {
+      "field_name": "charger_id",
+      "required": false,
+      "datatype": "string",
+      "max_length": 36,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "session_id",
+      "required": true,
+      "datatype": "string",
+      "max_length": 36,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "connector_id",
+      "required": false,
+      "datatype": "string",
+      "max_length": 36,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "session_start",
+      "required": true,
+      "datatype": "datetime",
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "session_end",
+      "required": true,
+      "datatype": "datetime",
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "session_error",
+      "required": true,
+      "datatype": "string",
+      "max_length": 255,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "error_other",
+      "required": false,
+      "datatype": "string",
+      "max_length": 255,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "energy_kwh",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 7,
+      "max_scale": 2,
+      "min_value": 0,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "power_kw",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 7,
+      "max_scale": 2,
+      "min_value": 0,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "payment_method",
+      "required": true,
+      "datatype": "string",
+      "max_length": 255,
+      "required_empty_allowed": true
+    },
+    {
+      "field_name": "payment_other",
+      "required": false,
+      "datatype": "string",
+      "max_length": 255,
+      "required_empty_allowed": true
+    }
+  ]
+}

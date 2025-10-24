@@ -1,0 +1,206 @@
+.program-performance-overview-text {
+  margin-top: 16px;
+}
+
+.program-performance-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.program-performance-header {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.pp-dashboard-time {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.program-performance-time {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: Montserrat-Regular;
+}
+
+.program-performance-container .usa-icon {
+  height: 16px;
+  width: 16px;
+  cursor: pointer;
+  fill: #a9aeb1;
+  margin-left: 4px;
+}
+
+.pp-dashboard-filter-container {
+  margin-top: 1.5rem;
+}
+
+.update-view-button-container {
+  margin-top: auto;
+}
+
+.update-view-button-container--new-row {
+  margin-top: 1.5rem;
+}
+
+.pp-dashboard-row {
+  margin-top: 40px;
+}
+
+.pp-dashboard-section-heading {
+  display: flex;
+  border-bottom: 2px solid #005a7c;
+}
+
+.pp-dashboard-section-heading-text {
+  font-size: 14px;
+  line-height: 18px;
+  font-family: Montserrat-Thin;
+  color: #005a7c;
+  text-transform: uppercase;
+}
+
+.pp-dashboard-large-stat {
+  font-size: 24px;
+  line-height: 32px;
+  font-family: Montserrat-Thin;
+  margin-top: 0.5rem;
+}
+
+.pp-dashboard-small-stat-row {
+  margin-top: 8px;
+  align-items: baseline;
+}
+
+.pp-dashboard-small-stat-row.section-break {
+  padding-bottom: 7px;
+  border-bottom: 1px solid #979797;
+}
+
+.pp-dashboard-small-stat.pull-right {
+  font-size: 16px;
+  line-height: 20px;
+  font-family: Montserrat-Thin;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.pp-dashboard-stat-label {
+  font-family: Montserrat-Regular;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.pp-dashboard-large-stat-label {
+  margin-top: 0.25rem;
+}
+
+.usa-alert.pp-dashboard-alert {
+  margin-top: 0.5rem;
+}
+
+.usa-alert.pp-dashboard-alert .usa-alert__body {
+  padding: 0.75rem 1rem;
+  font-size: 12px;
+}
+
+.usa-alert.pp-dashboard-alert--reliability .usa-alert__body {
+  font-size: 14px;
+}
+
+.pp-dashboard-alert__heading {
+  font-family: Montserrat-Thin-Bold;
+}
+
+.pp-dashboard-alert__ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.pp-dashboard-reliability-data {
+  margin-top: 1rem;
+}
+
+.pp-dashboard-stat-large-helper-text {
+  font-family: Montserrat-Regular;
+  font-size: 16px;
+  line-height: 20px;
+  align-self: center;
+  margin-top: 0.5rem;
+  margin-left: 4px;
+}
+
+.pp-dashboard-stat-flex {
+  display: flex;
+}
+
+.pp-dashboard-chart-title {
+  font-family: Montserrat-Thin;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 0.5rem;
+}
+
+.reliability-donut-chart {
+  margin-top: 0.75rem;
+  margin-bottom: 24px;
+}
+
+.pp-dashboard-legend-circle {
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+}
+
+.pp-dashboard-legend-circle.positive {
+  background-color: #00a91c;
+}
+
+.pp-dashboard-legend-circle.negative {
+  background-color: #b50909;
+}
+
+.pp-dashboard-legend-circle.disabled {
+  background-color: #a9aeb1;
+}
+
+.pp-dashboard-legend-text {
+  font-size: 12px;
+  line-height: 16px;
+  font-family: Montserrat-Thin;
+  margin-left: 4px;
+}
+
+.pp-dashboard-legend-label {
+  margin-left: 18px;
+  margin-bottom: 11px;
+}
+
+.pp-dashboard-bottom-border {
+  border-bottom: 1px solid #979797;
+  padding-bottom: 7.5px;
+}
+
+.pp-description-row {
+  margin-top: 1rem;
+}
+
+.pp-dashboard-spinner-container {
+  min-height: 40.5rem;
+}
+
+.pp-dashboard-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6.75rem;
+}
+
+.pp-dashboard-spinner-content {
+  margin-top: 1rem;
+}
+
+.jo-pp-dashboard-maintenance-costs {
+  margin-top: 2rem;
+}

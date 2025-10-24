@@ -1,0 +1,2 @@
+use evchart_data_v3;
+DROP TABLE migration_toggle_table

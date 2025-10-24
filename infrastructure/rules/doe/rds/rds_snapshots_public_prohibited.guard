@@ -1,0 +1,16 @@
+## RDS_Snapshots_Public_Prohibited
+
+let rds_snapshots_public_prohibited = Resources.*[ Type == 'AWS::RDS::DBClusterSnapshot'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "RDS_SNAPSHOTS_PUBLIC_PROHIBITED"
+]
+
+
+rule RDS_SNAPSHOTS_PUBLIC_PROHIBITED when %rds_snapshots_public_prohibited !empty {
+#  %aws_rds_instances_snapshot_encrypted.Properties.StorageEncrypted EXISTS
+  %rds_snapshots_public_prohibited.Properties.SnapshotType != "public"
+  <<
+    Violation: All RDS snapshots must not be available to the public.
+    Fix: Set the SnapshotType parameter to not be public.
+  >>
+}

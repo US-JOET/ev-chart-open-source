@@ -1,0 +1,235 @@
+.module-details-gray-bg {
+  background-color: #f5f5f5;
+}
+
+.module-details-header-container {
+  margin-top: 21px;
+  margin-bottom: 21px;
+  display: flex;
+}
+
+.module-header-name {
+  max-width: 600px;
+  margin: 0 !important;
+}
+
+.module-header-name-no-max {
+  margin: 0 !important;
+}
+
+.module-header-chip {
+  margin-left: 12px;
+  margin-right: 12px;
+  width: min-content;
+  align-self: center;
+}
+
+#moduleButtons {
+  margin-top: 2px;
+}
+
+.module-details-details {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 32px;
+}
+
+.dr-module-details-details {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 32px;
+}
+
+.dr-module-details-row {
+  margin-bottom: 16px;
+}
+
+.module-details-header {
+  padding-bottom: 16px;
+}
+
+.module-details-field {
+  display: flex;
+}
+
+.module-details-label {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+  padding-bottom: 8px;
+  padding-right: 4px;
+}
+
+.decision-details-header {
+  font-size: 18px !important;
+}
+
+.decision-details-field {
+  display: flex;
+}
+
+.decision-details-label {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+  padding-bottom: 6px;
+  padding-right: 4px;
+}
+
+.decision-details-container {
+  margin-bottom: 32px;
+}
+
+#decisionDetailsComments {
+  overflow-wrap: anywhere;
+}
+
+.upload-success-banner {
+  margin-bottom: 32px;
+}
+
+.draft-banner {
+  margin-bottom: 32px;
+}
+
+.draft-banner .usa-alert__heading {
+  font-size: 16px !important;
+  line-height: 22px !important;
+  font-family: "Montserrat-Regular" !important;
+  font-weight: normal;
+}
+
+.module-details-submission-status {
+  padding-top: 32px;
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 95px;
+}
+
+.submission-status-steps {
+  background-color: #f5f5f5;
+}
+
+.submission-status-step {
+  background-color: #f5f5f5;
+  margin-top: 0 !important;
+}
+
+.usa-step-indicator {
+  margin-left: -1px !important;
+  margin-right: -1px !important;
+}
+
+.usa-step-indicator__segment::before {
+  box-shadow:
+    inset 0 0 0 0.25rem #919191,
+    0 0 0 0.25rem #f5f5f5 !important;
+}
+
+.usa-step-indicator__segment--current::before {
+  box-shadow: 0 0 0 0.25rem #f5f5f5 !important;
+}
+
+.usa-step-indicator__segment--complete::before {
+  box-shadow: 0 0 0 0.25rem #f5f5f5 !important;
+}
+
+.submission-status-step.submission-status-step-rejected > .usa-step-indicator__segment-label {
+  color: #b50909;
+}
+
+.submission-status-step-rejected.usa-step-indicator__segment::before {
+  background-color: #b50909 !important;
+  box-shadow:
+    inset 0 0 0 0.25rem #b50909,
+    0 0 0 0.25rem #f5f5f5 !important;
+  color: #fff !important;
+}
+
+.module-data-header {
+  border-bottom: 1px solid #9d9d9d;
+  display: flex;
+  justify-content: space-between;
+}
+
+.module-data-text {
+  font-size: 18px;
+  line-height: 26px;
+  align-self: end;
+  padding-bottom: 8px;
+  margin-top: 32px;
+}
+
+.submit-module-data-button {
+  margin-left: auto;
+  align-self: center;
+}
+
+.submit-module-data-button > button {
+  margin-right: 0;
+}
+
+#moduleButtons {
+  margin-right: 0 !important;
+  margin-left: auto;
+  align-self: center;
+}
+
+#approveModuleButton {
+  margin-right: 0;
+}
+
+button#viewHistoryLogButton {
+  margin-left: 825px;
+}
+
+.view-history-log-container {
+  margin-bottom: 32px;
+}
+
+.history-log-view-module-name {
+  margin-top: 3px;
+}
+
+.rej-header-button {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+.partial-data-banner {
+  margin-top: 24px !important;
+}
+
+#bannerDownloadCSVButton {
+  margin-top: 8px;
+}
+
+.module-details-actions-button {
+  display: inline-block;
+  margin-left: 16px;
+}
+
+.module-details-actions-button .actions-dropdown-button {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 2px #2c608a;
+  color: #2c608a;
+  padding: 8px 12px 8px 20px;
+  text-decoration: none;
+}
+
+.module-details-actions-button .menu .menu-item .usa-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.menu {
+  width: 162px !important;
+}
+
+.module-details-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 159.25px;
+  padding-top: 159.25px;
+}

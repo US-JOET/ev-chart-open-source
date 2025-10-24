@@ -1,0 +1,251 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+SM81,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM82,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM83,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM84,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM85,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM86,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM87,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM88,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM89,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM90,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM91,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM92,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM93,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM94,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM95,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM96,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM97,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM98,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM99,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM100,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM101,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM102,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM103,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM104,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM105,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM106,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM107,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM108,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM109,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM110,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM111,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM112,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM113,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM114,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM115,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM116,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM117,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM118,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM119,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM120,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM121,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM122,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM123,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM124,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM125,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM126,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM127,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM128,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM129,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM130,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM131,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM132,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM133,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM134,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM135,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM136,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM137,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM138,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM139,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM140,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM141,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM142,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM143,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM144,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM145,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM146,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM147,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM148,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM149,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM150,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM151,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM152,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM153,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM154,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM155,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM156,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM157,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM158,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM159,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM160,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM161,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM162,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM163,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM164,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM165,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM166,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM167,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM168,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM169,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM170,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM171,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM172,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM173,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM174,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM175,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM176,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM177,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM178,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM179,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM180,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM81,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM82,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM83,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM84,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM85,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM86,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM87,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM88,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM89,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM90,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM91,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM92,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM93,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM94,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM95,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM96,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM97,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM98,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM99,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM100,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM101,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM102,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM103,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM104,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM105,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM106,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM107,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM108,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM109,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM110,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM111,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM112,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM113,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM114,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM115,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM116,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM117,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM118,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM119,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM120,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM121,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM122,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM123,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM124,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM125,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM126,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM127,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM128,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM129,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM130,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM131,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM132,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM133,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM134,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM135,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM136,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM137,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM138,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM139,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM140,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM141,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM142,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM143,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM144,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM145,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM146,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM147,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM148,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM149,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM150,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM151,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM152,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM153,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM154,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM155,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM156,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM157,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM158,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM159,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM160,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM161,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM162,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM163,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM164,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM165,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM166,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM167,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM168,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM169,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM170,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM171,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM172,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM173,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM174,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM175,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM176,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM177,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM178,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM179,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM180,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM181,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM182,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM183,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM184,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM185,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM186,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM187,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM188,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM189,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM190,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM191,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM192,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM193,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM194,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM195,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM196,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM197,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM198,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM199,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM200,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM201,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM202,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM203,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM204,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM205,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM206,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM207,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM208,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM209,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM210,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM211,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM212,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM213,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM214,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM215,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM216,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM217,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM218,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM219,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM220,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM221,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM222,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM223,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM224,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM225,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM226,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90,45
+SM227,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM228,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80,30
+SM229,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
+SM230,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0,0
