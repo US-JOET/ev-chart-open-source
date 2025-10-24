@@ -1,0 +1,60 @@
+.submission-tracker-outline {
+  font-family: "Montserrat-Regular";
+  font-size: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px 0 #dedede;
+  align-items: center;
+  line-height: 16px;
+  margin-bottom: 8px;
+}
+
+.submission-tracker-legend-title {
+  margin-top: 13px;
+  margin-left: 300px;
+  margin-right: 300px;
+  color: #171717;
+  font-family: "Montserrat-Thin-Bold";
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 26px;
+}
+
+.legend-line {
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid #979797;
+  line-height: 0.1em;
+  margin: 25px 0 25px;
+}
+
+.legend-line span {
+  background: #fff;
+  padding: 0 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.icon-description {
+  max-width: 246px;
+}
+
+.icon-overflow-visible {
+  overflow: visible;
+}
+
+#submissionTrackerModalButton {
+  padding-right: 16px;
+}
+
+.submission-tracker-unstyled-button-text {
+  margin-top: 12px;
+  font-size: 12px;
+}

@@ -1,0 +1,18 @@
+## Cloudwatch_alarm_settings_check
+
+#
+let cloudwatch_alarm_settings_check = Resources.*[ Type == 'AWS::CloudWatch::Alarm'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "CLOUDWATCH_ALARM_SETTINGS_CHECK"
+]
+
+rule CLOUDWATCH_ALARM_SETTINGS_CHECK when %cloudwatch_alarm_settings_check !empty {
+  %cloudwatch_alarm_settings_check.Properties.AlarmSettings exists or
+  %cloudwatch_alarm_settings_check.Properties.OKSettings exists or
+  %cloudwatch_alarm_settings_check.Properties.InsufficientDataSettings exists
+
+  <<
+    Violation: CloudWatch Alarms should have at least one Alarm Setting, one Insufficient Data Settings action, or one OK Setting enabled.
+    Fix: Set one Alarm Settings, one Insufficient Data Settings action, or one OK Setting on the CloudWatch Alarm resource.
+  >>
+}

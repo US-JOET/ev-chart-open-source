@@ -1,0 +1,2 @@
+station_id,network_provider,project_id,maintenance_report_start,maintenance_report_end,caas,maintenance_cost_total,maintenance_cost_federal
+,,,String,String,String,String,String

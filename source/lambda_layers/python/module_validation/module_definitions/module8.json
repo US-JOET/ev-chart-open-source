@@ -1,0 +1,43 @@
+{
+  "module": 8,
+  "fields": [
+    {
+      "field_name": "der_upgrade",
+      "required": false,
+      "datatype": "boolean"
+    },
+    {
+      "field_name": "der_onsite",
+      "required": true,
+      "datatype": "boolean"
+    },
+    {
+      "field_name": "der_type",
+      "required": true,
+      "datatype": "string",
+      "min_length": 1
+    },
+    {
+      "field_name": "der_type_other",
+      "required": false,
+      "datatype": "string",
+      "min_length": 1
+    },
+    {
+      "field_name": "der_kw",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 10,
+      "max_scale": 2,
+      "min_value": 0
+    },
+    {
+      "field_name": "der_kwh",
+      "required": true,
+      "datatype": "decimal",
+      "max_precision": 10,
+      "max_scale": 2,
+      "min_value": 0
+    }
+  ]
+}

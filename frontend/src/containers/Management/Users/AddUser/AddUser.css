@@ -1,0 +1,46 @@
+.add-user-breadcrumbs {
+  padding-top: 32px;
+}
+
+.add-user-heading {
+  margin-bottom: 0 !important;
+}
+
+.add-user-subheading {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.organization-label {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.org-details-field {
+  margin-bottom: 24px;
+}
+
+.user-details-container {
+  margin-top: 32px;
+}
+
+.user-details-heading {
+  margin-top: 0;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.admin-info {
+  margin-bottom: 22px;
+}
+
+.add-user-field {
+  margin-bottom: 22px;
+}
+
+.add-user-buttons-container {
+  padding-top: 26px;
+}

@@ -1,0 +1,2 @@
+﻿station_id,port_id,network_provider,session_id,session_start,session_end,session_error,energy_kwh,power_kw,payment_method
+,,,,String,String,,String,String,

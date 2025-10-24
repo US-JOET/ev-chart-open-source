@@ -1,0 +1,32 @@
+.technical-notes-pp-dashboard__description {
+  margin-top: 1.5rem;
+}
+.technical-notes-pp-dashboard-table.usa-table {
+  margin-top: 2rem;
+}
+.technical-notes-pp-dashboard-table.usa-table th,
+.technical-notes-pp-dashboard-table.usa-table td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.technical-notes-pp-dashboard-table__th--category {
+  width: 9rem;
+}
+.technical-notes-pp-dashboard-table__th--calculation {
+  width: 14rem;
+}
+.technical-notes-pp-dashboard-table__th--modules_referenced {
+  width: 12.5rem;
+}
+.technical-notes-pp-dashboard-table__tbody {
+  vertical-align: top;
+}
+.technical-notes-pp-dashboard-table__tbody td {
+  line-height: 16px;
+}
+.technical-notes-pp-dashboard-table__calc-desc-div {
+  margin-top: 1rem;
+}
+.technical-notes-pp-dashboard-table__calc-exclusions {
+  font-style: italic;
+}

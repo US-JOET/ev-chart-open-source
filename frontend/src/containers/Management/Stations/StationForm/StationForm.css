@@ -1,0 +1,180 @@
+.station-form-header {
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9d9d9d;
+  width: 100%;
+}
+
+.form-field {
+  margin-top: 11px;
+  margin-bottom: 11px;
+}
+
+.usa-form {
+  max-width: 100%;
+}
+
+.tooltip-icon.usa-icon {
+  margin-left: 8px;
+  fill: #adadad;
+  width: 13px;
+  height: 13px;
+}
+
+.required-field::after {
+  content: "*";
+  color: red;
+}
+
+.form-submit-button-group {
+  margin-top: 60px;
+}
+
+.form-add-button {
+  margin-top: 30px;
+}
+
+.label-tooltip-container {
+  display: flex;
+  align-items: center;
+}
+
+.organization-selection-combobox {
+  margin-top: 20px;
+}
+
+.remove-button {
+  margin-top: 30px;
+  font-family: "Montserrat-Regular";
+}
+
+.usa-select {
+  font-family:
+    Montserrat-Regular,
+    Source Sans Pro Web,
+    Helvetica Neue,
+    Helvetica,
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+ul {
+  margin-bottom: 0;
+}
+
+.usa-error-message {
+  font-family: Montserrat-Thin-Bold;
+  /* font-size: 14px; */
+}
+
+.error-combobox > input {
+  border-width: 0.25rem;
+  border-color: #b50909;
+  border-style: solid;
+  padding-top: calc(0.5rem - 0.25rem);
+  padding-bottom: calc(0.5rem - 0.25rem);
+}
+
+.error-datepicker > .usa-date-picker__wrapper > input {
+  border-width: 0.25rem;
+  border-color: #b50909;
+  border-style: solid;
+  padding-top: calc(0.5rem - 0.25rem);
+  padding-bottom: calc(0.5rem - 0.25rem);
+}
+
+.usa-textarea,
+.usa-range,
+.usa-radio__label,
+.usa-input-group,
+.usa-hint,
+.usa-combo-box__input,
+.usa-combo-box__list,
+.usa-select,
+.usa-checkbox__label,
+.usa-fieldset,
+.usa-input {
+  font-family:
+    Montserrat-Regular,
+    Source Sans Pro Web,
+    Helvetica Neue,
+    Helvetica,
+    Roboto,
+    Arial,
+    sans-serif;
+  font-size: 1.06rem;
+  line-height: 1.3;
+}
+
+.station-details-field-header {
+  font-family: "Montserrat-Thin-Bold";
+  line-height: 26px;
+  font-size: 18px;
+}
+
+.station-details-field {
+  font-family: "Montserrat-Regular";
+  line-height: 24px;
+  font-size: 16px;
+}
+
+.station-details-field .label-tooltip-container {
+  line-height: 1.15;
+}
+
+.no-authorized-subrecipients-text {
+  margin-top: 10px;
+}
+
+.station-details-header {
+  padding-bottom: 8px;
+  margin-bottom: 0;
+  width: 100%;
+}
+
+.station-details-page-header {
+  margin-bottom: 0;
+}
+
+.subrecipient-tooltip-icon.usa-icon {
+  margin-left: 8px;
+  margin-top: 10px;
+  fill: #adadad;
+  width: 20px;
+  height: 20px;
+}
+
+.station-details-container {
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.funding-type-options {
+  margin-top: 0;
+}
+
+.afc-radio-field
+.federally-funded-radio-field {
+  display: inline-block;
+  width: 115px;
+}
+
+.station-registration-hint {
+  padding-top: 0.25rem;
+}
+.usa-character-count__status.usa-character-count__status--invalid {
+  font-family: Montserrat-Thin-Bold;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+  color: #b50909;
+  display: block;
+  font-weight: 700;
+}
+
+.dr-selection-spinner {
+  text-align: center;
+}
+
+.dr-selection-spinner {
+  display: inline-block;
+  margin: auto;
+}

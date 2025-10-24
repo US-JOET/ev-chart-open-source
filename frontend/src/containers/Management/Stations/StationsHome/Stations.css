@@ -1,0 +1,21 @@
+.add-station-button button.usa-button {
+  right: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 0px;
+}
+.all-stations-heading {
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.station-success-banner {
+  margin-bottom: 24px;
+}
+
+.add-sr-org-text {
+  margin-top: -15px;
+  width: 711px;
+}

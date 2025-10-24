@@ -1,0 +1,2 @@
+station_id,network_provider,der_onsite,der_type,der_kw,der_kwh
+SM81,shell_recharge,,solar; station_battery,90,45

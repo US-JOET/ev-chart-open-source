@@ -1,0 +1,42 @@
+.submission-tracker-overview-text {
+  margin-top: 16px;
+}
+
+.submission-tracker-info-alert.usa-alert {
+  margin-top: 1.5rem;
+}
+
+.submission-tracker-info-alert {
+  margin-bottom: 24px;
+}
+
+.submission-tracker-info-alert .heading {
+  height: 26px;
+  width: 860px;
+  color: #171717;
+  font-family: "Montserrat-Thin";
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 0;
+  line-height: 26px;
+  margin-bottom: 8px;
+}
+
+.submission-tracker-info-alert .text {
+  height: 40px;
+  width: 860px;
+  color: #171717;
+  font-family: "Montserrat-Regular";
+  font-size: 16px;
+  letter-spacing: 0;
+  line-height: 20px;
+}
+
+.submission-tracker-info-alert.usa-alert--info .usa-alert__body::before {
+  mask-size: 1.7rem 1.7rem !important;
+}
+
+.submission-tracker__dashboard-updated-tooltip {
+  height: 16px;
+  width: 16px;
+}

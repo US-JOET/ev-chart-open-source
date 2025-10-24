@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ""
+
+# Parameters:
+# Do I need anything here?
+
+Resources:
+  DRSmokeTestECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      EmptyOnDelete: true
+      ImageTagMutability: MUTABLE
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep only one untagged image, expire all others",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 1
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+      RepositoryName: ev-chart-lambdas/dr-smoke-test-ecr
+
+    # Outputs:
+    #   ECRRepositoryURI:
+    #     Description: The URI of ev-chart-dr-smoke-test-ecr
+    #     Value: !Sub "${DRSmokeTestECR.RepositoryURI}"
+    #     Export: 
+    #       Name: DRSmokeTestECRRepositoryURI

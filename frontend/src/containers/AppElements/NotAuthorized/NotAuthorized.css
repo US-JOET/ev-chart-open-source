@@ -1,0 +1,26 @@
+#main-content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.align-center {
+  text-align: center;
+}
+
+#notAuthorizedBanner {
+  padding-top: 32px;
+}
+
+#notAuthorizedText {
+  padding-top: 32px;
+}
+
+#notAuthorzedDots {
+  padding-top: 24px;
+}
+
+#notAuthorizedReturnHome {
+  padding-top: 24px;
+  padding-bottom: 46px;
+}

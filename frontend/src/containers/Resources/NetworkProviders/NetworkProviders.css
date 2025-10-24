@@ -1,0 +1,13 @@
+.network-provider-heading {
+  margin-top: 16px;
+  margin-bottom: 32px;
+}
+
+.network-provider-subheading-container {
+  margin-bottom: 16px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.network-provider-subheading {
+  margin-bottom: 8px;
+}

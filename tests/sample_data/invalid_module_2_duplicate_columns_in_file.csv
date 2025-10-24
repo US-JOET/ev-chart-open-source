@@ -1,0 +1,4 @@
+﻿station_id,port_id,session_id,session_start,session_end,session_error,energy_kwh,power_kw,network_provider,payment_method
+subway-station-updated3,1111,10008,2024-01-01T00:00:00Z,2024-01-20T00:00:00Z,20241.01,20241.01,20241.02,blink,VISA
+subway-station-updated3,12,10009,2024-01-01T00:00:00Z,2024-01-20T00:00:00Z,20241.01,20241.01,20241.02,blink,VISA
+subway-station-updated3,12,10009,2024-01-01T00:00:00Z,2024-01-20T00:00:00Z,20241.01,20241.01,20241.02,blink,VISA

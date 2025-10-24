@@ -1,0 +1,2 @@
+station_id,der_onsite,der_type,der_kw,der_kwh
+APIM91,TRUE,solar; station_battery,90,45

@@ -1,0 +1,26 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+SM81,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.00,45.00
+SM82,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM83,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80.00,30.00
+SM84,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM85,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM86,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.00,45.00
+SM87,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM88,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80.00,30.00
+SM89,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM90,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM91,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.00,45.00
+SM92,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM93,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80.00,30.00
+SM94,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM95,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM96,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.00,45.00
+SM97,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM98,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80.00,30.00
+SM99,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM100,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM101,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.00,45.00
+SM102,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM103,shell_recharge,TRUE,TRUE,other,ombined_heat_and_power_units-utilize,80.00,30.00
+SM104,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00
+SM105,shell_recharge,FALSE,FALSE,none,ombined_heat_and_power_units-utilize,0.00,0.00

@@ -1,0 +1,64 @@
+button.usa-button.draft-page-header-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 12px 16px;
+  margin-right: 0;
+}
+
+.upload-module-data {
+  background-color: #2c608a !important;
+}
+
+.approved-success-banner,
+.submit-draft-success-banner,
+.rejected-success-banner,
+.async-upload-banner {
+  margin-bottom: 24px;
+}
+
+.module-data-tabs-header {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.what-are-submission-status {
+  margin-bottom: 32px;
+}
+
+.draft-module-data-table-header {
+  font-family:
+    Montserrat-Regular,
+    Source Sans Pro Web,
+    Helvetica Neue,
+    Helvetica,
+    Roboto,
+    Arial,
+    sans-serif;
+  font-weight: normal;
+  font-size: 18px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+button.usa-button.usa-button--outline.draft-page-header-button {
+  right: 0;
+}
+
+.no-authorization-container {
+  margin-top: 18px;
+}
+
+.no-authorization-header {
+  font-size: 18px;
+}
+
+.no-authorization-body {
+  font-size: 16px;
+}
+
+.usa-button:disabled,
+.usa-button[aria-disabled="true"] {
+  background-color: #a09c9c !important;
+  color: #231f20 !important;
+}

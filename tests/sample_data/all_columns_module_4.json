@@ -1,0 +1,54 @@
+
+    {
+        "schema": {
+            "fields": [
+                {
+                    "name": "index", 
+                    "type": "integer"
+                }, 
+                {
+                    "name": "station_id", 
+                    "type": "string"
+                    }, 
+                {
+                    "name": "port_id",
+                    "type": "string"},
+                {
+                    "name": "outage_id",
+                    "type": "datetime",
+                    "tz": "UTC"
+                },
+                {
+                    "name": "outage_duration",
+                    "type": "number",
+                    "extDtype": "Float64"
+                },
+                {
+                    "name": "network_provider",
+                    "type": "string"
+                }, 
+                {
+                    "name": "upload_id",
+                    "type": "string"
+                },
+                {
+                    "name": "station_uuid",
+                    "type": "string"
+                }
+            ],
+            "primaryKey": ["index"],
+            "pandas_version": "1.4.0"
+        },
+        "data": [
+            {
+                "index": 2,
+                "station_id": "5db7e53e-362b-40fc-b8bb-a905276190f1",
+                "port_id": "11-qpwwo2",
+                "outage_id": "2023-07-03T12:51:48.000Z",
+                "outage_duration": 123248.92,
+                "network_provider": "shell_recharge",
+                "upload_id": "b524f405-2802-409b-871d-49f10493b886",
+                "station_uuid": "hello-world"
+            }
+        ]
+    }

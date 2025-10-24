@@ -1,0 +1,25 @@
+.jo-welcome-container {
+  padding-top: 2rem;
+}
+
+.jo-welcome-header {
+  margin: 0;
+}
+
+.jo-dashboard-tabs {
+  margin-top: 1.5rem;
+  margin-bottom: 80px;
+}
+
+#joSSDashboard {
+  margin-top: 16px;
+}
+
+#joPPDashboard {
+  margin-top: 16px;
+}
+
+.jo-pp-container {
+  margin-top: 18px;
+  margin-bottom: 18px;
+}

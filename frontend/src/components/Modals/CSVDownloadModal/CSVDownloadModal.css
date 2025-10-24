@@ -1,0 +1,24 @@
+h2#csvModalHeading {
+  font-family: Montserrat-Bold;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  margin-top: 0px;
+}
+
+h2#csvModalHeading.bottom-border {
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.spinner-modal-body div {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 24px;
+}
+
+.csv-modal-comments {
+  margin-top: 20px;
+}
+
+#csvModalFooter {
+  margin-top: 40px;
+}

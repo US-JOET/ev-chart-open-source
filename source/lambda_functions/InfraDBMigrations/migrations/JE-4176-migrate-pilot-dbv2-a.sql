@@ -1,0 +1,1 @@
+CALL evchart_data_v3.migrate_dbv2_pilot();

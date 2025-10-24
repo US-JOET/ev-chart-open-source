@@ -1,0 +1,7 @@
+﻿station_id,port_id,network_provider,outage_id,outage_duration, excluded_outage
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, True
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, False
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, 
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, NULL
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, 1
+APIM4,354321,shell_recharge,2023-07-03T12:51:48Z,123248.92, A

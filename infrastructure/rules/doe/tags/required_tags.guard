@@ -1,0 +1,14 @@
+## required_tags
+ 
+let required_tags = Resources.*[ Type == "*" 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "REQUIRED_TAGS"
+]
+ 
+rule REQUIRED_TAGS when %required_tags !empty {
+    %required_tags.Properties.Tags.notEmpty == true
+    <<
+      Violation: All resources must have tags defined.
+      Fix: Set tags for all resources.
+    >>
+}

@@ -1,0 +1,158 @@
+#SubmittalsTable .pagination-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#SubmittalsTable .pagination-info-row .pagination-info-dropdown {
+  align-items: center;
+  display: flex;
+}
+
+#SubmittalsTable .pagination-info {
+  margin-top: 16px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#SubmittalsTable .module-details-table-info {
+  justify-content: space-between;
+}
+
+#SubmittalsTable .pagination-info-row-count {
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: solid 1.5px #9d9d9d;
+}
+
+#SubmittalsTable .pagination-info-row-per-page {
+  margin-right: 8px;
+}
+
+#submittalsSelectItemsPerPage {
+  border-radius: 5%;
+  margin-top: 0 !important;
+}
+
+.sort-icon-submitted.usa-icon {
+  margin-left: 8px;
+  fill: #ffffff;
+  width: 20px;
+  height: 20px;
+}
+
+.submitted-column-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.no-data-add-draft {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.submitted-row .menu .menu-item .usa-button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.submitted-row .menu {
+  width: 160px;
+}
+
+.submitted-table {
+  line-height: 24px;
+}
+
+.usa-table--borderless .submitted-table-header th {
+  line-height: 16px;
+}
+
+.upload-module-data-modal-link {
+  cursor: pointer;
+  text-decoration: underline;
+  color: #005a7c;
+}
+
+.submitted-table th {
+  padding: 16px 10px !important;
+}
+
+.submitted-table td {
+  padding: 10px 10px !important;
+}
+
+tr.submitted-row {
+  line-height: 20px;
+}
+
+.module-to-data-hyperlink {
+  font-weight: bold;
+  color: #005a7c;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.column-definitions-button-error {
+  font-family: Montserrat-Bold;
+  color: #005a7c;
+  background-color: #fff;
+}
+
+button.usa-button.column-definitions-button-error {
+  margin-right: 0;
+}
+
+.error-guidance-button {
+  float:right;
+  font-family: Montserrat-Bold;
+  color: #005a7c;
+  background-color: #fff;
+}
+
+/* full table 690 (excluding cell padding) */
+th.submitted-table-header td.module_name {
+  width: 180px;
+  background-color: #005a7c;
+}
+
+th.submitted-table-header.module_name {
+  width: 180px;
+}
+
+th.submitted-table-header.year {
+  width: 78px;
+}
+
+th.submitted-table-header.module_frequency {
+  width: 80px;
+}
+
+th.submitted-table-header.sub_recipient {
+  width: 100px;
+}
+
+th.submitted-table-header.submission_status {
+  width: 80px;
+}
+
+th.submitted-table-header.submitted_on {
+  width: 130px;
+}
+
+th.submitted-table-header.uploaded_by {
+  width: 80px;
+}
+
+th.submitted-table-header.upload_id {
+  width: 80px;
+}
+
+th.submitted-table-header.actions {
+  width: 90px;
+}

@@ -1,0 +1,2 @@
+﻿station_id,port_id,network_provider,outage_id,outage_duration
+,,,String,String

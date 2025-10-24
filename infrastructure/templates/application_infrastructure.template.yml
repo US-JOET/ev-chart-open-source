@@ -1,0 +1,4062 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ""
+
+Metadata: {}
+
+Parameters:
+  ApiGatewayVpcEndoint:
+    Type: String
+    #Description:
+
+  LambdaResourceCommitId:
+    Type: String
+    #Description:
+
+  CognitoOneIdClientSecret:
+    Type: String
+    #Description:
+    NoEcho: true
+
+  NetworkProxy:
+    Type: String
+    Default: ""
+    #Description:
+
+  NetworkProxyCert:
+    Type: String
+    Default: ""
+    #Description:
+
+  RdsSnapshotId:
+    Type: String
+    Default: ""
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+  VpcSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    #Description:
+
+  VpcSubnetIdsPrivate:
+    Type: List<AWS::EC2::Subnet::Id>
+    #Description:
+
+  AsyncTimeout:
+    Type: Number
+    Default: 900
+
+  PipelineTimeout:
+    Type: Number
+    Default: 300
+
+  PandasLayerPythonVersion:
+    Type: String
+    Default: 20
+
+Mappings:
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+  VpcIdMap:
+    us-east-1:
+      "414275662771": vpc-05a349f3444076a6d
+      "030628784534": vpc-082b5ecc72a39dfc3
+      "888515010394": vpc-0dd0b535d7070df3b
+    us-east-2:
+      "414275662771": vpc-0d9a94cfe49ce36a3
+      "030628784534": vpc-0964ba310648efd83
+      "888515010394": vpc-070d60d18a2a512db
+
+Conditions:
+  isDev: !And
+    - !Equals [ !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ], dev ]
+    - !Condition isNotSubEnvironment
+  isNotProd: !And
+    - !Not [ !Equals [ !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ], prod ] ]
+    - !Condition isNotSubEnvironment
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+  isPrimaryEnvironment: !And
+    - !Condition isPrimaryRegion
+    - !Condition isNotSubEnvironment
+  isPrimaryRegion: !Equals [ !Ref AWS::Region, us-east-1 ]
+  isUsingSnapshot: !Not [ !Equals [ !Ref RdsSnapshotId, "" ] ]
+
+Resources:
+  ApiGateway:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        ApiGatewayRestApiAuthorizerProviderARN: !If
+          - isNotSubEnvironment
+          - !GetAtt Cognito.Outputs.CognitoUserPoolArn
+          - !Sub
+            - arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}
+            -
+              UserPoolId: "{{resolve:ssm:/ev-chart/cognito/user_pool_id}}"
+        ApiGatewayRestApiMethodIntegrationUriAPIDefault: !GetAtt LambdaResourceAPIDefault.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDownloadModuleData: !GetAtt LambdaResourceAPIGetDownloadModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetModuleData: !GetAtt LambdaResourceAPIGetModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveModuleData: !GetAtt LambdaResourceAPIPutRemoveModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPutRemoveStationId: !GetAtt LambdaResourceAPIPutRemoveStationId.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetUploadOptions: !GetAtt LambdaResourceAPIGetUploadOptions.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetSubrecipients: !GetAtt LambdaResourceAPIGetSubrecipients.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDirectRecipients: !GetAtt LambdaResourceAPIGetDirectRecipients.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetColumnDefinitions : !GetAtt LambdaResourceAPIGetColumnDefinitions.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetNetworkProviders : !GetAtt LambdaResourceAPIGetNetworkProviders.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetStationsById: !GetAtt LambdaResourceAPIGetStationsById.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetStationsByOrgId: !GetAtt LambdaResourceAPIGetStationsByOrgId.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPostImportModuleData: !GetAtt LambdaResourceAPIPostImportModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPostS2SImportModuleData: !GetAtt LambdaResourceAPIPostS2SImportModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPostStation: !GetAtt LambdaResourceAPIPostStation.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIToken: !GetAtt LambdaResourceAPIToken.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDraftOrSubmittedData: !GetAtt LambdaResourceAPIGetDraftOrSubmittedData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPutSubmitModuleData: !GetAtt LambdaResourceAPIPutSubmitModuleData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPutSubmissionApproval: !GetAtt LambdaResourceAPIPutSubmissionApproval.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetModuleDetails: !GetAtt LambdaResourceAPIGetModuleDetails.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDecisionDetails: !GetAtt LambdaResourceAPIGetDecisionDetails.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetUsersByOrgId: !GetAtt LambdaResourceAPIGetUsersByOrgId.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetOrgUserData: !GetAtt LambdaResourceAPIGetOrgUserData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPostUser: !GetAtt LambdaResourceAPIPostUser.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPostOrg: !GetAtt LambdaResourceAPIPostOrg.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPatchStation: !GetAtt LambdaResourceAPIPatchStation.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIPatchUser: !GetAtt LambdaResourceAPIPatchUser.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetStatus: !GetAtt LambdaResourceAPIGetStatus.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetS2SModuleDetails: !GetAtt LambdaResourceAPIGetS2SModuleDetails.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetImportErrorData: !GetAtt LambdaResourceAPIGetImportErrorData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIFeatureFlags: !GetAtt LambdaResourceAPIFeatureFlags.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetModuleHistoryLog: !GetAtt LambdaResourceAPIGetModuleHistoryLog.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetAuthorizations: !GetAtt LambdaResourceAPIGetAuthorizations.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetSubmissionTracker: !GetAtt LambdaResourceAPIGetSubmissionTracker.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetReportingYears: !GetAtt LambdaResourceAPIGetReportingYears.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardProgramPerformance: !GetAtt LambdaResourceAPIGetDashboardProgramPerformance.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPFederallyFundedNetworkSize: !GetAtt LambdaResourceAPIGetDashboardPPFederallyFundedNetworkSize.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPReliability: !GetAtt LambdaResourceAPIGetDashboardPPReliability.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPCapitalCosts: !GetAtt LambdaResourceAPIGetDashboardPPCapitalCosts.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPEnergyUsage: !GetAtt LambdaResourceAPIGetDashboardPPEnergyUsage.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardPPMaintenanceCosts: !GetAtt LambdaResourceAPIGetDashboardPPMaintenanceCosts.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetDashboardSubmissionDetails: !GetAtt LambdaResourceAPIGetDashboardSubmissionDetails.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPILogout: !GetAtt LambdaResourceAPILogout.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetPresignedUrl: !GetAtt LambdaResourceAPIGetPresignedUrl.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiMethodIntegrationUriAPIGetSubmittingNullData: !GetAtt LambdaResourceAPIGetSubmittingNullData.Outputs.LambdaFunctionArn
+        ApiGatewayRestApiPolicySourceVpce: !Ref ApiGatewayVpcEndoint
+        ApiGatewayRestApiStageLogsLogGroupKmsKeyAlias: ev-chart/general
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/api_gateway.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  AuroraDatabase:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        RDSDBClusterDBSubnetGroupSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        RDSDBClusterKmsKeyId: alias/ev-chart/general
+        RDSDBClusterSnapshotIdentifier: !If
+          - isUsingSnapshot
+          - !Ref RdsSnapshotId
+          - !Ref AWS::NoValue
+        RDSDBClusterVpcSecurityGroupId: !Ref VpcSecurityGroupId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/aurora_database.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  Cognito:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        CognitoUserPoolIdentityProviderClientSecret: !Ref CognitoOneIdClientSecret
+        CognitoUserPoolLambdaConfigPreTokenGeneration: !GetAtt LambdaResourceCognitoPreTokenGenTrigger.Outputs.LambdaFunctionArn
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/cognito.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  DynamoDBGlobalTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Condition: isPrimaryEnvironment
+    DependsOn: LambdaResourceReplicateKMSKeyCustomResource
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - DYNAMODB_AUTOSCALING_ENABLED
+        SuppressedRulesDescription:
+          DYNAMODB_AUTOSCALING_ENABLED: >
+            Not required as table is pay per request.
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: identifier
+          AttributeType: S
+        -
+          AttributeName: session_id
+          AttributeType: S
+        -
+          AttributeName: org_id
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        -
+          IndexName: gsi_session_id
+          KeySchema:
+            -
+              AttributeName: session_id
+              KeyType: HASH
+          Projection:
+            NonKeyAttributes:
+              - refresh_token
+            ProjectionType: INCLUDE
+        -
+          IndexName: gsi_org_id
+          KeySchema:
+            -
+              AttributeName: org_id
+              KeyType: HASH
+            -
+              AttributeName: identifier
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
+      KeySchema:
+        -
+          AttributeName: identifier
+          KeyType: HASH
+      Replicas:
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-1
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-2
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+      SSESpecification:
+        SSEEnabled: true
+        SSEType: KMS
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName: ev-chart_users
+
+  DynamoDBGlobalTableOrg:
+    Type: AWS::DynamoDB::GlobalTable
+    Condition: isPrimaryEnvironment
+    DependsOn: LambdaResourceReplicateKMSKeyCustomResource
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - DYNAMODB_AUTOSCALING_ENABLED
+        SuppressedRulesDescription:
+          DYNAMODB_AUTOSCALING_ENABLED: >
+            Not required as table is pay per request.
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: org_id
+          AttributeType: S
+        -
+          AttributeName: recipient_type
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        -
+          AttributeName: org_id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        -
+          IndexName: gsi_recipient_type
+          KeySchema:
+            -
+              AttributeName: recipient_type
+              KeyType: HASH
+            -
+              AttributeName: org_id
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Replicas:
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-1
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-2
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+      SSESpecification:
+        SSEEnabled: true
+        SSEType: KMS
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName: ev-chart_org
+
+  DynamoDBGlobalTableApiKey:
+    Type: AWS::DynamoDB::GlobalTable
+    Condition: isPrimaryEnvironment
+    DependsOn: LambdaResourceReplicateKMSKeyCustomResource
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - DYNAMODB_AUTOSCALING_ENABLED
+        SuppressedRulesDescription:
+          DYNAMODB_AUTOSCALING_ENABLED: >
+            Not required as table is pay per request.
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: hashed_api_key
+          AttributeType: S
+        -
+          AttributeName: environment
+          AttributeType: S
+        -
+          AttributeName: org_id
+          AttributeType: S
+        -
+          AttributeName: generated_on
+          AttributeType: S
+
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        -
+          AttributeName: hashed_api_key
+          KeyType: HASH
+        -
+          AttributeName: environment
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        -
+          IndexName: gsi_org_id
+          KeySchema:
+            -
+              AttributeName: org_id
+              KeyType: HASH
+            -
+              AttributeName: hashed_api_key
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        -
+          IndexName: gsi_org_id_generated_on
+          KeySchema:
+            -
+              AttributeName: org_id
+              KeyType: HASH
+            -
+              AttributeName: generated_on
+              KeyType: RANGE
+
+          Projection:
+            ProjectionType: ALL
+      Replicas:
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-1
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+        -
+          DeletionProtectionEnabled: true
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+          Region: us-east-2
+          SSESpecification:
+            KMSMasterKeyId: alias/ev-chart/general
+      SSESpecification:
+        SSEEnabled: true
+        SSEType: KMS
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName: ev-chart_api_key
+
+  LambdaLayerPython:
+    Type: AWS::Lambda::LayerVersion
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      CompatibleRuntimes:
+        - python3.11
+      Content:
+        S3Bucket: !Sub
+          - ev-chart-artifact-${Environment}-${AWS::Region}
+          -
+            Environment: !If
+              - isNotSubEnvironment
+              - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+              - !Ref SubEnvironment
+        S3Key: !Sub deploy/lambda/${LambdaResourceCommitId}/layers/layer_python.zip
+      Description: A collection of Python modules to facilitate EV-ChART Lambda backend functionality.
+      LayerName: !Sub
+        - EV-ChART_Python_Layer_${Environment}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIDefault:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return the appropriate React/static content from S3.
+        LambdaFunctionFunctionName: APIDefault
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Returns Module Data.
+        LambdaFunctionFunctionName: APIGetModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraAPIKeys:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Generates/assigns API Key.
+        LambdaFunctionFunctionName: InfraAPIKeys
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDownloadModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionMemorySize: 10240
+        LambdaFunctionDescription: Returns Module Data for download.
+        LambdaFunctionFunctionName: APIGetDownloadModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPutRemoveModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Deletes Module Data in draft and rejected status.
+        LambdaFunctionFunctionName: APIPutRemoveModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPutRemoveStationId:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Deletes station with no uploaded data.
+        LambdaFunctionFunctionName: APIPutRemoveStationId
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetSubrecipients:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all subrecipients from DynamoDB.
+        LambdaFunctionFunctionName: APIGetSubrecipients
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDirectRecipients:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all direct-recipients from DynamoDB.
+        LambdaFunctionFunctionName: APIGetDirectRecipients
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetUploadOptions:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Returns the upload options avaliable.
+        LambdaFunctionFunctionName: APIGetUploadOptions
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDraftOrSubmittedData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all the drafts or submitted modules given a DR or SR
+        LambdaFunctionFunctionName: APIGetDraftOrSubmittedData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPutSubmitModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Submit module data for direct-recipient and sub-recipient.
+        LambdaFunctionFunctionName: APIPutSubmitModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPutSubmissionApproval:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Updates the submission status for a given upload id.
+        LambdaFunctionFunctionName: APIPutSubmissionApproval
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetColumnDefinitions:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return column definitions.
+        LambdaFunctionFunctionName: APIGetColumnDefinitions
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetNetworkProviders:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return network providers for station registration.
+        LambdaFunctionFunctionName: APIGetNetworkProviders
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetStationsById:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return charging station data from Aurora.
+        LambdaFunctionFunctionName: APIGetStationsById
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetStationsByOrgId:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return charging station data from Aurora.
+        LambdaFunctionFunctionName: APIGetStationsByOrgId
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPostImportModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Import module data into aurora and add metadata.
+        LambdaFunctionFunctionName: APIPostImportModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPostS2SImportModuleData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Import module data into aurora and add metadata using api key.
+        LambdaFunctionFunctionName: APIPostS2SImportModuleData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPostStation:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Send charging station data to Aurora.
+        LambdaFunctionFunctionName: APIPostStation
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetModuleDetails:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Returns the upload options avaliable.
+        LambdaFunctionFunctionName: APIGetModuleDetails
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDecisionDetails:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return decision details from Aurora given upload_id.
+        LambdaFunctionFunctionName: APIGetDecisionDetails
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetUsersByOrgId:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return users in an organzation from DynamoDB given an org id.
+        LambdaFunctionFunctionName: APIGetUsersByOrgId
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetOrgUserData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return users in an organzation from DynamoDB given an org id.
+        LambdaFunctionFunctionName: APIGetOrgUserData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetPresignedUrl:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return a presigned URL of the requested type and expiration time.
+        LambdaFunctionFunctionName: APIGetPresignedUrl
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPostUser:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Adds a new user into DynamoDB table.
+        LambdaFunctionFunctionName: APIPostUser
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPostOrg:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Adds a new org into DynamoDB table.
+        LambdaFunctionFunctionName: APIPostOrg
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPatchStation:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Update charging station data in Aurora.
+        LambdaFunctionFunctionName: APIPatchStation
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetStatus:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return relevant application status options.
+        LambdaFunctionFunctionName: APIGetStatus
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetS2SModuleDetails:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return relevant application status options using api key.
+        LambdaFunctionFunctionName: APIGetS2SModuleDetails
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+
+  LambdaResourceAPIFeatureFlags:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return relevant application status options.
+        LambdaFunctionFunctionName: APIFeatureFlags
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetModuleHistoryLog:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return history log for a given module ID.
+        LambdaFunctionFunctionName: APIGetModuleHistoryLog
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetAuthorizations:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return the DR authorizations based off of the SRs org_id in its token.
+        LambdaFunctionFunctionName: APIGetAuthorizations
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetSubmissionTracker:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return module data submission statuses for a DR based off of the org id from the token
+        LambdaFunctionFunctionName: APIGetSubmissionTracker
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetReportingYears:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Returns all reporting years available based off submitted module data
+        LambdaFunctionFunctionName: APIGetReportingYears
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIPatchUser:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Remove user from an org.
+        LambdaFunctionFunctionName: APIPatchUser
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetImportErrorData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all error data from imports based on upload_id
+        LambdaFunctionFunctionName: APIGetImportErrorData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardProgramPerformance:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardProgramPerformance
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardPPFederallyFundedNetworkSize:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardPPFederallyFundedNetworkSize
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardPPReliability:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardPPReliability
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardPPCapitalCosts:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardPPCapitalCosts
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+
+  LambdaResourceAPIGetDashboardPPMaintenanceCosts:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardPPMaintenanceCosts
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardPPEnergyUsage:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard program performance data
+        LambdaFunctionFunctionName: APIGetDashboardPPEnergyUsage
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIGetDashboardSubmissionDetails:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return all dashboard submission details data
+        LambdaFunctionFunctionName: APIGetDashboardSubmissionDetails
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPIToken:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return the JWT when providing a valid authentication code from Cognito.
+        LambdaFunctionFunctionName: APIToken
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAPILogout:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Process any necessary tasks when logging out from the application.
+        LambdaFunctionFunctionName: APILogout
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceCognitoPreTokenGenTrigger:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Cognito pre-token generation trigger to add custom claims to user identity tokens.
+        LambdaFunctionFunctionName: CognitoPreTokenGenTrigger
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceCognitoPreTokenGenTriggerPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceCognitoPreTokenGenTrigger.Outputs.LambdaFunctionArn
+      Principal: cognito-idp.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn:  !If
+        - isNotSubEnvironment
+        - !GetAtt Cognito.Outputs.CognitoUserPoolArn
+        - !Sub
+          - arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPoolId}
+          -
+            UserPoolId: "{{resolve:ssm:/ev-chart/cognito/user_pool_id}}"
+
+  LambdaResourceCopyRDSSnapshot:
+    Type: AWS::CloudFormation::Stack
+    Condition: isPrimaryRegion
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Replicate the daily automated Aurora snapshot to the us-west-2 region for DR purposes.
+        LambdaFunctionFunctionName: CopyRDSSnapshot
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceCopyRDSSnapshotEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isPrimaryRegion
+    Properties:
+      Description: Scheduled event rule to trigger the automated Aurora snapshot replication to the us-east-2 region for
+        DR purposes.
+      Name: !Sub
+        - EV-ChART_CopyRDSSnapshot${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: cron(45 5 * * ? *)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceCopyRDSSnapshot.Outputs.LambdaFunctionArn
+          Id: EV-ChART_CopyRDSSnapshot
+
+  LambdaResourceCopyRDSSnapshotLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Condition: isPrimaryRegion
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceCopyRDSSnapshot.Outputs.LambdaFunctionArn
+      Principal: events.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt LambdaResourceCopyRDSSnapshotEventsRule.Arn
+
+  LambdaResourceInfraInitOrganization:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Initialize new organizations.
+        LambdaFunctionFunctionName: InfraInitOrganization
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraRemoveTestData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Remove all uploaded/station data associated to JO org
+        LambdaFunctionFunctionName: InfraRemoveTestData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraDeleteStation:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Remove a station if it has no module data
+        LambdaFunctionFunctionName: InfraDeleteStation
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraChangeUploadStatus:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Change submission status of upload
+        LambdaFunctionFunctionName: InfraChangeUploadStatus
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraDBCreateStoredProcedures:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Create SQL procedures for application. only create stored procedures here
+        LambdaFunctionFunctionName: InfraDBCreateStoredProcedures
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref PipelineTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraDBMigrations:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Runs migration scripts
+        LambdaFunctionFunctionName: InfraDBMigrations
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref PipelineTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceInfraDBCreateTriggers:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Create SQL triggers
+        LambdaFunctionFunctionName: InfraDBCreateTriggers
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref PipelineTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceIdleUserReport:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Condition: isNotSubEnvironment
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Generate list of accounts that have exceed maximum time since last login.
+        LambdaFunctionFunctionName: IdleUserReport
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceIdleUserReportEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Scheduled event rule to check for idle user accounts
+      Name: !Sub
+        - EV-ChART_IdleUserReport${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: cron(45 4 * * ? *)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceIdleUserReport.Outputs.LambdaFunctionArn
+          Id: EV-ChART_IdleUserReport
+
+  LambdaResourceIdleUserReportLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Condition: isNotSubEnvironment
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceIdleUserReport.Outputs.LambdaFunctionArn
+      Principal: events.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt LambdaResourceIdleUserReportEventsRule.Arn
+
+  SSMParameterLambdaIdleUserMax:
+    Type: AWS::SSM::Parameter
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Maximum days before an EV-ChART user account is flagged as idle.
+      Name: !Sub
+        - /ev-chart/lambda${SubEnvironmentPath}/idle-user-report/max-idle
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: 400
+
+  SSMParameterLambdaIdleUserMaxPending:
+    Type: AWS::SSM::Parameter
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Maximum pending days before an EV-ChART user account is flagged as idle.
+      Name: !Sub
+        - /ev-chart/lambda${SubEnvironmentPath}/idle-user-report/max-pending
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: 30
+
+  LambdaResourceReplicateKMSKey:
+    Type: AWS::CloudFormation::Stack
+    Condition: isPrimaryEnvironment
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Replicate the deployed KMS CMK to the us-west-2 region for DR purposes.
+        LambdaFunctionFunctionName: ReplicateKMSKey
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceReplicateKMSKeyCustomResource:
+    Type: Custom::ReplicateKMSKey
+    Condition: isPrimaryEnvironment
+    Properties:
+      ServiceToken: !GetAtt LambdaResourceReplicateKMSKey.Outputs.LambdaFunctionArn
+
+  LambdaResourceTestUserData:
+    Type: AWS::CloudFormation::Stack
+    Condition: isNotProd
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Deploy test user data to the EV-ChART DynamoDB table.
+        LambdaFunctionFunctionName: TestUserData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceEmailSender:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Sends emails to Proofpoint/customers from an SQS queue.
+        LambdaFunctionFunctionName: EmailSender
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceAsyncFileIntegrity:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Checks file integrity from an SQS queue.
+        LambdaFunctionFunctionName: AsyncFileIntegrity
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+        - isNotSubEnvironment
+        - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+        - !Ref SubEnvironment
+
+  LambdaResourceAsyncDataValidation:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: S3 triggers on put and validates data.
+        LambdaFunctionFunctionName: AsyncDataValidation
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionMemorySize: 10240
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceAsyncBizMagic:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Perform full-record custom validation and transformation
+        LambdaFunctionFunctionName: AsyncBizMagic
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceAsyncValidatedUpload:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Loads validated data into RDS database
+        LambdaFunctionFunctionName: AsyncValidatedUpload
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceAsyncUpdateStatus:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Updates the status of files uploaded async.
+        LambdaFunctionFunctionName: AsyncUpdateStatus
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceAPIGetSubmittingNullData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Return boolean on whether null data is being submitted, gived upload_id and module_id
+        LambdaFunctionFunctionName: APIGetSubmittingNullData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          -
+            - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [ ",", !Ref VpcSubnetIdsPrivate ]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+        - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  LambdaResourceScheduledMetadataCleanup:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Scheduled Lambda that finds and removes uncompleted uploads
+        LambdaFunctionFunctionName: ScheduledMetadataCleanup
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceScheduledMetadataCleanupEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Scheduled event rule to check uncompleted uploads
+      Name: !Sub
+        - EV-ChART_ScheduledMetadataCleanup${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: rate(1 day)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceScheduledMetadataCleanup.Outputs.LambdaFunctionArn
+          Id: EV-ChART_ScheduledMetadataCleanup
+
+  LambdaResourceScheduledMetadataCleanupLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Condition: isNotSubEnvironment
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceScheduledMetadataCleanup.Outputs.LambdaFunctionArn
+      Principal: events.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt LambdaResourceScheduledMetadataCleanupEventsRule.Arn
+
+  LambdaResourceScheduledDatabaseDriftDetection:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Scheduled Lambda reports drift between central config and deployed database schemas
+        LambdaFunctionFunctionName: ScheduledDatabaseDriftDetection
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceScheduledAPIKeyExpirationEmail:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Scheduled Lambda that finds api keys about to expire and sends email to org admins
+        LambdaFunctionFunctionName: ScheduledAPIKeyExpirationEmail
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceScheduledAPIKeyExpirationEmailEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Scheduled event rule to check uncompleted uploads
+      Name: !Sub
+        - EV-ChART_ScheduledAPIKeyExpirationEmail${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: rate(1 day)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceScheduledAPIKeyExpirationEmail.Outputs.LambdaFunctionArn
+          Id: EV-ChART_ScheduledMetadataCleanup
+
+  LambdaResourceScheduledAPIKeyExpirationEmailLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Condition: isNotSubEnvironment
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceScheduledAPIKeyExpirationEmail.Outputs.LambdaFunctionArn
+      Principal: events.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !GetAtt LambdaResourceScheduledAPIKeyExpirationEmailEventsRule.Arn
+
+  LambdaResourceScheduledSubmissionDeadlineEmail:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Scheduled Lambda that finds past due submissions and emails reminders
+        LambdaFunctionFunctionName: ScheduledSubmissionDeadlineEmail
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceRestoreDynamoDBBackupData:
+    Type: AWS::CloudFormation::Stack
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Parameters:
+        LambdaFunctionDescription: Function that will ease redeployment of data found in DynamoDB backups.
+        LambdaFunctionFunctionName: RestoreDynamoDBBackupData
+        LambdaFunctionLayerArns: !Join
+          - ","
+          - - !Ref LambdaLayerPython
+            - !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:336392948345:layer:AWSSDKPandas-Python311:${PandasLayerPythonVersion}
+        LambdaFunctionNetworkProxy: !Ref NetworkProxy
+        LambdaFunctionNetworkProxyCert: !Ref NetworkProxyCert
+        LambdaFunctionTimeout: !Ref AsyncTimeout
+        LambdaFunctionVpcConfigSecurityGroupId: !Ref VpcSecurityGroupId
+        LambdaFunctionVpcConfigSubnetIds: !Join [",", !Ref VpcSubnetIdsPrivate]
+        LambdaResourceCommitId: !Ref LambdaResourceCommitId
+        SubEnvironment: !If
+          - isNotSubEnvironment
+          - !Ref AWS::NoValue
+          - !Ref SubEnvironment
+      #Tags:
+      TemplateURL: !Sub
+      - https://ev-chart-artifact-${Environment}-${AWS::Region}.s3.${AWS::Region}.amazonaws.com/deploy/templates/lambda_resource.template.yml
+      - Environment: !If
+          - isNotSubEnvironment
+          - !FindInMap [EnvironmentMap, !Ref 'AWS::AccountId', Environment]
+          - !Ref SubEnvironment
+
+  LambdaResourceScheduledSubmissionDeadlineQuarterlyEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Scheduled event rule to check for past due submissions (quarterly)
+      Name: !Sub
+        - EV-ChART_ScheduledSubmissionDeadlineQuarterly${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: cron(0 13 3-5,21-23 FEB,MAY,AUG,NOV ? *)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceScheduledSubmissionDeadlineEmail.Outputs.LambdaFunctionArn
+          Id: EV-ChART_ScheduledDeadlineEmail
+
+  LambdaResourceScheduledSubmissionDeadlineYearlyEventsRule:
+    Type: AWS::Events::Rule
+    Condition: isNotSubEnvironment
+    Properties:
+      Description: Scheduled event rule to check for past due submissions (Yearly)
+      Name: !Sub
+        - EV-ChART_ScheduledSubmissionDeadlineYearly${SubEnvironmentName}
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+      ScheduleExpression: cron(0 13 4-6,22-24 MAR ? *)
+      State: ENABLED
+      Targets:
+        -
+          Arn: !GetAtt LambdaResourceScheduledSubmissionDeadlineEmail.Outputs.LambdaFunctionArn
+          Id: EV-ChART_ScheduledDeadlineEmail
+
+  LambdaResourceScheduledSubmissionDeadlineLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Condition: isNotSubEnvironment
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt LambdaResourceScheduledSubmissionDeadlineEmail.Outputs.LambdaFunctionArn
+      Principal: events.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+
+  SQSOutboundEmail:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub
+      - ev-chart-outbound${SubEnvironmentName}
+      - SubEnvironmentName: !If
+          - isNotSubEnvironment
+          - ""
+          - !Sub _${SubEnvironment}
+
+  SQSAsyncDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: True
+      QueueName: !Sub
+        - ev-chart-async-dlq${SubEnvironmentName}.fifo
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+
+  SQSFifoAsyncFileIntegrity:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SQSAsyncDLQ.Arn
+        maxReceiveCount: 5
+      FifoQueue: True
+      VisibilityTimeout: !Ref AsyncTimeout
+      FifoThroughputLimit: perMessageGroupId
+      DeduplicationScope: messageGroup
+      QueueName: !Sub
+        - ev-chart-file-integrity${SubEnvironmentName}.fifo
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+
+  SQSFifoAsyncDataValidation:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SQSAsyncDLQ.Arn
+        maxReceiveCount: 5
+      FifoQueue: True
+      VisibilityTimeout: !Ref AsyncTimeout
+      FifoThroughputLimit: perMessageGroupId
+      DeduplicationScope: messageGroup
+      QueueName: !Sub
+        - ev-chart-data-validation${SubEnvironmentName}.fifo
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+
+  SQSFifoAsyncBizMagic:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SQSAsyncDLQ.Arn
+        maxReceiveCount: 5
+      FifoQueue: True
+      VisibilityTimeout: !Ref AsyncTimeout
+      FifoThroughputLimit: perMessageGroupId
+      DeduplicationScope: messageGroup
+      QueueName: !Sub
+        - ev-chart-biz-magic${SubEnvironmentName}.fifo
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+
+  SQSFifoAsyncUpdateStatus:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt SQSAsyncDLQ.Arn
+        maxReceiveCount: 5
+      FifoQueue: True
+      VisibilityTimeout: !Ref AsyncTimeout
+      FifoThroughputLimit: perMessageGroupId
+      DeduplicationScope: messageGroup
+      QueueName: !Sub
+        - ev-chart-async-status${SubEnvironmentName}.fifo
+        -
+          SubEnvironmentName: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub _${SubEnvironment}
+
+  SNSFifoAsyncTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      KmsMasterKeyId: alias/ev-chart/general
+      FifoTopic: True
+      ContentBasedDeduplication: False
+      TopicName: !Sub
+        - ev-chart-async${SubEnvironmentName}.fifo
+        - SubEnvironmentName: !If
+          - isNotSubEnvironment
+          - ""
+          - !Sub _${SubEnvironment}
+
+  SNSAsyncFileIntegritySQSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSFifoAsyncTopic
+      Endpoint: !GetAtt SQSFifoAsyncFileIntegrity.Arn
+      Protocol: sqs
+      RawMessageDelivery: True
+      FilterPolicy:
+        file-integrity:
+          - passed
+
+  SNSAsyncDataValidationSQSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSFifoAsyncTopic
+      Endpoint: !GetAtt SQSFifoAsyncDataValidation.Arn
+      Protocol: sqs
+      RawMessageDelivery: True
+      FilterPolicy:
+        data-validation:
+          - passed
+
+  SNSAsyncBizMagicSQSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSFifoAsyncTopic
+      Endpoint: !GetAtt SQSFifoAsyncBizMagic.Arn
+      Protocol: sqs
+      RawMessageDelivery: True
+      FilterPolicy:
+        biz-magic:
+          - passed
+
+  SNSAsyncUpdateStatusSQSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref SNSFifoAsyncTopic
+      Endpoint: !GetAtt SQSFifoAsyncUpdateStatus.Arn
+      Protocol: sqs
+      RawMessageDelivery: True
+
+  EmailSenderSQSTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !GetAtt LambdaResourceEmailSender.Outputs.LambdaFunctionArn
+      EventSourceArn: !GetAtt SQSOutboundEmail.Arn
+
+  AsyncDataValidationSQSTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !GetAtt LambdaResourceAsyncDataValidation.Outputs.LambdaFunctionArn
+      EventSourceArn: !GetAtt SQSFifoAsyncFileIntegrity.Arn
+      FunctionResponseTypes:
+        - ReportBatchItemFailures
+      #ScalingConfig:
+        #MaximumConcurrency: 10 Future configuration options
+      BatchSize: 1
+
+  AsyncBizMagicSQSTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !GetAtt LambdaResourceAsyncBizMagic.Outputs.LambdaFunctionArn
+      EventSourceArn: !GetAtt SQSFifoAsyncDataValidation.Arn
+      FunctionResponseTypes:
+        - ReportBatchItemFailures
+      #ScalingConfig:
+        #MaximumConcurrency: 10 Future configuration options
+      BatchSize: 1
+
+  AsyncValidatedUploadSQSTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !GetAtt LambdaResourceAsyncValidatedUpload.Outputs.LambdaFunctionArn
+      EventSourceArn: !GetAtt SQSFifoAsyncBizMagic.Arn
+      FunctionResponseTypes:
+        - ReportBatchItemFailures
+      BatchSize: 1
+
+  AsyncUpdateStatusSQSTrigger:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: !GetAtt LambdaResourceAsyncUpdateStatus.Outputs.LambdaFunctionArn
+      EventSourceArn: !GetAtt SQSFifoAsyncUpdateStatus.Arn
+      FunctionResponseTypes:
+        - ReportBatchItemFailures
+      BatchSize: 1
+
+  S3BucketDataTransfer:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    DependsOn: LambdaS3TriggerPermission
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED
+          - S3_BUCKET_DEFAULT_LOCK_ENABLED
+          - S3_BUCKET_LOGGING_ENABLED
+          - S3_BUCKET_PUBLIC_READ_PROHIBITED
+          - S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+          - S3_BUCKET_REPLICATION_ENABLED
+        SuppressedRulesDescription:
+          S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_DEFAULT_LOCK_ENABLED: >
+            Not needed as data retention is satisfied by loading the data in the database.
+            Incorrect/error data does not need to be retained.
+          S3_BUCKET_LOGGING_ENABLED: >
+            Not needed as the S3 buckets are not public and are only accessible by the AWS account
+            and any fedarated identities.
+          S3_BUCKET_PUBLIC_READ_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_PUBLIC_WRITE_PROHIBITED: >
+            Not needed as S3 public access is blocked by default for the AWS account.
+          S3_BUCKET_REPLICATION_ENABLED: >
+            Not needed as replication is not needed.
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          -
+            BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              KMSMasterKeyID: !Sub arn:${AWS::Partition}:kms:${AWS::Region}:${AWS::AccountId}:alias/ev-chart/general
+              SSEAlgorithm: aws:kms
+      BucketName: !Sub
+        - ev-chart-artifact-data-${Environment}-${AWS::Region}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+      LifecycleConfiguration:
+        Rules:
+          -
+            ExpirationInDays: 1
+            Id: DownloadLifecycle
+            Prefix: download
+            Status: Enabled
+            #Transitions:
+            #  -
+            #    TransitionInDays: 30
+            #    StorageClass: GLACIER
+          -
+            ExpirationInDays: 1
+            Id: UploadLifecycle
+            Prefix: upload
+            Status: Enabled
+            #Transitions:
+            #  -
+            #    TransitionInDays: 30
+            #    StorageClass: GLACIER
+      NotificationConfiguration:
+        LambdaConfigurations:
+          -
+            Event: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  -
+                    Name: prefix
+                    Value: upload/
+            Function: !GetAtt LambdaResourceAsyncFileIntegrity.Outputs.LambdaFunctionArn
+      VersioningConfiguration:
+        Status: Enabled
+      #Tags:
+
+  S3BucketDataTransferBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: isDev
+    Properties:
+      Bucket: !Ref S3BucketDataTransfer
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+            Effect: Deny
+            Principal: "*"
+            Resource: !Sub ${S3BucketDataTransfer.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: false
+          -
+            Action:
+              - s3:GetObject
+              - s3:PutObject
+            Effect: Allow
+            Principal: "*"
+            Resource: !Sub ${S3BucketDataTransfer.Arn}/*
+            Condition:
+              StringEquals:
+                aws:SourceVpc: !FindInMap [ VpcIdMap, !Ref AWS::Region, !Ref AWS::AccountId ]
+        Version: 2012-10-17
+
+  LambdaS3TriggerPermission:
+    Type: AWS::Lambda::Permission
+    Metadata:
+      guard:
+        SuppressedRules:
+          - LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED
+        SuppressedRulesDescription:
+          LAMBDA_FUNCTION_PUBLIC_ACCESS_PROHIBITED: >
+            Not relevant for this resource as the permission policy only allows the S3 service to
+            invoke the function.
+    Properties:
+      FunctionName: !GetAtt LambdaResourceAsyncFileIntegrity.Outputs.LambdaFunctionArn
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref 'AWS::AccountId'
+      SourceArn: !Sub
+        - arn:${AWS::Partition}:s3:::ev-chart-artifact-data-${Environment}-${AWS::Region}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  SQSAsyncPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "SQS:SendMessage"
+            Effect: "Allow"
+            Resource: !Sub "arn:${AWS::Partition}:sqs:${AWS::Region}:${AWS::AccountId}:ev-chart-*"
+            Principal:
+              Service:
+                - "sns.amazonaws.com"
+      Queues:
+        - !Ref SQSFifoAsyncFileIntegrity
+        - !Ref SQSFifoAsyncDataValidation
+        - !Ref SQSFifoAsyncBizMagic
+        - !Ref SQSFifoAsyncUpdateStatus
+
+  SSMParameterApplicationMaintenance:
+    Type: AWS::SSM::Parameter
+    Properties:
+      AllowedPattern: ^(?:True|False)$
+      Description: '"True" if the application should be considered in maintenance mode, "False" otherwise.'
+      Name: !Sub
+        - /ev-chart/status${SubEnvironmentPath}/maintenance
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "False" # Use double-quotes to avoid YAML parsing the value as a boolean.
+
+  SSMParameterDynamoDBTableName:
+    Type: AWS::SSM::Parameter
+    Condition: isPrimaryEnvironment
+    Properties:
+      Description: The name of the EV-ChART DynamoDB users table.
+      Name: /ev-chart/dynamodb/table
+      Type: String
+      Value: !Ref DynamoDBGlobalTable
+
+  SSMParameterAsyncTopicArn:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The arn of the EV-ChART Async SNS Topic.
+      Name: !Sub
+        - /ev-chart/async${SubEnvironmentPath}/async-topic-arn
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !Ref SNSFifoAsyncTopic
+
+  SSMParameterS3BucketName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The name of the EV-ChART static asset S3 bucket.
+      Name: !Sub
+        - /ev-chart/s3${SubEnvironmentPath}/static-asset-bucket-name
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !Sub
+        - ev-chart-artifact-${Environment}-${AWS::Region}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  SSMParameterS3AsyncArtifactBucketName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The name of the EV-ChART async
+      Name: !Sub
+        - /ev-chart/s3${SubEnvironmentPath}/async-artifact-bucket-name
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !Sub
+        - ev-chart-artifact-data-${Environment}-${AWS::Region}
+        -
+          Environment: !If
+            - isNotSubEnvironment
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - !Ref SubEnvironment
+
+  SSMParameterFeatureFlagAddUser:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for add user feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/add-user
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagS2S:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: JE-3476 Feature flag for s2s feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/s2s
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagSubmissionTracker:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for submission tracker feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/submission-tracker
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagQueryDownloadRefactor:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for removing the stored procedure from GetDownloadModuleData
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/query-download-refactor
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagSendEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for send email feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/send-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagNewUserEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for send email feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/new-user-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDataApprovalRejection:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for send email feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/data-approval-rejection-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagStationAuthorizesSr:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for when a DR authorizes an SR and email is sent to SR.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/station-authorizes-sr-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagModuleFiceNulls:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for when handling module five null data
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/module-five-nulls
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "False"
+
+  SSMParameterFeatureFlagNetworkProviderTable:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for when handling new network provider table
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/network-provider-table
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagJOPPDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing the tab for the JO Program Performance dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/jo-pp-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagJOSSDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing the tab for the JO Submission Status dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/jo-ss-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "False"
+
+  SSMParameterFeatureFlagDRPPDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing the tab for the DR Program Performance dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-pp-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDRPPDashboardReportingYearFilter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for filtering the DR Program Performance dashboard by reporting year.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-pp-dashboard-reporting-year
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDRPPDashboardDynamicUnits:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for dynamically updating the magnitude of kpi units on the DR Program Performance Dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-pp-dashboard-dynamic-units
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDRPPDashboardOfficialUptime:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing official uptime KPIs on the DR Program Performance Dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-pp-dashboard-official-uptime
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagExcludedOutagesModuleFour:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for including excluded outages for module 4.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/excluded-outages-module-four
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDRSSDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing the tab for the DR Submission Status dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-ss-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !If
+        - isNotProd
+        - "True"
+        - "False"
+
+  SSMParameterFeatureFlagDRSTDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for showing the tab for the DR Submission Tracker Details dashboard.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/dr-st-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagResourcesTechnicalNotesDRPPDashboard:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for page under the Resources tab explaining DR Program Performance Dashboard calculations.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/resources-technical-notes-dr-pp-dashboard
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule2:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 2
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-2
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule3:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 3
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-3
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule4:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 4
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-4
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule5:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 5
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-5
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule6:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 6
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-6
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule7:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 7
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-7
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule8:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 8
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-8
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagUniqueConstraintModule9:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for enforcing unique constraint on module 9
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/unique-constraint-module-9
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagRemoveStation:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for remove station functionality.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/remove-station
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagRemoveModuleData:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for removing module data from import metadata and module table.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/remove-module-data
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+
+  SSMParameterFeatureFlagPresignedUrl:
+    Type: AWS::SSM::Parameter
+    Condition: isDev
+    Properties:
+      Description: Feature flag for using the presigned URL feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/presigned-url
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagFileUploadFailEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for an email when file upload fails.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/file-upload-fail-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagInsertRDSFailEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for an email when inserting into RDS fails.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/insert-rds-fail-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDataProcessingFailEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for an email when data processing fails.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/data-processing-fail-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDataProcessingSuccessEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for an email when data processing is successful.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/data-processing-success-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDataAwaitingReviewEmail:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for an email when data is awaiting review.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/data-awaiting-review-email
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagRemoveModule:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for removing drafts and rejected modules.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/remove-module
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagSRAddsStation:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for SR adding a station
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/sr-adds-station
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagRegisterNonFedFundedStation:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for allowing users to register non-federally funded stations
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/register-non-fed-funded-station
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAddSROrg:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for DR admins adding SR orgs
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/add-sr-org
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagJOAddOrg:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for JO admins creating organizations
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/jo-add-org
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagRDSProxy:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using the RDS Proxy service for Aurora connection handling.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/use-rds-proxy
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+
+  SSMParameterFeatureFlagStationSubmissionDetails:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for station submission details feature.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/station-submission-details
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagStationSubmissionDetailsReportingYearFilter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for filtering the station submission details page by reporting year.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/station-submission-details-reporting-year
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagSubmissionTrackerSubrecipientFilter:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for DR admins filtering the Submission Tracker by subrecipient/contractor.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/submission-tracker-subrecipient-filter
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagDatabaseCentralConfig:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for referring API calls to use database central config
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/database-central-config
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagBizMagic:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using biz magic
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/biz-magic
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAsyncBizMagicModule2:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using async biz magic on module 2
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/async-biz-magic-module-2
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAsyncBizMagicModule3:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using async biz magic on module 3
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/async-biz-magic-module-3
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAsyncBizMagicModule4:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using biz magic on module 4
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/async-biz-magic-module-4
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAsyncBizMagicModule5:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using biz magic on module 5
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/async-biz-magic-module-5
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagAsyncBizMagicModule9:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for using biz magic on module 9
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/async-biz-magic-module-9
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+  SSMParameterFeatureFlagNTierOrganizations:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for n-tier organization creation.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/n-tier-organizations
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !If
+        - isDev
+        - "True"
+        - "False"
+
+  SSMParameterFeatureFlagCheckDuplicatesUpload:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: Feature flag for check duplicates at upload stage.
+      AllowedPattern: ^(?:True|False)$
+      Name: !Sub
+        - /ev-chart/features${SubEnvironmentPath}/check-duplicates-upload
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "True"
+
+
+  # Allow MySQL access from the application Lambda functions.
+  VPCEC2SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      FromPort: !GetAtt AuroraDatabase.Outputs.EndpointPort
+      GroupId: !Ref VpcSecurityGroupId
+      IpProtocol: tcp
+      SourceSecurityGroupId: !Ref VpcSecurityGroupId
+      ToPort: !GetAtt AuroraDatabase.Outputs.EndpointPort
+
+  # Allow MySQL access from the DOE secure gateway device.
+  VPCEC2SecurityGroupIngressSecureGateway:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      CidrIp: 146.138.208.51/32
+      FromPort: !GetAtt AuroraDatabase.Outputs.EndpointPort
+      GroupId: !Ref VpcSecurityGroupId
+      IpProtocol: tcp
+      ToPort: !GetAtt AuroraDatabase.Outputs.EndpointPort
+
+Outputs: {}

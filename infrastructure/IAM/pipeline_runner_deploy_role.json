@@ -1,0 +1,85 @@
+Trust:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::RUNNER_ACCOUNT_ID:role/RUNNER_ROLE"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+Permissions:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ReplacePlaceholder",
+            "Action": "iam:PassRole",
+            "Resource": "arn:aws:iam::ENV_ACCOUNT_ID:role/CLOUDFORMATION_ROLE",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:DeleteObject*",
+                "s3:GetBucket*",
+                "s3:GetObject*",
+                "s3:List*",
+                "s3:PutObject*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-artifact-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:Encrypt",
+                "kms:GenerateDataKey*",
+                "kms:ReEncrypt*",
+                "kms:Decrypt",
+                "kms:DescribeKey"
+            ],
+            "Resource": "arn:aws:kms:*:ENV_ACCOUNT_ID:*",
+            "Effect": "Allow",
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                },
+                "ForAnyValue:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                }
+            }
+        },
+        {
+            "Action": [
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStack*",
+                "cloudformation:DetectStack*",
+                "cloudformation:GetStackPolicy",
+                "cloudformation:GetTemplate*",
+                "cloudformation:SetStackPolicy",
+                "cloudformation:UpdateStack",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:ListChangeSets",
+                "cloudformation:ValidateTemplate",
+                "cloudformation:ListStackResources"
+            ],
+            "Resource": "arn:aws:cloudformation:*:ENV_ACCOUNT_ID:stack/ApplicationInfrastructureStack*",
+            "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "lambda:InvokeFunction"
+            ],
+            "Resource": "arn:aws:lambda:*:ENV_ACCOUNT_ID:function:*"
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+.submission-status-header {
+  width: 150px;
+}
+
+.tracker-icon-header {
+  width: 110px;
+}
+
+.submission-status-table {
+  margin-top: 0px !important;
+  line-height: 16px !important;
+}
+
+.submission-status-table-row {
+  border-bottom: 1px solid #e9e8e8;
+}
+
+.submission-status-table-row td {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+.submission-status-modal-heading {
+  border-bottom: 1px solid #9d9d9d;
+}

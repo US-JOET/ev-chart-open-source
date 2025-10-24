@@ -1,0 +1,223 @@
+.submission-tracker-filters {
+  margin-top: 1.5rem;
+}
+
+.submission-tracker__update-view-button {
+  position: absolute;
+  bottom: 0;
+}
+
+.submission-tracker__update-view-button.usa-button {
+  margin-right: 0;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.no-data-add-station-submission {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.sort-icon-tracker.usa-icon {
+  fill: #fff;
+  height: 20px;
+  margin-left: auto;
+  width: 20px;
+  right: 0;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  cursor: auto !important;
+}
+
+.nameColumnHeader {
+  cursor: pointer !important;
+}
+
+.submission-tracker-table__header-tooltip {
+  display: flex;
+}
+
+.tooltip-icon.usa-icon.tooltip-icon--margin-left-05 {
+  margin-left: 0.25rem;
+}
+
+.tooltip-icon.usa-icon.tooltip-icon--table-header {
+  fill: #ffffff;
+}
+
+.submission-tracker__subheading {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #9d9d9d;
+}
+
+#SubmissionTrackerTable .pagination-info-row-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#SubmissionTrackerTable .subLabel {
+  vertical-align: bottom !important;
+}
+
+#SubmissionTrackerTable .quarterSubLabel {
+  font-size: 12px;
+  font-family: "Montserrat-Regular";
+  font-weight: normal;
+}
+
+#SubmissionTrackerTable .pagination-info-row {
+  display: flex;
+  align-items: center;
+}
+
+#SubmissionTrackerTable .pagination-info-row .pagination-info-dropdown {
+  align-items: center;
+  display: flex;
+}
+
+#SubmissionTrackerTable .pagination-info {
+  margin-top: 16px;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+#SubmissionTrackerTable .pagination-info-row-count {
+  margin-right: 16px;
+  padding-right: 16px;
+  border-right: solid 1.5px #9d9d9d;
+}
+
+#SubmissionTrackerTable .pagination-info-row-per-page {
+  margin-right: 8px;
+}
+
+#usersSelectItemsPerPage {
+  border-radius: 5%;
+  margin-top: 0 !important;
+}
+
+#SubmissionTrackerTable .column-definitions-button {
+  font-family: Montserrat-Regular;
+  color: #005a7c;
+  background-color: #fff;
+  float: right;
+}
+
+.usa-table--borderless .submission-tracker-table__th {
+  line-height: 16px;
+  padding-bottom: 16px;
+  padding-top: 16px;
+}
+
+.usa-table--borderless .submission-tracker-table__td {
+  line-height: 16px;
+}
+
+td.name {
+  max-width: 220px;
+}
+
+td.submission-tracker-table__td--city {
+  max-width: 10.5rem;
+}
+
+.overflow-ellipsis.overflow-ellipsis--two-lines {
+  white-space: normal;
+}
+
+.overflow-ellipsis--two-lines {
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines */
+  line-clamp: 2; /* Also define the standard property 'line-clamp' for compatibility */
+  -webkit-box-orient: vertical;
+}
+
+td.submission-tracker-table__td--city,
+td.submission-tracker-table__td--one-time,
+td.submission-tracker-table__td--annual {
+  border-right: 1px solid #e9e8e8 !important;
+}
+
+.submission-tracker-table__td--status {
+  text-align: center;
+}
+
+.submission-tracker-table__th.city,
+.submission-tracker-table__th.one_time,
+.submission-tracker-table__th.annual {
+  position: relative;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.submission-tracker-table__th.one_time {
+  width: 7rem;
+}
+
+.submission-tracker-table__th.annual,
+.submission-tracker-table__th.quarter1,
+.submission-tracker-table__th.quarter2,
+.submission-tracker-table__th.quarter3,
+.submission-tracker-table__th.quarter4 {
+  width: 95px;
+}
+
+.submission-tracker-table__th.city::after,
+.submission-tracker-table__th.one_time::after,
+.submission-tracker-table__th.annual::after {
+  content: "";
+  position: absolute;
+  top: 25%;
+  right: 0;
+  height: 75%;
+  border-right: 1px solid rgba(240, 240, 240, 0.2);
+}
+
+.submission-tracker-tooltip-container .usa-tooltip__body {
+  padding: 1rem;
+  min-width: 18.625rem;
+}
+
+.submission-tracker-tooltip {
+  font-family: Montserrat-Regular;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.submission-tracker-tooltip__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: Montserrat-Thin;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.submission-tracker-tooltip__subheading {
+  margin-top: 0.25rem;
+}
+
+.submission-tracker-tooltip__contents {
+  margin-top: 1rem;
+}
+
+.submission-tracker-tooltip__module-name-label {
+  font-family: Montserrat-Thin;
+}
+
+.evchart-button-link.usa-button--unstyled {
+  font-family: "Montserrat-Regular";
+  color: #005a7c;
+  font-size: unset;
+  line-height: unset;
+}

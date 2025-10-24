@@ -1,0 +1,443 @@
+Trust:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "cloudformation.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+
+Permissions:
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "lambda:AddPermission",
+                "lambda:CreateFunction",
+                "lambda:InvokeFunction",
+                "lambda:DeleteFunction",
+                "lambda:DeleteLayerVersion",
+                "lambda:GetFunction",
+                "lambda:GetLayerVersion",
+                "lambda:PublishLayerVersion",
+                "lambda:RemovePermission",
+                "lambda:UpdateFunctionCode",
+                "lambda:UpdateFunctionConfiguration"
+            ],
+            "Resource": [
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:function:*",
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:layer:*",
+                "arn:aws:lambda:*:336392948345:layer:AWSSDKPandas-Python311:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "apigateway:DELETE",
+                "apigateway:GET",
+                "apigateway:PATCH",
+                "apigateway:POST",
+                "apigateway:PUT",
+                "apigateway:UpdateRestApiPolicy"
+            ],
+            "Resource": [
+                "arn:aws:apigateway:*::/restapis*",
+                "arn:aws:apigateway:*::/usageplans*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "logs:CreateLogGroup",
+                "logs:DeleteLogGroup",
+                "logs:PutRetentionPolicy"
+            ],
+            "Resource": [
+                "arn:aws:logs:*:ENV_ACCOUNT_ID:log-group:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "cognito-idp:CreateIdentityProvider",
+                "cognito-idp:CreateUserPoolClient",
+                "cognito-idp:CreateUserPoolDomain",
+                "cognito-idp:DeleteIdentityProvider",
+                "cognito-idp:DeleteUserPoolClient",
+                "cognito-idp:DeleteUserPoolDomain",
+                "cognito-idp:DescribeUserPool",
+                "cognito-idp:GetUserPoolMfaConfig",
+                "cognito-idp:UpdateIdentityProvider",
+                "cognito-idp:UpdateUserPoolClient",
+                "cognito-idp:UpdateUserPool",
+                "cognito-idp:UpdateUserPoolDomain",
+                "cognito-idp:ListTagsForResource",
+                "cognito-idp:UntagResource",
+                "cognito-idp:CreateResourceServer",
+                "cognito-idp:DeleteResourceServer",
+                "cognito-idp:DescribeResourceServer",
+                "cognito-idp:UpdateResourceServer"
+            ],
+            "Resource": [
+                "arn:aws:cognito-idp:*:ENV_ACCOUNT_ID:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "ssm:DeleteParameter*",
+                "ssm:PutParameter",
+                "ssm:GetParameters"
+            ],
+            "Resource": [
+                "arn:aws:ssm:*:ENV_ACCOUNT_ID:parameter/ev-chart/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "dynamodb:CreateGlobalTable",
+                "dynamodb:CreateTable",
+                "dynamodb:DeleteTable",
+                "dynamodb:DeleteTableReplica",
+                "dynamodb:DescribeContinuousBackups",
+                "dynamodb:DescribeGlobalTable",
+                "dynamodb:DescribeTable",
+                "dynamodb:UpdateContinuousBackups",
+                "dynamodb:UpdateGlobalTable",
+                "dynamodb:UpdateTable",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:CreateTableReplica",
+                "dynamodb:DeleteItem",
+                "dynamodb:DescribeContributorInsights",
+                "dynamodb:DescribeKinesisStreamingDestination",
+                "dynamodb:DescribeTimeToLive",
+                "dynamodb:GetItem",
+                "dynamodb:ListTagsOfResource",
+                "dynamodb:PutItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:UpdateItem",
+                "dynamodb:UntagResource",
+                "dynamodb:TagResource"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*:ENV_ACCOUNT_ID:table/*",
+                "arn:aws:dynamodb::ENV_ACCOUNT_ID:global-table/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "rds:AddTagsToResource",
+                "rds:CreateDBCluster",
+                "rds:CreateDBInstance",
+                "rds:CreateDBSubnetGroup",
+                "rds:DescribeDBClusters",
+                "rds:DescribeDBInstances",
+                "rds:DescribeDBSubnetGroups",
+                "rds:ModifyCurrentDBClusterCapacity",
+                "rds:ModifyDBCluster",
+                "rds:ModifyDBSubnetGroup",
+                "rds:RemoveTagsFromResource",
+                "rds:RestoreDBClusterFromSnapshot",
+                "rds:DescribeDBProxies",
+                "rds:DescribeDBProxyTargetGroups",
+                "rds:DescribeDBProxyTargets",
+                "rds:ModifyDBProxy",
+                "rds:DeregisterDBProxyTargets",
+                "rds:ModifyDBProxyTargetGroup",
+                "rds:RegisterDBProxyTargets",
+                "rds:ListTagsForResource"
+            ],
+            "Resource": [
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster-pg:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster-snapshot:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:db:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:subgrp:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:db-proxy:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:target-group:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "rds:CreateDBClusterParameterGroup",
+                "rds:DeleteDBClusterParameterGroup",
+                "rds:DescribeDBClusterParameters",
+                "rds:ModifyDBClusterParameterGroup",
+                "rds:RebootDBInstance"
+            ],
+            "Resource": [
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster-pg:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:db:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "events:DeleteRule",
+                "events:DescribeRule",
+                "events:PutRule",
+                "events:PutTargets",
+                "events:RemoveTargets"
+            ],
+            "Resource": [
+                "arn:aws:events:*:ENV_ACCOUNT_ID:rule/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "application-autoscaling:DeregisterScalableTarget"
+            ],
+            "Resource": [
+                "arn:aws:application-autoscaling:*:ENV_ACCOUNT_ID:scalable-target/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Sid": "RequiredToAddMYSQLPortForLambdaRDS",
+            "Action": [
+                "ec2:AuthorizeSecurityGroupIngress",
+                "ec2:RevokeSecurityGroupIngress"
+            ],
+            "Resource": [
+                "arn:aws:ec2:*:ENV_ACCOUNT_ID:security-group/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "sns:CreateTopic",
+                "sns:DeleteTopic",
+                "sns:ListSubscriptionsByTopic",
+                "sns:SetTopicAttributes",
+                "sns:GetTopicAttributes"
+            ],
+            "Resource": [
+                "arn:aws:sns:*:ENV_ACCOUNT_ID:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "secretsmanager:CreateSecret"
+            ],
+            "Resource": [
+                "arn:aws:secretsmanager:*:ENV_ACCOUNT_ID:secret:rds!*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:GetBucket*",
+                "s3:GetObject*",
+                "s3:CreateBucket",
+                "s3:PutEncryptionConfiguration",
+                "s3:List*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-artifact-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:CreateAlias",
+                "kms:CreateGrant",
+                "kms:Decrypt",
+                "kms:DeleteAlias",
+                "kms:DescribeKey",
+                "kms:EnableKeyRotation",
+                "kms:PutKeyPolicy",
+                "kms:ScheduleKeyDeletion"
+            ],
+            "Resource": "arn:aws:kms:*:ENV_ACCOUNT_ID:*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:Encrypt",
+                "kms:GenerateDataKey*",
+                "kms:ReEncrypt*"
+            ],
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                },
+                "ForAnyValue:StringEquals": {
+                    "kms:ResourceAliases": "alias/ev-chart/general"
+                }
+            },
+            "Resource": "arn:aws:kms:*:ENV_ACCOUNT_ID:*",
+            "Effect": "Allow"
+        },
+        {
+            "Sid": "NeedsLambdaIAMRoleName",
+            "Action": [
+                "iam:GetRole",
+                "iam:PassRole",
+                "iam:CreateServiceLinkedRole"
+            ],
+            "Resource": [
+                "arn:aws:iam::ENV_ACCOUNT_ID:role/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Sid": "NotResourceLevel",
+            "Action": [
+                "cognito-idp:CreateUserPool",
+                "ec2:DescribeSecurityGroups",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcs",
+                "kms:CreateKey",
+                "rds:CreateDBProxy"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "rds:ModifyDBInstance"
+            ],
+            "Resource": [
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:cluster:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:db:*",
+                "arn:aws:rds:*:ENV_ACCOUNT_ID:subgrp:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:PutBucketVersioning"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-artifact-*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "logs:DescribeLogGroups"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "lambda:GetEventSourceMapping",
+                "lambda:UpdateEventSourceMapping"
+            ],
+            "Resource": [
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:function:*",
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:layer:*",
+                "arn:aws:lambda:*:336392948345:layer:AWSSDKPandas-Python311:*",
+                "arn:aws:lambda:*:ENV_ACCOUNT_ID:event-source-mapping:*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "lambda:CreateEventSourceMapping",
+                "lambda:DeleteEventSourceMapping"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "sqs:GetQueueAttributes",
+                "sqs:SetQueueAttributes",
+                "sqs:DeleteQueue",
+                "sqs:CreateQueue"
+            ],
+            "Resource": [
+                "arn:aws:sqs:*:ENV_ACCOUNT_ID:ev-chart*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "sns:Subscribe",
+                "sns:Unsubscribe"
+            ],
+            "Resource": "arn:aws:sns:*:ENV_ACCOUNT_ID:ev-chart-*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutBucketNotification",
+                "s3:GetBucketNotification",
+                "s3:PutLifecycleConfiguration",
+                "s3:PutBucketPolicy"
+            ],
+            "Resource": [
+                "arn:aws:s3:::ev-chart-*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:UpdateStack",
+                "cloudformation:CreateStack",
+                "cloudformation:DescribeStack*",
+                "cloudformation:DetectStack*",
+                "cloudformation:DeleteStack",
+                "cloudformation:CancelUpdateStack",
+                "cloudformation:TagResource",
+                "cloudformation:UntagResource",
+                "cloudformation:RollbackStack",
+                "cloudformation:GetStackPolicy",
+                "cloudformation:GetTemplate*",
+                "cloudformation:SetStackPolicy",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:ListChangeSets",
+                "cloudformation:ValidateTemplate",
+                "cloudformation:ListStackResources"
+            ],
+            "Resource": [
+                "arn:aws:cloudformation:*:ENV_ACCOUNT_ID:stack/ApplicationInfrastructureStack*"
+            ]
+        },
+        {
+            "Action": [
+                "cloudformation:ListStacks"
+            ],
+            "Resource": [
+                "*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecr:PutLifecyclePolicy",
+                "ecr:DeleteLifecyclePolicy",
+                "ecr:CreateRepository",
+                "ecr:DeleteRepository",
+                "ecr:GetRepositoryPolicy",
+                "ecr:PutImageTagMutability",
+                "ecr:DescribeRepositories",
+                "ecr:SetRepositoryPolicy",
+                "ecr:DeleteRepositoryPolicy",
+                "ecr:GetRepositoryPolicy"
+            ],
+            "Resource": "arn:aws:ecr:*:ENV_ACCOUNT_ID:repository/ev-chart-*"
+        }
+    ]
+}

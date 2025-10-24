@@ -1,0 +1,332 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ""
+
+Metadata: {}
+
+Parameters:
+  RDSDBClusterBackupRetentionPeriod:
+    Type: Number
+    Default: 30
+    #Description:
+    MaxValue: 35
+    MinValue: 1
+
+  RDSDBClusterDBSubnetGroupSubnetIds:
+    Type: CommaDelimitedList
+    #Description:
+
+  RDSDBClusterKmsKeyId:
+    Type: String
+    #Description:
+
+  RDSDBClusterSnapshotIdentifier:
+    Type: String
+    Default: ""
+    #Description:
+
+  RDSDBClusterVpcSecurityGroupId:
+    Type: String
+    #Description:
+
+  SubEnvironment:
+    Type: String
+    Default: ""
+    #Description:
+
+Mappings:
+  EnvironmentMap:
+    "414275662771":
+      Environment: dev
+    "030628784534":
+      Environment: test
+    "888515010394":
+      Environment: prod
+
+  RDSProxyRoleName:
+    dev:
+      Name: role/RDSProxy-NeviDev
+    test:
+      Name: role/RDSProxy-NeviTest
+    prod:
+      Name: role/RDSProxy-NeviProd
+
+Conditions:
+  isNotSubEnvironment: !Equals [ !Ref SubEnvironment, "" ]
+  isUsingSnapshot: !Not [ !Equals [ !Ref RDSDBClusterSnapshotIdentifier, "" ] ]
+
+Resources:
+  RDSDBCluster:
+    Type: AWS::RDS::DBCluster
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - E3690
+      guard:
+        SuppressedRules:
+          - AURORA_MYSQL_BACKTRACKING_ENABLED
+        SuppressedRulesDescription:
+          AURORA_MYSQL_BACKTRACKING_ENABLED: >
+            Enabling backtracking now is a destructive action and not necessary with current backup
+            and replication processes.
+    Properties:
+      BackupRetentionPeriod: !Ref RDSDBClusterBackupRetentionPeriod
+      DBClusterParameterGroupName: !Ref RDSDBClusterParamaterGroup
+      DBSubnetGroupName: !Ref RDSDBClusterDBSubnetGroup
+      DeletionProtection: true
+      EnableCloudwatchLogsExports:
+        - audit
+        - error
+        - general
+        - slowquery
+      Engine: aurora-mysql
+      EngineVersion: 8.0
+      KmsKeyId: !Ref RDSDBClusterKmsKeyId
+      ManageMasterUserPassword: true
+      MasterUsername: !If
+        - isUsingSnapshot
+        - !Ref AWS::NoValue
+        - evchart
+      MasterUserSecret:
+        KmsKeyId: !Ref RDSDBClusterKmsKeyId
+      PreferredBackupWindow: 05:00-05:30
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: 0.5
+        MaxCapacity: 5
+      SnapshotIdentifier:  !If
+        - isUsingSnapshot
+        - !Ref RDSDBClusterSnapshotIdentifier
+        - !Ref AWS::NoValue
+      StorageEncrypted:  !If
+        - isUsingSnapshot
+        - !Ref AWS::NoValue
+        - true
+      # Tags:
+      VpcSecurityGroupIds:
+        - !Ref RDSDBClusterVpcSecurityGroupId
+
+  RDSDBClusterDBInstance1:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+      guard:
+        SuppressedRules:
+          - RDS_ENHANCED_MONITORING_ENABLED
+          - RDS_INSTANCE_DELETION_PROTECTION_ENABLED
+          - RDS_INSTANCE_LOGGING_ENABLED
+          - RDS_MULTI_AZ_SUPPORT
+          - RDS_STORAGE_ENCRYPTED
+          - RDS_SNAPSHOT_ENCRYPTED
+          - DB_INSTANCE_BACKUP_ENABLED
+        SuppressedRulesDescription:
+          RDS_ENHANCED_MONITORING_ENABLED: >
+            This level of granularity is not required at this time.
+          RDS_INSTANCE_DELETION_PROTECTION_ENABLED: >
+            Set at the cluster level.
+          RDS_INSTANCE_LOGGING_ENABLED: >
+            Set by the cluster parameter group and at the cluster level.
+          RDS_MULTI_AZ_SUPPORT: >
+            Set by the subnet IDs passed to the subnet group.
+          RDS_STORAGE_ENCRYPTED: >
+            Set at the cluster level.
+          RDS_SNAPSHOT_ENCRYPTED: >
+            The cluster is encrypted, which encrypts the snapshot.
+          DB_INSTANCE_BACKUP_ENABLED: >
+            Set at the cluster level.
+    Properties:
+      DBClusterIdentifier: !Ref RDSDBCluster
+      DBInstanceClass: db.serverless
+      Engine: aurora-mysql
+      PubliclyAccessible: false
+      # Tags:
+
+  RDSDBClusterDBInstance2:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Metadata:
+        guard:
+          SuppressedRules:
+            - RDS_ENHANCED_MONITORING_ENABLED
+            - RDS_INSTANCE_DELETION_PROTECTION_ENABLED
+            - RDS_INSTANCE_LOGGING_ENABLED
+            - RDS_MULTI_AZ_SUPPORT
+            - RDS_STORAGE_ENCRYPTED
+            - RDS_SNAPSHOT_ENCRYPTED
+            - DB_INSTANCE_BACKUP_ENABLED
+        SuppressedRulesDescription:
+          RDS_ENHANCED_MONITORING_ENABLED: >
+            This level of granularity is not required at this time.
+          RDS_INSTANCE_DELETION_PROTECTION_ENABLED: >
+            Set at the cluster level.
+          RDS_INSTANCE_LOGGING_ENABLED: >
+            Set by the cluster parameter group and at the cluster level.
+          RDS_MULTI_AZ_SUPPORT: >
+            Set by the subnet IDs passed to the subnet group.
+          RDS_STORAGE_ENCRYPTED: >
+            Set at the cluster level.
+          RDS_SNAPSHOT_ENCRYPTED: >
+            The cluster is encrypted, which encrypts the snapshot.
+          DB_INSTANCE_BACKUP_ENABLED: >
+            Set at the cluster level.
+    Properties:
+      DBClusterIdentifier: !Ref RDSDBCluster
+      DBInstanceClass: db.serverless
+      Engine: aurora-mysql
+      PubliclyAccessible: false
+
+  RDSDBClusterDBProxy:
+    Type: AWS::RDS::DBProxy
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      Auth:
+        -
+          AuthScheme: SECRETS
+          IAMAuth: DISABLED
+          SecretArn: !GetAtt RDSDBCluster.MasterUserSecret.SecretArn
+      DBProxyName: !Sub
+        - ev-chart-dbproxy${SubEnvironmentPath}
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub -${SubEnvironment}
+      EngineFamily: MYSQL
+      #RequireTLS: true
+      RoleArn: !Sub
+        - arn:${AWS::Partition}:iam::${AWS::AccountId}:${RoleName}
+        -
+          RoleName: !FindInMap
+            - RDSProxyRoleName
+            - !FindInMap [ EnvironmentMap, !Ref AWS::AccountId, Environment ]
+            - Name
+      #Tags:
+      VpcSecurityGroupIds:
+        - !Ref RDSDBClusterVpcSecurityGroupId
+      VpcSubnetIds: !Ref RDSDBClusterDBSubnetGroupSubnetIds
+
+  RDSDBClusterDBProxyDBProxyTargetGroup:
+    Type: AWS::RDS::DBProxyTargetGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      DBClusterIdentifiers:
+        - !Ref RDSDBCluster
+      DBProxyName: !Ref RDSDBClusterDBProxy
+      TargetGroupName: default
+
+  RDSDBClusterDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      DBSubnetGroupDescription: Aurora subnet group.
+      SubnetIds: !Ref RDSDBClusterDBSubnetGroupSubnetIds
+      # Tags:
+
+  RDSDBClusterParamaterGroup:
+    Type:  AWS::RDS::DBClusterParameterGroup
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      Description: Enable logs for forwarding to CloudWatch
+      Family: aurora-mysql8.0
+      Parameters:
+        slow_query_log: 1
+        general_log: 1
+        server_audit_logging: 1
+        server_audit_events: CONNECT,QUERY,TABLE
+      # Tags:
+
+  SSMParameterAuroraEndpointAddress:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora cluster endpoint address.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/endpoint_address
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !GetAtt RDSDBCluster.Endpoint.Address
+
+  SSMParameterAuroraReadEndpointAddress:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora cluster read endpoint address.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/read_endpoint_address
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !GetAtt RDSDBCluster.ReadEndpoint.Address
+
+  SSMParameterAuroraProxyEndpointAddress:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora cluster proxy endpoint address.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/proxy_endpoint_address
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !GetAtt RDSDBClusterDBProxy.Endpoint
+
+  SSMParameterAuroraEndpointPort:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora cluster endpoint port.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/endpoint_port
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !GetAtt RDSDBCluster.Endpoint.Port
+
+  SSMParameterAuroraMasterUserSecret:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora cluster master user secret ARN.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/master_user_secret_arn
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: !GetAtt RDSDBCluster.MasterUserSecret.SecretArn
+
+  SSMParameterEVChARTDatabaseName:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Description: The EV-ChART Aurora database name.
+      Name: !Sub
+        - /ev-chart/aurora${SubEnvironmentPath}/evchart-database-name
+        -
+          SubEnvironmentPath: !If
+            - isNotSubEnvironment
+            - ""
+            - !Sub /${SubEnvironment}
+      Type: String
+      Value: "evchart_data"
+
+Outputs:
+  EndpointPort:
+    Description: The EV-ChART Aurora cluster endpoint port.
+    Value: !GetAtt RDSDBCluster.Endpoint.Port

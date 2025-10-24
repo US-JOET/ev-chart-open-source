@@ -1,0 +1,2 @@
+station_id,network_provider,maintenance_report_start,maintenance_report_end,maintenance_cost_total,maintenance_cost_federal
+,shell_recharge,2023-01-01T00:00:00Z,2023-12-31T23:59:59Z,1394011.23,1394011.23

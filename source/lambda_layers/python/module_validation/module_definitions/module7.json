@@ -1,0 +1,23 @@
+{
+  "module": 7,
+  "fields": [
+    {
+      "field_name": "program_report_year",
+      "required": true,
+      "datatype": "integer",
+      "length": 4
+    },
+    {
+      "field_name": "opportunity_program",
+      "required": true,
+      "datatype": "string",
+      "length": null
+    },
+    {
+      "field_name": "program_descript",
+      "required": false,
+      "datatype": "string",
+      "length": null
+    }
+  ]
+}

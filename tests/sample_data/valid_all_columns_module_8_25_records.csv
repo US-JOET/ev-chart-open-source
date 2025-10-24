@@ -1,0 +1,26 @@
+station_id,network_provider,der_upgrade,der_onsite,der_type,der_type_other,der_kw,der_kwh
+SM80,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM81,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM82,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM83,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM84,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM85,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM86,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM87,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM88,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM89,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM90,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM91,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM92,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM93,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM94,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM95,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM96,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM97,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM98,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM99,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM100,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM101,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM102,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM103,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12
+SM104,shell_recharge,FALSE,TRUE,solar; station_battery,ombined_heat_and_power_units-utilize,90.12,45.12

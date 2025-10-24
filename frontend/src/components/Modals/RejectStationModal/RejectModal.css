@@ -1,0 +1,41 @@
+h2#rejectModalHeading {
+  font-family: Montserrat-Bold;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  margin-top: 0px;
+}
+
+h2#rejectModalHeading.bottom-border {
+  border-bottom: 1px solid #9d9d9d;
+}
+
+.reject-modal-field {
+  display: flex;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9e8e8;
+  margin-bottom: 8px;
+}
+
+.reject-modal-value {
+  font-family: "Montserrat-Thin";
+  font-weight: bold;
+}
+
+.reject-modal-comments {
+  margin-top: 20px;
+}
+
+#rejectionComments {
+  margin-top: 6px;
+  max-width: unset;
+}
+
+.rejection-comments-counter {
+  font-size: 14px;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+#rejectModalFooter {
+  margin-top: 40px;
+}

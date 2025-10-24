@@ -1,0 +1,51 @@
+station_id,network_provider,operator_name,operator_address,operator_city,operator_state,operator_zip,operator_zip_extended
+TESTM1,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM2,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM3,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM4,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM5,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM6,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM7,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM8,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM9,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM10,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM11,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM12,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM13,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM14,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM15,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM16,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM17,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM18,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM19,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM20,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM21,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM22,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM23,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM24,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM25,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM26,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM27,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM28,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM29,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM30,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM31,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM32,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM33,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM34,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM35,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM36,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM37,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM38,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM39,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM40,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM41,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM42,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM43,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM44,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM45,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM46,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM47,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM48,shell_recharge,ChargeNet,305 27th Street,Chicago,IL,60616,1234
+TESTM49,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514
+TESTM50,shell_recharge,ChargeNet,73 Oak Ridge Avenue,Madison,IL,53711,7514

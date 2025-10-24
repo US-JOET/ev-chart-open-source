@@ -1,0 +1,76 @@
+.station-edit-button {
+  margin-right: 0 !important;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color: #2c608a !important;
+}
+
+.station-card-container {
+  padding-bottom: 32px;
+}
+
+.station-details-card {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px 0 #dedede;
+}
+
+.station-card-content {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.station-header {
+  font-size: 18px;
+  line-height: 26px;
+  font-family: Montserrat-Thin;
+  font-weight: bold;
+}
+
+.station-details-field {
+  margin-top: 8px;
+}
+
+#noPortsField {
+  margin-bottom: 16px;
+}
+
+#noPortsContainer {
+  display: flex;
+}
+
+#noPortsValue {
+  margin-left: 30px;
+}
+
+.station-details-underline {
+  margin-right: 5px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9e8e8;
+}
+
+.port-summary-top-border {
+  padding-top: 8px;
+  border-top: 1px solid #e9e8e8;
+}
+
+.station-details-value {
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  font-family: Montserrat-Thin;
+  overflow-wrap: break-word;
+}
+
+#portCount,
+.pending-station-button-options {
+  margin-top: 16px;
+}
+
+.port-id {
+  text-align: right;
+}
+
+.non-fed-ports-container {
+  margin-top: 40px;
+}

@@ -1,0 +1,32 @@
+.station-submission-details__column-definitions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.station-submission-details-table.usa-table {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.station-submission-details-table.usa-table th,
+.station-submission-details-table td {
+  line-height: 16px;
+}
+
+.station-submission-details-table th.updated_on {
+  min-width: 8.625rem;
+}
+
+.usa-table td.no-data-table-cell {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.no-data-table-cell__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 16px;
+}
