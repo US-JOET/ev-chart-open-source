@@ -1,0 +1,48 @@
+swagger: "2.0"
+info:
+  version: 2023-09-20T18:54:58Z
+  title: Josh_Test_Endpoint
+host: qpbdwoxxil.execute-api.us-east-1.amazonaws.com
+basePath: /Josh_Test_Stage
+schemes:
+  - https
+paths:
+  /:
+    get:
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: CsvImportStatus
+          required: true
+          schema:
+            $ref: "#/definitions/CsvImportStatus"
+      responses:
+        "200":
+          description: 200 response
+          schema:
+            $ref: "#/definitions/Empty"
+      x-amazon-apigateway-integration:
+        type: aws
+        httpMethod: GET
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:414275662771:function:Josh_Test_Lambda/invocations
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+definitions:
+  Empty:
+    type: object
+    title: Empty Schema
+  CsvImportStatus:
+    type: object
+    properties:
+      fileName:
+        type: string
+        format: binary
+      id:
+        type: string
+    title: CsvImportStatusModel

@@ -1,0 +1,26 @@
+# Workflow that creates the PR for dev to test daily
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+name: DEV TO TEST PR
+jobs:
+  create-pr:
+    name: Create Dev to Test PR
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        # Create a pull request from the terminal
+        run: gh pr create
+          --base test
+          --head develop
+          --title "Add new feature"
+          --body "DEV TO TEST"
+          --reviewer sophia-canja
+          --reviewer joshua-theisen
+          --reviewer justin-gredler
+        env:
+          GH_TOKEN:  ${{ secrets.GITHUB_TOKEN }}

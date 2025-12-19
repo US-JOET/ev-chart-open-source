@@ -1,0 +1,97 @@
+on:
+  schedule:
+    - cron: "0 23 * * 1-5"
+  workflow_call:
+
+  workflow_dispatch:
+
+name: SCHEDULED API Tests
+jobs:
+  python-API-tests-test:
+    name: Run Python API Tests (Test)
+    environment: test
+    continue-on-error: true
+    runs-on: [python]
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: test
+
+      - name: set venv
+        run: |
+          /usr/bin/python3.11 -m venv ./.venv
+          source .venv/bin/activate
+          python3 --version
+          echo PATH=$PATH >> $GITHUB_ENV
+
+      - name: create .env file
+        run: echo "${{ secrets.DOTENV_FILE }}" > .env
+
+      - name: ensure pip
+        run: python3 -m ensurepip --upgrade
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r ./qatesting/requirements.txt
+
+      - name: pip list
+        run: python3 -m pip list
+
+      - name: Run Smoke Tests with pytest
+        continue-on-error: true
+        run: python3 -m pytest --disable-warnings -qs ./qatesting -m API_Smoke_external_test_env --app-url=https://evchart-test.driveelectric.gov --junit-xml=test-results.xml
+
+      - name: Surface test summary
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: test-results.xml
+          summary: true
+          display-options: fE
+          title: Test Results
+
+  python-API-tests-qa:
+    name: Run Python API Tests (QA)
+    environment: qa
+    runs-on: [python]
+    needs: [python-API-tests-test]
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: qa
+
+      - name: set venv
+        run: |
+          /usr/bin/python3.11 -m venv ./.venv
+          source .venv/bin/activate
+          python3 --version
+          echo PATH=$PATH >> $GITHUB_ENV
+
+      - name: create .env file
+        run: echo "${{ secrets.DOTENV_FILE }}" > .env
+
+      - name: ensure pip
+        run: python3 -m ensurepip --upgrade
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -r ./qatesting/requirements.txt
+
+      - name: pip list
+        run: python3 -m pip list
+
+      - name: Run Smoke Tests with pytest
+        run: python3 -m pytest --disable-warnings -qs ./qatesting -m API_Smoke_external_test_env --app-url=https://evchart-qa.driveelectric.gov --junit-xml=test-results.xml
+
+      - name: Surface test summary
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: test-results.xml
+          summary: true
+          display-options: fE
+          title: Test Results

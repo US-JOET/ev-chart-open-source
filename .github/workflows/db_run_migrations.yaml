@@ -1,0 +1,58 @@
+# Triggers database migration, creates stored procedures, and creates Triggers.
+# Can be manually triggered
+# Used in deployment pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: "Which environment should scripts be triggered in?"
+        required: true
+        type: environment
+      DEPLOY_REGION:
+        description: "What is the AWS Region? (Default is us-east-1)"
+        required: false
+        type: choice
+        options:
+        - us-east-1
+        - us-east-2
+        default: us-east-1
+  workflow_call:
+    inputs:
+      DEPLOY_REGION:
+        required: true
+        type: string
+      ENVIRONMENT:
+        required: true
+        type: string
+
+name: COMMON DB Migration
+jobs:
+
+  trigger-lambda-procedures:
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraDBCreateStoredProcedures"
+
+  trigger-lambda-migrations:
+    needs: trigger-lambda-procedures
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraDBMigrations"
+
+  trigger-lambda-dbtriggers:
+  # This step sometimes fails due to database.
+  # If this fails, try rerunning just this step.
+    needs: trigger-lambda-migrations
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraDBCreateTriggers"

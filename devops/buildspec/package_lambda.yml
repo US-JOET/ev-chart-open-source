@@ -1,0 +1,46 @@
+version: 0.2
+batch:
+  fast-fail: false
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+  pre_build:
+    commands:
+      - |
+        BASEPWD=$PWD
+
+        # Update the API Gateway deployment resource ID to the commit ID.  This is to force a new API deployment.
+        sed -i "s/ApiGatewayRestApiDeployment/$COMMIT_ID/" infrastructure/templates/api_gateway.template.yml
+
+        mkdir -p built_lambda_content/layers
+
+  build:
+    commands:
+      - |
+        # Build the Lambda layers.  Revisit if layer content conflicts with the service max layer size.
+        LAMBDA_LAYER_SOURCE=source/lambda_layers
+
+        cd $LAMBDA_LAYER_SOURCE
+        for function_layer_dir in $(find . -maxdepth 1 -mindepth 1 -type d); do
+          layer_name=$(basename $function_layer_dir)
+          zip -r $BASEPWD/built_lambda_content/layers/layer_$layer_name.zip ./$layer_name
+        done
+
+        cd $BASEPWD
+
+        # Build the Lambda functions
+        LAMBDA_FUNCTION_SOURCE=source/lambda_functions
+
+        for function_dir in $(find $LAMBDA_FUNCTION_SOURCE -maxdepth 1 -mindepth 1 -type d); do
+          function_name=$(basename $function_dir)
+          cd $function_dir
+          zip -r $BASEPWD/built_lambda_content/$function_name.zip .
+          cd $BASEPWD
+        done
+
+  post_build:
+    commands:
+      - |
+        aws s3 cp built_lambda_content s3://$ARTIFACT_BUCKET/deploy/lambda/$COMMIT_ID --recursive
+        aws s3 cp infrastructure/templates s3://$ARTIFACT_BUCKET/deploy/templates --recursive

@@ -1,0 +1,73 @@
+on:
+    workflow_dispatch:
+        inputs:
+            ENVIRONMENT:
+              required: true
+              type: environment
+
+name: "!MANUAL Deploy Project"
+jobs:
+  environment-restrictions:
+    # Get approval for higher environments, also pulls environment variables
+      name: Environment Approval
+      outputs:
+        branch: ${{ steps.get-deploy-env.outputs.get-branch }}
+        deploy_env: ${{ steps.get-deploy-env.outputs.deploy_env }}
+      environment: ${{ inputs.ENVIRONMENT }}
+      env:
+        BRANCH: ${{ vars.BRANCH }}
+        DEPLOY_ENV: ${{ vars.DEPLOY_ENV }}
+      runs-on: [infra]
+      steps:
+        - name: Get branch
+          id: get-branch
+          run: echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+
+        - name: Get deploy_env
+          id: get-deploy-env
+          run: echo "deploy_env=$DEPLOY_ENV" >> $GITHUB_OUTPUT
+
+  get-sha:
+    # Get sha of commit
+    name: get-sha
+    needs: environment-restrictions
+    runs-on: [infra]
+    outputs:
+      short_sha: ${{ steps.get_sha.outputs.short_sha }}
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ needs.environment-restrictions.outputs.branch }}
+      - name: get short sha
+        id: get_sha
+        run: echo "short_sha=$( git rev-parse --short HEAD )" >> $GITHUB_OUTPUT
+
+      - name: print short sha
+        run: echo "The short sha is ${{ steps.get_sha.outputs.short_sha }}"
+
+  trigger-tests:
+    # Run build tests
+    name: trigger build tests
+    needs: environment-restrictions
+    concurrency:
+      group: deploy-${{ github.workflow }}-${{ inputs.ENVIRONMENT }}
+      cancel-in-progress: true
+    uses: ./.github/workflows/base_build_and_test.yaml
+    with:
+      BRANCH_NAME: ${{ needs.environment-restrictions.outputs.branch }}
+    secrets:
+      STORYBOOK_DEPLOY_KEY: ${{ secrets.STORYBOOK_DEPLOY_KEY }}
+
+  trigger-deploy:
+    # deploy project to AWS
+    name: trigger deploy
+    needs: [trigger-tests, get-sha, environment-restrictions]
+    uses: ./.github/workflows/base_deploy.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: "${{ vars.DEPLOY_REGION }}"
+      COMMIT_ID: "${{ needs.get-sha.outputs.short_sha }}"
+      ENV_NAME: "${{ inputs.ENVIRONMENT }}"
+      BRANCH_NAME: "${{ needs.environment-restrictions.outputs.branch }}"
+      DEPLOY_ENV: "${{ needs.environment-restrictions.outputs.deploy_env }}"

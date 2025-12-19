@@ -1,0 +1,49 @@
+# O&M Request Helper Workflow
+# Workflow network provider acquired
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: "What enviornment should the API key be created in? (Default is production)"
+        required: true
+        type: environment
+        default: dev
+      DEPLOY_REGION:
+        required: false
+        description: "What AWS Region are you using? (Default is us-east-1)"
+        type: choice
+        options:
+          - us-east-1
+          - us-east-2
+        default: us-east-1
+      PURCHASING_NETWORK_PROVIDER_VALUE:
+        required: true
+        description: "What is the Network_Provider_Id that is the buyer?"
+        type: string
+      PURCHASED_NETWORK_PROVIDER_VALUE:
+        required: true
+        description: "What is the Network_Provider_Id that is the seller?"
+        type: string
+
+
+name: "!INFRA Network Provider Acquired"
+jobs:
+  approval-gate:
+    # Step that checks if approval is needed,and if so must be approved by authorized deployer before execution continues
+    runs-on: [infra]
+    environment:
+      name: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - run: echo "approval check"
+
+  trigger-lambda-api-keys:
+    # Triggers the InfraAPIKeys lambda using workflow inputs
+    needs: approval-gate
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraNetworkProviderAcquired"
+      PAYLOAD_STRING: '"buyer_network_provider_value": "${{ inputs.PURCHASING_NETWORK_PROVIDER_VALUE }}", "seller_network_provider_value": "${{ inputs.PURCHASED_NETWORK_PROVIDER_VALUE }}"'

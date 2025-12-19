@@ -1,0 +1,130 @@
+on:
+   #This workflow must run AFTER the 'cfn drift detection' workflow completes.
+
+   # run once weekly on Sunday at 8PM UTC
+   schedule:
+    - cron: '0 23 * * 0'
+   # Reenable if regular ATO reports are needed. Be sure to set emails in the DRIFT_REPORT_EMAILS repo variable (details below)
+
+   workflow_dispatch:
+
+name: SCHEDULED ATO Weekly Report
+jobs:
+    get-drift-report:
+        strategy:
+          fail-fast: false
+          matrix:
+            # Needs to run on the same runner as cfn drift detection
+            runner: [infra]
+            env: [prod, test, dev]
+            include:
+              - env_role: PROD_AWS_ASSUME_ROLE_ARN
+                env: prod
+              - env_role: TEST_AWS_ASSUME_ROLE_ARN
+                env: test
+              - env_role: DEV_AWS_ASSUME_ROLE_ARN
+                env: dev
+        name: run drift report
+        runs-on: ${{ matrix.runner }}
+        steps:
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v3
+            with:
+              aws-region: ${{ vars.DEPLOY_REGION }}
+              role-to-assume: ${{ secrets[matrix.env_role] }}
+              role-skip-session-tagging: true
+
+          - name: get drift report
+          #This step pulls drift data from a list of stacks created/generated in the 'cfn drift detection' workflow.
+            run: |
+                rm -f output.json
+                for stack in $(jq -r '.[]' ~/${{ matrix.env }}_stack_list.json); do
+                  echo "Stack Name: $stack" >> output.json
+                  aws cloudformation describe-stack-resource-drifts --stack-name $stack --stack-resource-drift-status-filters MODIFIED DELETED --output json >> output.json
+                done
+                aws cloudformation describe-stack-resource-drifts --stack-name ApplicationInfrastructureStack --stack-resource-drift-status-filters MODIFIED DELETED --output json >> output.json
+                cat output.json
+
+          - name: Upload Artifact
+            uses: actions/upload-artifact@v3
+            with:
+              name: ${{ matrix.env }}-drift-output.json
+              path: output.json
+
+    get-cfn-guard-report:
+        name: run cfn guard report
+        runs-on: [infra]
+        steps:
+          - name: checkout repo
+            uses: actions/checkout@v3
+            with:
+              ref: develop
+
+          - name: check rules
+            run: |
+              PATH=${PATH}:~/.guard/bin
+              cfn-guard validate -d ./infrastructure/templates -r ./infrastructure/rules --type CFNTemplate --show-summary all --output-format json > output.json
+              cat output.json
+
+          - name: Upload Artifact
+            uses: actions/upload-artifact@v3
+            with:
+              name: develop-cfn-guard-output.json
+              path: output.json
+
+    prep-email:
+      name: create email payload
+      runs-on: [infra]
+      env:
+        run-url: "https://github.doe.gov/joet/EV-ChART-Application/actions/runs/${{ github.run_id }}"
+        email-body: "Good Evening,<br><br>There are weekly ATO reports available for download and review at the following URL:"
+        email-subject: "EV-Chart Application ATO Report"
+      outputs:
+        email_payload: ${{ steps.set-payload.outputs.EMAIL_PAYLOAD }}
+        matrix: ${{ steps.matrix.outputs.MATRIX }}
+      steps:
+        - name: set email env
+          id: matrix
+          # This step pulls the GitHub Repository Variable "DRIFT_REPORT_EMAILS", which is a list of emails formatted as such:
+          # ["evchart@driveelectric.gov", "example.email@ee.doe.gov"]
+          run: |
+            $(echo "email-subject= $(printf '%(%m-%d-%Y)T\n' -1) ${{ env.email-subject }}" >> "$GITHUB_ENV")
+            $(echo "email-body=${{ env.email-body }}<br><br><a href="${{ env.run-url }}">Github Action Run<br><br>Thank you!<br><br>" >> "$GITHUB_ENV")
+            echo 'MATRIX=${{ vars.DRIFT_REPORT_EMAILS }}'  >> "$GITHUB_OUTPUT"
+
+        - name: create email payload
+          id: set-payload
+          run: |
+            $(echo "email_payload={\"Records\": [ { \"body\": \"${{ env.email-body }}\", \"messageAttributes\": { \"email_subject\": { \"stringValue\": \"${{ env.email-subject }}\" }, " >> "$GITHUB_OUTPUT")
+
+    send-email:
+      name: send drift report link via email
+      # This Job uses the outputs of the other jobs to send an email using the deployed EmailSender in the Dev environment.
+      # This is done with a direct aws cli call to invoke the lambda with the formatted email values
+      needs: [ get-drift-report, prep-email ]
+      environment: dev
+      strategy:
+        fail-fast: False
+        matrix:
+          email: ${{ fromJSON(needs.prep-email.outputs.MATRIX) }}
+      runs-on: [infra]
+      env:
+        email_payload: '${{ needs.prep-email.outputs.email_payload }}'
+        email_receiver: ${{ matrix.email }}
+      steps:
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v3
+          with:
+            aws-region: ${{ vars.DEPLOY_REGION }}
+            role-to-assume: ${{ secrets.RUNNER_ROLE }}
+            role-skip-session-tagging: true
+
+        - name: lambda invoke
+          run: |
+            aws lambda invoke \
+              --function-name EV-ChART_EmailSender \
+              --cli-binary-format raw-in-base64-out \
+              --payload '${{ env.email_payload }} "receiver_email": { "stringValue": "${{ env.email_receiver }}" } }}]}' \
+              output.json
+            echo "finished invoke"
+            cat output.json

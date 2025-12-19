@@ -1,0 +1,7 @@
+[
+        { "ParameterKey": "ApiGatewayVpcEndoint", "ParameterValue": "vpce-018f71bb7e61bd7c0" },
+        { "ParameterKey": "LambdaResourceCommitId", "ParameterValue": "COMMIT_ID" },
+        { "ParameterKey": "RdsSnapshotId", "ParameterValue": "arn:aws:rds:us-east-1:414275662771:cluster-snapshot:rds:applicationinfrastructurestack-aurora-rdsdbcluster-1vms7kobx7d9-2024-05-20-05-06" },
+        { "ParameterKey": "VpcSecurityGroupId", "ParameterValue": "sg-033d88f0ef1672caa" },
+        { "ParameterKey": "VpcSubnetIdsPrivate", "ParameterValue": "subnet-0f23f2801672c9d7c,subnet-0348c213bc0836388" }
+]

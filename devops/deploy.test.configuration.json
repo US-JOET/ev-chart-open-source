@@ -1,0 +1,10 @@
+[
+        { "ParameterKey": "ApiGatewayVpcEndoint", "ParameterValue": "vpce-0c481e8d9f5487eb4" },
+        { "ParameterKey": "CognitoOneIdClientSecret", "ParameterValue": "ONEID_CLIENT_SECRET" },
+        { "ParameterKey": "NetworkProxy", "ParameterValue": "http://proxy.doe.gov:3130" },
+        { "ParameterKey": "NetworkProxyCert", "ParameterValue": "/python/shared/eits_ca_cert.pem" },
+        { "ParameterKey": "LambdaResourceCommitId", "ParameterValue": "COMMIT_ID" },
+        { "ParameterKey": "RdsSnapshotId", "ParameterValue": "rds:applicationinfrastructurestack-aurora-rdsdbcluster-iz411dgmmcio-2024-08-22-05-08"},
+        { "ParameterKey": "VpcSecurityGroupId", "ParameterValue": "sg-049dd7589da37cfaa" },
+        { "ParameterKey": "VpcSubnetIdsPrivate", "ParameterValue": "subnet-08bc6fe3127323c35,subnet-021161bb069218fe9" }
+]

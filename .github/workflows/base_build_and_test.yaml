@@ -1,0 +1,230 @@
+# This is a reusable workflow that is used in both PRs and during the deployments.
+# It uses labels to dictate which jobs should be run, which prevents unneeded tests from being run, saving runner time.
+# Runs code and cloudformation tests, linting, and security tools
+
+on:
+    workflow_call:
+      inputs:
+        BRANCH_NAME:
+          required: true
+          type: string
+        LABELS:
+          required: false
+          type: string
+      secrets:
+        STORYBOOK_DEPLOY_KEY:
+          required: true
+    workflow_dispatch:
+      inputs:
+        BRANCH_NAME:
+          description: "What code branch should be used?"
+          required: true
+          type: string
+        LABELS:
+          description: "What labels should be used? If none are entered, all tests will run. Options: Infra, Python, Frontend"
+          required: false
+          type: string
+
+
+name: COMMON Test Branch
+jobs:
+    cfn-check:
+    # Runs if there are infrastructure changes, or is a deployment
+        if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Infra') }}
+        name: cfn check
+        concurrency:
+            group: cfn-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+            cancel-in-progress: true
+        runs-on: [python, infra]
+        steps:
+            - name: checkout repo
+              uses: actions/checkout@v3
+              with:
+                ref: ${{ inputs.BRANCH_NAME }}
+            - name: set venv
+              run: |
+                /usr/bin/python3.11 -m venv ./.venv
+                source .venv/bin/activate
+                python3 --version
+                echo PATH=$PATH >> $GITHUB_ENV
+
+            - name: ensure pip
+              run: python3 -m ensurepip --upgrade
+
+            - name: install cfn lint
+              run: |
+                python3 -m pip install regex
+                python3 -m pip install --upgrade cfn-lint
+
+            - name: lint
+            # Checks all cloudformation templates for linting errors
+              run: cfn-lint infrastructure/templates/*.yml --ignore-checks W
+
+            - name: cfn guard
+            # Checks templates to verify they follow required security rules. Current rules can be found in /infrastrcture/rules
+              run: |
+                PATH=${PATH}:~/.guard/bin
+                cd infrastructure
+                cfn-guard validate -d ./templates -r ./rules --type CFNTemplate --show-summary fail
+                cd ..
+
+    bandit:
+    # Runs on python changes, or is a deployment.
+        if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Python') }}
+        name: Python Security Check (bandit)
+        concurrency:
+            group: bandit-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+            cancel-in-progress: true
+        runs-on: [python]
+        steps:
+            - name: checkout repo
+              uses: actions/checkout@v3
+              with:
+                ref: ${{ inputs.BRANCH_NAME }}
+            - name: set venv
+              run: |
+                /usr/bin/python3.11 -m venv ./.venv
+                source .venv/bin/activate
+                python3 --version
+                echo PATH=$PATH >> $GITHUB_ENV
+
+            - name: ensure pip
+              run: python3 -m ensurepip --upgrade
+
+            - name: install bandit
+              run: |
+                python3 -m pip install --upgrade bandit
+
+            - name: run bandit
+            # Bandit is an open-source security linter from PyCQA. Scans for common python security issues.
+              #continue-on-error: true
+              run: bandit --severity-level medium --confidence-level medium -r ./source/
+
+    node-lint:
+    # Runs on any npm related changes, or deployments.
+        if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Frontend') }}
+        name: node lint
+        concurrency:
+            group: node-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+            cancel-in-progress: true
+        runs-on: [npm]
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                ref: ${{ inputs.BRANCH_NAME }}
+            - name: Install modules
+              run: npm install eslint --no-save
+            - name: Run ESLint
+              continue-on-error: true
+              run: npx eslint ./frontend --ext .js,.jsx,.ts,.tsx
+
+    npm-test:
+    # Runs on any npm related changes, or developments.
+    # Currently disabled as there are no current npm/frontend tests.
+    # Uncomment the input check and remove 'if false' to reenable.
+        if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Frontend') }}
+        # if: ${{false}}
+        name: Run Node Unit Tests
+        concurrency:
+            group: npm-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+            cancel-in-progress: true
+        runs-on: [npm]
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                    persist-credentials: false
+                    ref: ${{ inputs.BRANCH_NAME }}
+
+            # - name: check npm version
+            #   run: |
+            #     npm --version
+            #     node --version
+            #     yarn --version
+
+            - uses: webfactory/ssh-agent@v0.8.0
+              with:
+                  ssh-private-key: ${{ secrets.STORYBOOK_DEPLOY_KEY }}
+
+            - name: install dependencies
+              run: |
+                cd frontend
+                npm ci
+                cd ..
+
+            - name: run tests
+              run: |
+                cd frontend
+                npm run test -- --reporter=verbose
+                cd ..
+
+    python-lint-score:
+    # Runs on python changes, or is a deployment.
+    # Using pylint to lint python
+      if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Python') }}
+      name: Get Python Linting Score
+      concurrency:
+          group: python-lint-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+          cancel-in-progress: true
+      runs-on: [python]
+      steps:
+          - uses: actions/checkout@v3
+            with:
+              ref: ${{ inputs.BRANCH_NAME }}
+
+          - name: set venv
+            run: |
+              /usr/bin/python3.11 -m venv ./.venv
+              source .venv/bin/activate
+              python3 --version
+              echo PATH=$PATH >> $GITHUB_ENV
+
+          - name: ensure pip
+            run: python3 -m ensurepip --upgrade
+
+          - name: Install dependencies
+            run: |
+              python3 -m pip install pylint
+
+          - name: analyse python files
+            run: |
+              pylint $(git ls-files '*.py') --output=lint.txt || true
+              cat lint.txt
+
+          - name: Upload Artifact
+            uses: actions/upload-artifact@v3
+            with:
+              name: lint.txt
+              path: lint.txt
+
+    python-unit-tests:
+    # Runs on python changes, or is a deployment.
+    # Runs all tests in /tests using pytests.
+        if: ${{ inputs.LABELS == '' || contains(inputs.LABELS, 'Python') }}
+        name: Run Python Unit Tests
+        concurrency:
+            group: python-unit-test-${{ github.workflow }}-${{ inputs.BRANCH_NAME }}
+            cancel-in-progress: true
+        runs-on: [python]
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                ref: ${{ inputs.BRANCH_NAME }}
+
+            - name: set venv
+              run: |
+                /usr/bin/python3.11 -m venv ./.venv
+                source .venv/bin/activate
+                python3 --version
+                echo PATH=$PATH >> $GITHUB_ENV
+
+            - name: ensure pip
+              run: |
+                python3 -m ensurepip --upgrade
+
+            - name: Install dependencies
+              run: |
+                python3 -m pip install --upgrade pip
+                find ./ -type f -name "requirements.txt" | while read file; do  echo "installing files from $file"; python3 -m pip install -r $file; done
+
+            - name: Test with pytest
+              run: python3 -m pytest -n auto -s ./tests

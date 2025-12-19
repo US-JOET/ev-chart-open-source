@@ -1,0 +1,40 @@
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Automatically assigns labels to Pull Requests.
+# Also runs required build tests 
+# Confiuration for how labels are assigned can be found in the .github/labeler.yml file
+# Labels are also used to more efficently run relevent tests 
+name: "|INFRA PR Labeler"
+jobs:
+  labeler:
+    outputs:
+      all-labels: ${{ steps.labeled.outputs.all-labels }}
+    runs-on: [infra]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - id: labeled
+        uses: actions/labeler@v5
+        with:
+          sync-labels: true
+  trigger-tests:
+    needs: labeler      
+    if: ${{ !github.event.pull_request.draft }}
+    name: trigger pr tests
+    concurrency:
+      group: deploy-${{ github.workflow }}-${{ github.ref }}
+    uses: ./.github/workflows/base_build_and_test.yaml
+    with:
+      BRANCH_NAME: ${{ github.head_ref }}
+      LABELS: ${{ needs.labeler.outputs.all-labels }}
+    secrets:
+      STORYBOOK_DEPLOY_KEY: ${{ secrets.STORYBOOK_DEPLOY_KEY }}
+
+        
+

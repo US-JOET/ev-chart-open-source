@@ -1,0 +1,9 @@
+[
+        { "ParameterKey": "ApiGatewayVpcEndoint", "ParameterValue": "vpce-0dcc92fbd101e870c" },
+        { "ParameterKey": "CognitoOneIdClientSecret", "ParameterValue": "ONEID_CLIENT_SECRET" },
+        { "ParameterKey": "NetworkProxy", "ParameterValue": "http://proxy.doe.gov:3130" },
+        { "ParameterKey": "NetworkProxyCert", "ParameterValue": "/python/shared/eits_ca_cert.pem" },
+        { "ParameterKey": "LambdaResourceCommitId", "ParameterValue": "COMMIT_ID" },
+        { "ParameterKey": "VpcSecurityGroupId", "ParameterValue": "sg-06b88ccecbd208229" },
+        { "ParameterKey": "VpcSubnetIdsPrivate", "ParameterValue": "subnet-05c91bef30cc39232,subnet-071cea449c3cae635" }
+]

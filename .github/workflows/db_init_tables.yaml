@@ -1,0 +1,20 @@
+# This workflow is used to create the database and tables from scratch
+# If this workflow is ran and the database and tables already exist, the tables will not be overwritten
+
+on:
+    workflow_dispatch:
+        inputs:
+            ENVIRONMENT:
+              required: true
+              type: environment
+
+name: "!INFRA DB Init Tables"
+jobs:
+  trigger-db-init-tables:
+    name: "Database Init Tables"
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: us-east-1
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraInitDBTables"

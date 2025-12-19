@@ -1,0 +1,91 @@
+on:
+  push:
+      branches:
+      - develop
+      - test
+      - qa
+      - main
+      paths-ignore:
+      - '.github/**'
+  #Don't deploy for workflow changes
+
+name: COMMON Deploy Project
+jobs:
+
+  get-sha:
+    # Get sha of commit
+    name: get-sha
+    runs-on: [infra]
+    outputs:
+      short_sha: ${{ steps.get_sha.outputs.short_sha }}
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref_name }}
+      - name: get short sha
+        id: get_sha
+        run: echo "short_sha=$( git rev-parse --short HEAD )" >> $GITHUB_OUTPUT
+
+      - name: print short sha
+        run: echo "The short sha is ${{ steps.get_sha.outputs.short_sha }}"
+
+  trigger-tests:
+    # Run build tests
+    name: trigger build tests
+    concurrency:
+      group: deploy-${{ github.workflow }}-${{ github.ref_name }}
+      cancel-in-progress: true
+    uses: ./.github/workflows/base_build_and_test.yaml
+    with:
+      BRANCH_NAME: ${{ github.ref_name }}
+    secrets:
+      STORYBOOK_DEPLOY_KEY: ${{ secrets.STORYBOOK_DEPLOY_KEY }}
+
+  environment-restrictions:
+  # Get approval for higher environments, also pulls deploy_env variable
+    name: Environment Approval
+    outputs:
+      deploy_env: ${{ steps.get-deploy-env.outputs.deploy_env }}
+    environment:
+      name: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'develop' && 'dev' || github.ref_name }}
+    env:
+      DEPLOY_ENV: ${{ vars.DEPLOY_ENV }}
+    runs-on: [infra]
+    steps:
+      - name: Get deploy_env
+        id: get-deploy-env
+        run: echo "deploy_env=$DEPLOY_ENV" >> $GITHUB_OUTPUT
+
+  turn-maintenance-mode-on:
+  # Turn maintenance mode ON before deploying to main
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/infra_set_feature_toggle.yaml
+    with:
+      DEPLOY_ENV: "PROD"
+      FEATURE_TOGGLE_PATH: "/ev-chart/status/maintenance"
+      VALUE: "True"
+    secrets: inherit
+
+  trigger-deploy:
+    # deploy project to AWS
+    name: trigger deploy
+    needs: [trigger-tests, get-sha, environment-restrictions]
+    uses: ./.github/workflows/base_deploy.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ vars.DEPLOY_REGION }}
+      COMMIT_ID: "${{ needs.get-sha.outputs.short_sha }}"
+      ENV_NAME: ${{ github.ref_name == 'main' && 'prod' || github.ref_name == 'develop' && 'dev' || github.ref_name }}
+      BRANCH_NAME: ${{ github.ref_name }}
+      DEPLOY_ENV: "${{ needs.environment-restrictions.outputs.deploy_env }}"
+
+  turn-maintenance-mode-off:
+    # Turn maintenance mode OFF after deploying to main
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/infra_set_feature_toggle.yaml
+    with:
+      DEPLOY_ENV: "PROD"
+      FEATURE_TOGGLE_PATH: "/ev-chart/status/maintenance"
+      VALUE: "False"
+    secrets: inherit

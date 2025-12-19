@@ -1,0 +1,107 @@
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      DEPLOY_REGION:
+        required: true
+        type: string
+      COMMIT_ID:
+        required: true
+        type: string
+      ENV_NAME:
+        required: true
+        type: string
+      BRANCH_NAME:
+        required: true
+        type: string
+      DEPLOY_ENV:
+        required: true
+        type: string
+  # Add ability to be called by deployment process 
+name: Deploy ecr lambda functions
+jobs:
+  # Deploy ECRs
+  deploy-ecr-cloudformation:
+      name: deploy-base-cfn
+      runs-on: [infra]
+      env:
+        RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+        CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+          with:
+            ref: ${{ inputs.BRANCH_NAME }}
+
+        - name: Print vars
+          run: |
+            echo ${{ env.RUNNER_ROLE }}
+            echo ${{ inputs.ENV_NAME }}
+            echo ${{ inputs.DEPLOY_REGION }}
+            echo ${{ inputs.COMMIT_ID }}
+            echo ${{ inputs.BRANCH_NAME }}
+
+        # Configure AWS Credential
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v3
+          with:
+            aws-region: ${{ inputs.DEPLOY_REGION }}
+            role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+            role-skip-session-tagging: true
+
+        # Deploy to AWS CloudFormation First
+          # do I need to pull from S3 like we do with the application-infrastructure template?
+        - name: Deploy to AWS CloudFormation ECRs
+          uses: aws-actions/aws-cloudformation-github-deploy@v1
+          with:
+            name: ApplicationInfrastructureStack-ECR${{ !contains(fromJSON('["dev", "test", "prod"]'), inputs.ENV_NAME) && format('-{0}', inputs.ENV_NAME) || '' }}
+            template: https://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}.s3.amazonaws.com/deploy/templates/ui_tests_ecr.template.yml
+            no-fail-on-empty-changeset: "1"
+            role-arn: ${{ secrets[env.CLOUDFORMATION_ROLE] }}
+
+
+  # Push to ECR
+    # for each ECR we need to have a matching code base to build/tag/push to
+      # python/bash script?
+      # Mapping file?
+      # Name matching?
+
+  # Deploy lambda to ECR
+  deploy-ecr-lambda-cloudformation:
+      name: deploy
+      needs: [package-frontend, package-lambda]
+      env:
+        RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+        CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+      runs-on: [infra]
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+          with:
+            ref: ${{ inputs.BRANCH_NAME }}
+
+        # Configure AWS Credential
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v3
+          with:
+            aws-region: ${{ inputs.DEPLOY_REGION }}
+            role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+            role-skip-session-tagging: true
+
+        - name: shortsha
+          run: |
+            sed -i "s/ENVIRONMENT/${{ inputs.ENV_NAME }}/" devops/deploy.ui-tests.${{ inputs.ENV_NAME }}.configuration.json
+            sed -i "s/COMMIT_ID/commit-${{ inputs.COMMIT_ID }}/" devops/deploy.ui-tests.${{ inputs.ENV_NAME }}.configuration.json
+            sed -i "s/ONEID_CLIENT_SECRET/${{ secrets.ONEID_CLIENT_SECRET }}/" devops/deploy.ui-tests.${{ inputs.ENV_NAME }}.configuration.json
+
+            cat devops/deploy.ui-tests.${{ inputs.ENV_NAME }}.configuration.json
+
+        - name: Deploy lambda from ecr with cloudformation
+          uses: aws-actions/aws-cloudformation-github-deploy@v1
+          with:
+            name: ApplicationInfrastructureStack-ecr-lambda${{ !contains(fromJSON('["dev", "test", "prod"]'), inputs.ENV_NAME) && format('-{0}', inputs.ENV_NAME) || '' }}
+            template: https://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}.s3.amazonaws.com/deploy/templates/ui_tests_lambda.template.yml
+            no-fail-on-empty-changeset: "1"
+            role-arn: ${{ secrets[env.CLOUDFORMATION_ROLE] }}
+            parameter-overrides: file:///${{ github.workspace }}/devops/deploy.ui-tests.${{ inputs.ENV_NAME }}.configuration.json
+            capabilities: CAPABILITY_AUTO_EXPAND

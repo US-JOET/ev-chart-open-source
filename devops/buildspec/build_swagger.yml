@@ -1,0 +1,27 @@
+version: 0.2
+batch:
+  fast-fail: false
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+  build:
+    commands:
+      - pip install -r ../utils/requirements.txt
+      - |
+      #Take in parameters(hard coding for testing)
+      BASE_SWAGGER_FILE="../../infrastructure/base_swagger.yml"
+      OUTPUT_FILE="swagger.yml"
+      #maybe use git cli to get root of project?(git rev-parse --show-toplevel)
+      SWAGGER_PATH="../../source/lambda_functions"
+
+      python -m ../utils/merge_swagger.py \
+      --base-swagger-file $BASE_SWAGGER_FILE
+      --swagger-path $SWAGGER_PATH \
+      --output $OUTPUT_FILE
+
+post_build:
+    commands:
+      - |
+        aws s3 cp $OUTPUT_FILE s3://$ARTIFACT_BUCKET/deploy/swagger/$COMMIT_ID --recursive
+      
