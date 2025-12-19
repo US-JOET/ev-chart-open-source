@@ -1,0 +1,23 @@
+on:
+   # run once a week, Fridays at 8PM UTC
+   schedule:
+    - cron: '0 23 * * 5'
+   # REENABLE IF RUNNING OTHER PIPELINES
+   
+   
+   workflow_dispatch:
+
+name: SCHEDULED NPM Cleanup
+jobs:
+    clean_cache:
+        name: npm cache clean
+        # Matrix strategy to trigger multible jobs at once. 
+        # The runners listed here should be the name of NPM tagged runners
+        strategy:
+          matrix: 
+            runner: [JOET-NEVI-NPM, JOETRunner2]
+        runs-on: ${{ matrix.runner }}
+        steps:
+          - name: delete npm cache
+            run: |
+                npm cache clean --force

@@ -1,0 +1,153 @@
+on:
+    schedule:
+        - cron: '0 3 * * 1-5'
+    workflow_call:
+
+    workflow_dispatch:
+
+
+name: SCHEDULED DB Drift Detection
+jobs:
+  trigger-db-drift-detection-dev:
+    name: "Database Drift Detection: Dev"
+    continue-on-error: true
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: DEV_AWS_ASSUME_ROLE_ARN
+    steps:
+      -
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+      -
+        name: Execute Lambda
+        run: |
+          aws lambda invoke \
+            --function-name EV-ChART_ScheduledDatabaseDriftDetection \
+            --cli-binary-format raw-in-base64-out \
+            output.json
+      -
+        name: Process Results
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import sys
+
+          with open(Path("./output.json"), "r", encoding="utf-8") as file:
+            results = json.load(file)
+
+            if results.get("statusCode") == 500:
+              print(f"Drifts found: {json.loads(results['body']).get('drifts')}")
+              sys.exit(1)
+
+  trigger-db-drift-detection-test:
+    name: "Database Drift Detection: Test"
+    continue-on-error: true
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: TEST_AWS_ASSUME_ROLE_ARN
+    steps:
+      -
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+      -
+        name: Execute Lambda
+        run: |
+          aws lambda invoke \
+            --function-name EV-ChART_ScheduledDatabaseDriftDetection \
+            --cli-binary-format raw-in-base64-out \
+            output.json
+      -
+        name: Process Results
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import sys
+
+          with open(Path("./output.json"), "r", encoding="utf-8") as file:
+            results = json.load(file)
+
+            if results.get("statusCode") == 500:
+              print(f"Drifts found: {json.loads(results['body']).get('drifts')}")
+              sys.exit(1)
+
+  trigger-db-drift-detection-qa:
+    name: "Database Drift Detection: QA"
+    continue-on-error: true
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: TEST_AWS_ASSUME_ROLE_ARN
+    steps:
+      -
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+      -
+        name: Execute Lambda
+        run: |
+          aws lambda invoke \
+            --function-name EV-ChART_ScheduledDatabaseDriftDetection_qa \
+            --cli-binary-format raw-in-base64-out \
+            output.json
+      -
+        name: Process Results
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import sys
+
+          with open(Path("./output.json"), "r", encoding="utf-8") as file:
+            results = json.load(file)
+
+            if results.get("statusCode") == 500:
+              print(f"Drifts found: {json.loads(results['body']).get('drifts')}")
+              sys.exit(1)
+
+  trigger-db-drift-detection-prod:
+    name: "Database Drift Detection: Prod"
+    continue-on-error: true
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: PROD_AWS_ASSUME_ROLE_ARN
+    steps:
+      -
+        name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+      -
+        name: Execute Lambda
+        run: |
+          aws lambda invoke \
+            --function-name EV-ChART_ScheduledDatabaseDriftDetection \
+            --cli-binary-format raw-in-base64-out \
+            output.json
+      -
+        name: Process Results
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          import sys
+
+          with open(Path("./output.json"), "r", encoding="utf-8") as file:
+            results = json.load(file)
+
+            if results.get("statusCode") == 500:
+              print(f"Drifts found: {json.loads(results['body']).get('drifts')}")
+              sys.exit(1)

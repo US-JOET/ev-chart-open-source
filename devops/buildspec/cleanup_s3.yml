@@ -1,0 +1,10 @@
+version: 0.2
+batch:
+  fast-fail: false
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+  build:
+    commands:
+      - aws s3 rm s3://$ARTIFACT_BUCKET/deploy/lambda --recursive --exclude $COMMIT_ID/*

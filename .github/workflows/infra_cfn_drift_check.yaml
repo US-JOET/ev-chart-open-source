@@ -1,0 +1,46 @@
+on:
+   # MUST BE RUN BEFORE WEEKLY ATO REPORTS
+
+   # run once a week on Saturday at 8PM UTC
+   schedule:
+    - cron: '0 23 * * 6'
+   # Reenable with weekly ATO reports, must run on the same runner as the ato report
+   workflow_dispatch:
+
+name: SCHEDULED Run CFN Drift Detection
+jobs:
+    start-drift-report:
+        strategy:
+          fail-fast: false
+          matrix:
+            env: [prod, test, dev]
+            runner: [infra]
+            include:
+              - env_role: PROD_AWS_ASSUME_ROLE_ARN
+                env: prod
+              - env_role: TEST_AWS_ASSUME_ROLE_ARN
+                env: test
+              - env_role: DEV_AWS_ASSUME_ROLE_ARN
+                env: dev
+        name: run drift detection
+        runs-on: ${{ matrix.runner }}
+        steps:
+          - name: Configure AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v3
+            with:
+              aws-region: ${{ vars.DEPLOY_REGION }}
+              role-to-assume: ${{ secrets[matrix.env_role] }}
+              role-skip-session-tagging: true
+
+          - name: start drift detection
+          # This step creates a list of nested stacks in the ApplicationInfrastructureStack, saves the list for the weekly ato report, and starts drift detection on the found stacks
+            run: |
+                rm -f output.json
+                aws cloudformation list-stack-resources --stack-name ApplicationInfrastructureStack \
+                --output json --query 'StackResourceSummaries[?(ResourceType==`AWS::CloudFormation::Stack`)].PhysicalResourceId' > ~/${{ matrix.env }}_stack_list.json
+                for stack in $(jq -r '.[]' ~/${{ matrix.env }}_stack_list.json); do
+                  echo "Stack Name: $stack" >> output.json
+                  aws cloudformation detect-stack-drift --stack-name $stack --output json >> output.json
+                done
+                aws cloudformation detect-stack-drift --stack-name ApplicationInfrastructureStack --output json >> output.json
+                cat output.json

@@ -1,0 +1,92 @@
+on:
+    workflow_call:
+      inputs:
+        FUNCTION_NAME:
+            required: true
+            type: string
+        ENVIRONMENT:
+            required: true
+            type: string
+        DEPLOY_REGION:
+            required: true
+            type: string
+        PAYLOAD_STRING:
+            required: false
+            default: ""
+            type: string
+        OUTPUT_FILE:
+            required: false
+            default: response.json
+            type: string
+        PAYLOAD_FILE:
+            required: false
+            type: boolean
+            default: false
+
+# Reusable workflow used to trigger lambda functions. (Used in post deployment, infra, and O&M workflows)
+name: CALLED Lambda Trigger
+jobs:
+  trigger-lambda:
+    runs-on: [infra]
+    env:
+      SUB_ENV_SUF: ""
+      FUNCTION_NAME: ${{ inputs.FUNCTION_NAME }}
+      PAYLOAD_STRING: "'{ ${{ inputs.PAYLOAD_STRING }} }'"
+      OUTPUT_FILE: ${{ inputs.OUTPUT_FILE }}
+      RUNNER_ROLE: "${{ inputs.ENVIRONMENT }}_AWS_ASSUME_ROLE_ARN"
+    steps:
+      - name: setup for subenv
+        run: |
+            if [ '${{ inputs.ENVIRONMENT }}' == 'qa' ]; then
+              $(echo "SUB_ENV_SUF=_${{inputs.ENVIRONMENT}}" >> "$GITHUB_ENV")
+              $(echo "RUNNER_ROLE=TEST_AWS_ASSUME_ROLE_ARN" >> "$GITHUB_ENV")
+            else
+              echo "Not a sub env, using default suffix: ${{ env.SUB_ENV_SUF }}"
+            fi
+
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      - name: set payload type
+        run: |
+            if ${{ inputs.PAYLOAD_FILE }}; then
+              $(echo "PAYLOAD_STRING=${{inputs.PAYLOAD_STRING}}" >> "$GITHUB_ENV")
+            else
+              echo "Not a file payload, using default payload type: JSON (${{ env.PAYLOAD_STRING }}) "
+            fi
+
+      - name: lambda invoke
+        id: lambda-invoke
+        run: |
+            aws lambda invoke \
+              --function-name EV-ChART_${{ env.FUNCTION_NAME }}${{ env.SUB_ENV_SUF }} \
+              --cli-binary-format raw-in-base64-out \
+              --payload ${{ env.PAYLOAD_STRING }} \
+              ${{ env.OUTPUT_FILE }} > cli-output.json
+            echo "finished invoke"
+            cat ${{ env.OUTPUT_FILE }}
+            {
+              echo 'results<<EOF'
+              cat cli-output.json
+              echo EOF
+            } >> $GITHUB_OUTPUT
+
+      -
+        name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+            name: ${{ env.OUTPUT_FILE }}
+            path: ${{ env.OUTPUT_FILE }}
+
+      -
+        name: check-exection-status
+        if: contains(steps.lambda-invoke.outputs.results, 'FunctionError')
+        run: |
+            cat cli-output.json
+            cat ${{ env.OUTPUT_FILE }}
+            exit 1

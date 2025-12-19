@@ -1,0 +1,70 @@
+# Workflow to update feature toggles throughout different environments in application
+
+on:
+  workflow_dispatch:
+    inputs:
+      DEPLOY_ENV:
+        required: true
+        type: choice
+        options:
+        - "DEV"
+        - "TEST"
+        - "PROD"
+      FEATURE_TOGGLE_PATH:
+        description: "Provide full feature toggle path"
+        required: true
+        type: string
+      VALUE:
+        required: true
+        type: choice
+        options:
+        - "True"
+        - "False"
+
+  workflow_call:
+    inputs:
+      DEPLOY_ENV:
+        required: true
+        type: string
+      FEATURE_TOGGLE_PATH:
+        required: true
+        type: string
+      VALUE:
+        required: true
+        type: string
+
+name: "!INFRA Set Feature Toggle"
+jobs:
+  set-parameter:
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+      CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+
+    steps:
+      # Configure AWS Credential
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      # Setting parameter
+      - name: Set input parameter to given value
+        run: |
+          aws ssm put-parameter \
+            --name "${{ inputs.FEATURE_TOGGLE_PATH }}" \
+            --type String \
+            --value "${{ inputs.VALUE }}" \
+            --overwrite
+
+      # Logging updated value of parameter
+      - name: Log updated parameter value
+        run: |
+          echo "Updated value for ${{ inputs.FEATURE_TOGGLE_PATH }}"
+          aws ssm get-parameter \
+            --name "${{ inputs.FEATURE_TOGGLE_PATH }}" \
+            --with-decryption \
+            --query 'Parameter.Value' \
+            --output text

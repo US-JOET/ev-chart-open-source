@@ -1,0 +1,38 @@
+# Workflow to test toggling maintenance-mode on and off
+
+on:
+  workflow_dispatch:
+
+name: "Test maintenance-mode"
+jobs:
+  test-toggling-maintenance-mode:
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+      CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+    steps:
+    # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      # Turning on maintenance mode
+      - name: Set maintenance mode to true
+        run: |
+          aws ssm put-parameter \
+            --name "/ev-chart/status/maintenance" \
+            --type String \
+            --value "True" \
+            --overwrite
+
+      # Getting value of maintenance field
+      - name: Read value back
+        run: |
+          aws ssm get-parameter \
+            --name "/ev-chart/status/maintenance" \
+            --with-decryption \
+            --query 'Parameter.Value' \
+            --output text

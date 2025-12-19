@@ -1,0 +1,34 @@
+# O&M Request Helper Workflow
+# Resets an Expired user (a user that was invited but did not login within 30 days) back to Pending and resends a new user email
+# Only for organizations with no active users
+on:
+  workflow_dispatch:
+    inputs:
+        ENVIRONMENT:
+          description: "Which environment do you want to run ScheduledReinviteExpiredUsersForNewOrgs in?"
+          required: true
+          type: environment
+        DEPLOY_REGION:
+          required: true
+          description: "Which AWS Region should this be triggered in? (Default is us-east-1)"
+          type: choice
+          options:
+            - us-east-1
+            - us-east-2
+          default: us-east-1
+        ORG_ID:
+          description: "Which org_id do you want to resend the invite to?"
+          required: true
+          type: string
+
+name: "SCHEDULED Reinvite Expired Users For New Orgs"
+jobs:
+  trigger-reinvite-expired-users-for-new-orgs:
+    # Triggers the ScheduledReinviteExpiredUsersForNewOrgs lambda using workflow inputs
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT:  ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "ScheduledReinviteExpiredUsersForNewOrgs"
+      PAYLOAD_STRING: '"org_id": "${{inputs.ORG_ID}}"'

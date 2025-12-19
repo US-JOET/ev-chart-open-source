@@ -1,0 +1,224 @@
+on:
+  workflow_call:
+    inputs:
+      DEPLOY_REGION:
+      # What AWS Region should be deployed
+        required: true
+        type: string
+      COMMIT_ID:
+      # What is the git commit sha being deployed
+        required: true
+        type: string
+      ENV_NAME:
+      # Name of the deployment environment
+        required: true
+        type: string
+      BRANCH_NAME:
+      # Git branch of the code being deployed
+        required: true
+        type: string
+      DEPLOY_ENV:
+      # Name of the base environment (sub env uses base environment)
+        required: true
+        type: string
+
+# Reusable workflow the deploys the project to AWS
+name: CALLED deploy project
+jobs:
+  deploy-base-cloudformation:
+    name: deploy-base-cfn
+    runs-on: [infra]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+      CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.BRANCH_NAME }}
+
+      - name: Print vars
+        run: |
+          echo ${{ env.RUNNER_ROLE }}
+          echo ${{ inputs.ENV_NAME }}
+          echo ${{ inputs.DEPLOY_REGION }}
+          echo ${{ inputs.COMMIT_ID }}
+          echo ${{ inputs.BRANCH_NAME }}
+
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      # Deploy to AWS CloudFormation First
+      - name: Deploy to AWS CloudFormation baseline
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ApplicationInfrastructureStack-Baseline${{ !contains(fromJSON('["dev", "test", "prod"]'), inputs.ENV_NAME) && format('-{0}', inputs.ENV_NAME) || '' }}
+          template: ./infrastructure/templates/application_baseline.yml
+          no-fail-on-empty-changeset: "1"
+          role-arn: ${{ secrets[env.CLOUDFORMATION_ROLE] }}
+          parameter-overrides: file:///${{ github.workspace }}/devops/baseline${{ !contains(fromJSON('["dev", "test", "prod"]'), inputs.ENV_NAME) && format('.{0}', inputs.ENV_NAME) || '' }}.configuration.json
+
+  package-lambda:
+    name: package-lambda-functions
+    needs: [deploy-base-cloudformation]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+    runs-on: [infra]
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.BRANCH_NAME }}
+
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      - name: update-api-gateway-id
+        run: |
+          # Update the API Gateway deployment resource ID to the commit ID.  This is to force a new API deployment.
+          sed -i "s/ApiGatewayRestApiDeployment/Deploy${{ inputs.COMMIT_ID }}/" infrastructure/templates/api_gateway.template.yml
+
+          mkdir -p built_lambda_content/layers
+          ls
+
+      - name: Zip Functions
+        run: |
+          # Build the Lambda layers.  Revisit if layer content conflicts with the service max layer size.
+          BASEPWD=$PWD
+          LAMBDA_LAYER_SOURCE=source/lambda_layers
+          cd $LAMBDA_LAYER_SOURCE
+          pwd
+          for function_layer_dir in $(find . -maxdepth 1 -mindepth 1 -type d); do
+            layer_name=$(basename $function_layer_dir)
+            echo "layer name: $layer_name"
+            zip -r $BASEPWD/built_lambda_content/layers/layer_$layer_name.zip ./$layer_name
+          done
+
+          cd $BASEPWD
+          # Build the Lambda functions
+          LAMBDA_FUNCTION_SOURCE=source/lambda_functions
+
+          for function_dir in $(find $LAMBDA_FUNCTION_SOURCE -maxdepth 1 -mindepth 1 -type d); do
+            function_name=$(basename $function_dir)
+            cd $function_dir
+            echo "zipping function: $function_name"
+            zip -r $BASEPWD/built_lambda_content/$function_name.zip .
+            cd $BASEPWD
+          done
+
+      - name: Upload lambda and templates to S3
+        run: |
+          aws s3 cp built_lambda_content s3://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}/deploy/lambda/commit-${{ inputs.COMMIT_ID }} --recursive
+          aws s3 cp infrastructure/templates s3://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}/deploy/templates --recursive
+
+  package-frontend:
+    name: Build UI
+    needs: [deploy-base-cloudformation]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+    runs-on: [npm, infra]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.BRANCH_NAME }}
+          persist-credentials: false
+
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.STORYBOOK_DEPLOY_KEY }}
+
+      - name: install dependencies
+        run: |
+          cd frontend
+          npm ci
+          cd ..
+
+      - name: Build
+        run: |
+          CI=false
+          cd frontend
+          npm run build:${{ inputs.ENV_NAME }}
+          cd ..
+
+      - name: export no_proxy
+        run: |
+          export no_proxy="169.254.169.254,github.doe.gov"
+
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      - name: Upload to S3
+        run: |
+          # aws s3 rm s3://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}/react --recursive
+          aws s3 cp frontend/build s3://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}/deploy/react --recursive
+
+      - name: Archive build
+        uses: actions/upload-artifact@v3
+        with:
+          name: React-app
+          path: frontend/build
+
+  # This workflow contains a single job called "deploy"
+  deploy-cloudformation:
+    name: deploy
+    needs: [package-frontend, package-lambda]
+    env:
+      RUNNER_ROLE: "${{ inputs.DEPLOY_ENV }}_AWS_ASSUME_ROLE_ARN"
+      CLOUDFORMATION_ROLE: "${{ inputs.DEPLOY_ENV }}_CLOUDFROMATION_ROLE"
+    runs-on: [infra]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ inputs.BRANCH_NAME }}
+
+      # Configure AWS Credential
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-region: ${{ inputs.DEPLOY_REGION }}
+          role-to-assume: ${{ secrets[env.RUNNER_ROLE] }}
+          role-skip-session-tagging: true
+
+      - name: shortsha
+        run: |
+          sed -i "s/ENVIRONMENT/${{ inputs.ENV_NAME }}/" devops/deploy.${{ inputs.ENV_NAME }}.configuration.json
+          sed -i "s/COMMIT_ID/commit-${{ inputs.COMMIT_ID }}/" devops/deploy.${{ inputs.ENV_NAME }}.configuration.json
+          sed -i "s/ONEID_CLIENT_SECRET/${{ secrets.ONEID_CLIENT_SECRET }}/" devops/deploy.${{ inputs.ENV_NAME }}.configuration.json
+
+          cat devops/deploy.${{ inputs.ENV_NAME }}.configuration.json
+
+      - name: Deploy application cloudformation from s3
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: ApplicationInfrastructureStack${{ !contains(fromJSON('["dev", "test", "prod"]'), inputs.ENV_NAME) && format('-{0}', inputs.ENV_NAME) || '' }}
+          template: https://ev-chart-artifact-${{ inputs.ENV_NAME }}-${{ inputs.DEPLOY_REGION }}.s3.amazonaws.com/deploy/templates/application_infrastructure.template.yml
+          no-fail-on-empty-changeset: "1"
+          role-arn: ${{ secrets[env.CLOUDFORMATION_ROLE] }}
+          parameter-overrides: file:///${{ github.workspace }}/devops/deploy.${{ inputs.ENV_NAME }}.configuration.json
+          capabilities: CAPABILITY_AUTO_EXPAND
+
+  trigger-migrations:
+    needs: [deploy-cloudformation]
+    name: trigger db migrations
+    uses: ./.github/workflows/db_run_migrations.yaml
+    secrets: inherit
+    with:
+      ENVIRONMENT: ${{ inputs.ENV_NAME }}
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}

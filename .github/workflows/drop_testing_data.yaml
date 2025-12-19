@@ -1,0 +1,70 @@
+# Testing helper script
+# This workflow is used to remove all data assosiated with an organization.
+# This is most commonly used after testing is completed on new release.
+# Any triggers should be reviewed to verify org_id is correct.
+# Requires approval when deleting in higher environments
+
+on:
+    workflow_dispatch:
+      inputs:
+        ENVIRONMENT:
+          description: "Which environment does the org/data exist in?"
+          required: true
+          type: environment
+        DEPLOY_REGION:
+          required: true
+          description: "Which AWS Region should this be triggered in? (Default is us-east-1)"
+          type: choice
+          options:
+            - us-east-1
+            - us-east-2
+          default: us-east-1
+        ORG_ID:
+          description: "Which org_id should have it's data removed? (DEFAULT IS THE JODR ORG_ID)"
+          required: true
+          type: string
+          default: "154ecdd3-d864-4110-916b-9c1287bb31e8"
+        OPERATION:
+          description: "What operation should be run? (Default is Select)"
+          required: true
+          type: choice
+          options:
+            - delete
+            - select
+          default: select
+
+name: "!INFRA Drop Testing Data"
+jobs:
+  trigger-lambda-select:
+  # Triggers the InfraRemoveTestData lambda in select mode.
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraRemoveTestData"
+      PAYLOAD_STRING: '"delete": false, "org_id": "${{inputs.ORG_ID}}"'
+
+  approval-gate:
+  # Step that checks if approval is needed, and if so must be approved by authorized deployer before execution continues
+  # Verify org_id is correct before approving
+  # Can be found in the trigger-lambda-select logs under 'lambda invoke'
+    runs-on: [infra]
+    if: ${{ inputs.OPERATION == 'delete' }}
+    needs: trigger-lambda-select
+    environment:
+        name: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - run: echo "approval check"
+
+  trigger-lambda-delete:
+  # Triggers the InfraRemoveTestData lambda in delete mode.
+    if: ${{ inputs.OPERATION == 'delete' }}
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    needs: [trigger-lambda-select, approval-gate]
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraRemoveTestData"
+      PAYLOAD_STRING: '"delete": true, "org_id": "${{inputs.ORG_ID}}"'

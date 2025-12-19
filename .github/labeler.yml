@@ -1,0 +1,30 @@
+# Add 'Infra' label to any changes within infra folders or any subfolders
+Infra:
+#- infrastructure/**
+# - devops/**
+# - .github/**
+- changed-files: #Uncomment for labeler version 5
+  - any-glob-to-any-file:
+    - infrastructure/**
+    - devops/**
+    - .github/**
+
+# Add 'Python' label to any change to .py files within the entire repository 
+Python:
+- changed-files:
+  - any-glob-to-any-file: '**/*.py'
+
+Frontend:
+- changed-files:
+  - any-glob-to-any-file: frontend/**
+
+Database:
+- changed-files:
+  - any-glob-to-any-file: database/**
+
+# Add 'release' label to any PR that is opened against the `main` branch
+release: #only works on v5
+ - base-branch: 'main'
+
+test-release:
+  - base-branch: 'test'

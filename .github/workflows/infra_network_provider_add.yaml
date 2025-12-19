@@ -1,0 +1,49 @@
+# O&M Request Helper Workflow
+# Workflow to manage API keys
+# API Keys are created to allow users to submit data using system to system API.
+
+on:
+    workflow_dispatch:
+      inputs:
+        ENVIRONMENT:
+          description: "What enviornment should the API key be created in? (Default is production)"
+          required: true
+          type: environment
+          default: dev
+        DEPLOY_REGION:
+          required: false
+          description: "What AWS Region are you using? (Default is us-east-1)"
+          type: choice
+          options:
+          - us-east-1
+          - us-east-2
+          default: us-east-1
+        NETWORK_PROVIDER_ID:
+          required: true
+          description: "What is the Network_Provider_Id that will be set in the database?"
+          type: string
+        NETWORK_PROVIDER_DESCRIPTION:
+          required: true
+          description: "What is the Network_Provider_Description that will be set in the database?"
+          type: string
+
+name: "!INFRA Add Network Provider"
+jobs:
+  approval-gate:
+  # Step that checks if approval is needed,and if so must be approved by authorized deployer before execution continues
+    runs-on: [infra]
+    environment:
+        name: ${{ inputs.ENVIRONMENT }}
+    steps:
+      - run: echo "approval check"
+
+  trigger-lambda-api-keys:
+  # Triggers the InfraAPIKeys lambda using workflow inputs
+    needs: approval-gate
+    uses: ./.github/workflows/common_lambda_trigger.yaml
+    secrets: inherit
+    with:
+      DEPLOY_REGION: ${{ inputs.DEPLOY_REGION }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+      FUNCTION_NAME: "InfraAddNetworkProvider"
+      PAYLOAD_STRING: '"network_provider_id": "${{ inputs.NETWORK_PROVIDER_ID }}", "network_provider_description": "${{ inputs.NETWORK_PROVIDER_DESCRIPTION }}"'

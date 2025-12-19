@@ -1,0 +1,11 @@
+swagger: "2.0"
+info:
+  description: Test
+  version: alpha
+  title: TEST_API
+host: test.us-east-1.amazonaws.com
+basePath: /dev
+schemes:
+  - https
+paths: {}
+definitions: {}
